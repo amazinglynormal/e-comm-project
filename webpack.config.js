@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require("path");
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
-const mode = process.env.NODE_ENV;
+const isDevelopment = process.env.NODE_ENV !== "production";
 
 module.exports = {
-  mode,
+  mode: isDevelopment ? "development" : "production",
   entry: path.resolve(__dirname, "..", "./src/index.tsx"),
   resolve: {
     extensions: [".tsx", ".ts", ".js"],
@@ -42,7 +44,12 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "..", "./src/index.html"),
     }),
-  ],
-  devtool: mode === "production" ? "source-map" : "cheap-module-source-map",
+    isDevelopment && new ReactRefreshWebpackPlugin(),
+  ].filter(Boolean),
+  devtool: isDevelopment ? "cheap-module-source-map" : "source-map",
   stats: "errors-only",
+  devServer: {
+    open: true,
+    hot: true,
+  },
 };
