@@ -7,7 +7,7 @@ const isDevelopment = process.env.NODE_ENV !== "production";
 
 module.exports = {
   mode: isDevelopment ? "development" : "production",
-  entry: path.resolve(__dirname, "..", "./src/index.tsx"),
+  entry: path.resolve(__dirname, "src/index.tsx"),
   resolve: {
     extensions: [".tsx", ".ts", ".js"],
   },
@@ -37,18 +37,20 @@ module.exports = {
     ],
   },
   output: {
-    path: path.resolve(__dirname, "..", "./build"),
+    path: path.resolve(__dirname, "build"),
     filename: "bundle.js",
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, "..", "./src/index.html"),
+      template: path.resolve(__dirname, "src/index.html"),
     }),
     isDevelopment && new ReactRefreshWebpackPlugin(),
   ].filter(Boolean),
   devtool: isDevelopment ? "cheap-module-source-map" : "source-map",
-  stats: "errors-only",
   devServer: {
+    stats: {
+      children: true,
+    },
     open: true,
     hot: true,
   },
