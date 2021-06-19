@@ -1,5 +1,4 @@
-import { Menu } from "react-feather";
-import { IconButton } from "./IconButton";
+import { MobileMenu } from "./MobileMenu";
 import styles from "./navbar.module.css";
 
 export const Navbar = () => {
@@ -27,12 +26,7 @@ export const Navbar = () => {
           <p>PROFILE</p>
           <p>CART</p>
         </div>
-        <div className={styles.mobileMenu}>
-          <IconButton
-            icon={<Menu size={24} />}
-            onClickHandler={() => console.log("clicked")}
-          />
-        </div>
+        <MobileMenu />
       </div>
     </div>
   );

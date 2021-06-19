@@ -34,10 +34,6 @@
   .desktopRight > p {
     margin: 0 1rem;
   }
-
-  .mobileMenu {
-    display: none;
-  }
 }
 
 @media screen and (min-width: 1440px) {
