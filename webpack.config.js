@@ -48,9 +48,8 @@ module.exports = {
   ].filter(Boolean),
   devtool: isDevelopment ? "cheap-module-source-map" : "source-map",
   devServer: {
-    stats: {
-      children: true,
-    },
+    stats: "normal",
+    clientLogLevel: "warn",
     open: true,
     hot: true,
   },
