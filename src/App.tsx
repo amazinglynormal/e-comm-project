@@ -1,3 +1,9 @@
+import { Navbar } from "./components/Navbar";
+
 export const App = () => {
-  return <h1>Hello React typescript</h1>;
+  return (
+    <>
+      <Navbar />
+    </>
+  );
 };

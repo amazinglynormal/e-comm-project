@@ -1,0 +1,47 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 66px;
+  width: 100%;
+  padding: 0 1rem;
+  border-bottom: 1px solid #e7e7e7;
+}
+
+.desktopNavLinks {
+  display: none;
+}
+
+.desktopRight {
+  display: none;
+}
+
+@media screen and (min-width: 769px) {
+  .desktopNavLinks {
+    display: block;
+  }
+
+  .navLink {
+    text-decoration: none;
+    color: black;
+    margin: 0 1rem;
+  }
+
+  .desktopRight {
+    display: flex;
+  }
+
+  .desktopRight > p {
+    margin: 0 1rem;
+  }
+
+  .mobileMenu {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .navbar {
+    padding: 0 2rem;
+  }
+}
