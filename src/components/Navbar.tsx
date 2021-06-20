@@ -1,5 +1,5 @@
 import { MobileMenu } from "./MobileMenu";
-import styles from "./navbar.module.css";
+import styles from "./Navbar.module.css";
 
 export const Navbar = () => {
   return (
@@ -8,16 +8,16 @@ export const Navbar = () => {
         <p>BRAND</p>
       </div>
       <nav className={styles.desktopNavLinks}>
-        <a href="#" className={styles.navLink}>
+        <a href="/" className={styles.navLink}>
           Link
         </a>
-        <a href="#" className={styles.navLink}>
+        <a href="/" className={styles.navLink}>
           Link
         </a>
-        <a href="#" className={styles.navLink}>
+        <a href="/" className={styles.navLink}>
           Link
         </a>
-        <a href="#" className={styles.navLink}>
+        <a href="/" className={styles.navLink}>
           Link
         </a>
       </nav>

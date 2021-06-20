@@ -1,4 +1,4 @@
-import styles from "./mobileMenu.module.css";
+import styles from "./MobileMenu.module.css";
 import { Menu, X } from "react-feather";
 import { IconButton } from "./IconButton";
 import { useState } from "react";
@@ -22,16 +22,16 @@ export const MobileMenu = () => {
         <nav className={styles.navLinks}>
           <ul>
             <li>
-              <a href="#">Link</a>
+              <a href="/">Link</a>
             </li>
             <li>
-              <a href="#">Link</a>
+              <a href="/">Link</a>
             </li>
             <li>
-              <a href="#">Link</a>
+              <a href="/">Link</a>
             </li>
             <li>
-              <a href="#">Link</a>
+              <a href="/">Link</a>
             </li>
           </ul>
         </nav>

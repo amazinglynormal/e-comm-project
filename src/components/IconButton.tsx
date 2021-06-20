@@ -1,4 +1,4 @@
-import styles from "./iconButton.module.css";
+import styles from "./IconButton.module.css";
 
 interface Props {
   icon: JSX.Element;
