@@ -14,6 +14,7 @@ module.exports = {
     "plugin:jsx-a11y/recommended",
     "prettier",
     "plugin:prettier/recommended",
+    "plugin:jest-dom/recommended",
   ],
   rules: {
     "no-unused-vars": "off",
