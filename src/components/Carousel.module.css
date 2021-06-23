@@ -1,0 +1,16 @@
+.carouselContainer {
+  position: relative;
+  height: 500px;
+  width: 100%;
+}
+
+.buttonContainer {
+  position: absolute;
+  top: calc(100% * 0.7);
+  right: calc(100% / 2);
+}
+
+.image {
+  max-width: 100%;
+  max-height: 100%;
+}
