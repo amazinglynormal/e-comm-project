@@ -1,11 +1,12 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 
-const development = process.env.NODE_ENV === "development";
+const isDevelopment = process.env.NODE_ENV === "development";
 
 module.exports = {
-  mode: development ? "development" : "production",
+  mode: isDevelopment ? "development" : "production",
   entry: path.resolve(__dirname, "src/index.tsx"),
   resolve: {
     extensions: [".tsx", ".ts", ".js"],
@@ -15,7 +16,16 @@ module.exports = {
       {
         test: /\.(ts|js)x?$/,
         exclude: /node_modules/,
-        use: [{ loader: "babel-loader" }],
+        use: [
+          {
+            loader: "babel-loader",
+            options: {
+              plugins: [
+                isDevelopment && require.resolve("react-refresh/babel"),
+              ].filter(Boolean),
+            },
+          },
+        ],
       },
       {
         test: /\.css$/i,
@@ -31,10 +41,12 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "src/index.html"),
     }),
-  ],
-  devtool: development ? "eval-source-map" : false,
+    isDevelopment && new ReactRefreshWebpackPlugin(),
+  ].filter(Boolean),
+  devtool: isDevelopment ? "eval-source-map" : false,
   devServer: {
     open: true,
     port: 3000,
+    hot: true,
   },
 };
