@@ -1,12 +1,14 @@
 import { PromoSection } from "./PromoSection";
 import { CollectionSelection } from "./CollectionSelection";
+import { IncentiveSection } from "./IncentiveSection";
 
 const Home = () => {
   return (
-    <div>
+    <>
       <PromoSection />
       <CollectionSelection />
-    </div>
+      <IncentiveSection />
+    </>
   );
 };
 
