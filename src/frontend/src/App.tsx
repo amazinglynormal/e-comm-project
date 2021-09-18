@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { StoreNavigation } from "./components/StoreNavigation";
 
 import Home from "./home/Home";
 
@@ -7,7 +8,7 @@ import "tailwindcss/tailwind.css";
 const App = () => {
   return (
     <Router>
-      <h1 className="text-2xl">Hello World</h1>
+      <StoreNavigation />
       <Switch>
         <Route exact path="/">
           <Home />
