@@ -1,4 +1,5 @@
 import { Fragment, useState } from "react";
+import { Link } from "react-router-dom";
 import { Dialog, Popover, Tab, Transition } from "@headlessui/react";
 import {
   MenuIcon,
@@ -216,20 +217,20 @@ export const StoreNavigation = () => {
 
               <div className="border-t border-gray-200 py-6 px-4 space-y-6">
                 <div className="flow-root">
-                  <a
-                    href="/"
+                  <Link
+                    to="/signup"
                     className="-m-2 p-2 block font-medium text-gray-900"
                   >
                     Create an account
-                  </a>
+                  </Link>
                 </div>
                 <div className="flow-root">
-                  <a
-                    href="/"
+                  <Link
+                    to="/login"
                     className="-m-2 p-2 block font-medium text-gray-900"
                   >
                     Sign in
-                  </a>
+                  </Link>
                 </div>
               </div>
 
@@ -319,18 +320,18 @@ export const StoreNavigation = () => {
               </form>
 
               <div className="flex items-center space-x-6">
-                <a
-                  href="/"
+                <Link
+                  to="/login"
                   className="text-sm font-medium text-white hover:text-gray-100"
                 >
                   Sign in
-                </a>
-                <a
-                  href="/"
+                </Link>
+                <Link
+                  to="/signup"
                   className="text-sm font-medium text-white hover:text-gray-100"
                 >
                   Create an account
-                </a>
+                </Link>
               </div>
             </div>
           </div>
