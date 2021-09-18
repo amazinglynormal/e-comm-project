@@ -6,6 +6,7 @@ import { Footer } from "./components/Footer";
 import Home from "./home/Home";
 import SignUp from "./signup/SignUp";
 import LogIn from "./login/LogIn";
+import ProductDetails from "./product/ProductDetails";
 
 import "tailwindcss/tailwind.css";
 
@@ -14,6 +15,9 @@ const App = () => {
     <Router>
       <StoreNavigation />
       <Switch>
+        <Route path="/product/:id">
+          <ProductDetails />
+        </Route>
         <Route path="/login">
           <LogIn />
         </Route>
