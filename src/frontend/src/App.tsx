@@ -1,5 +1,7 @@
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+
 import { StoreNavigation } from "./components/StoreNavigation";
+import { Footer } from "./components/Footer";
 
 import Home from "./home/Home";
 
@@ -14,6 +16,7 @@ const App = () => {
           <Home />
         </Route>
       </Switch>
+      <Footer />
     </Router>
   );
 };
