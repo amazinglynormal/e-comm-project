@@ -1,6 +1,7 @@
 import { PromoSection } from "./PromoSection";
 import { CollectionSelection } from "./CollectionSelection";
 import { IncentiveSection } from "./IncentiveSection";
+import { SecondaryHighlightSection } from "./SecondaryHighlightSection";
 
 const Home = () => {
   return (
@@ -8,6 +9,7 @@ const Home = () => {
       <PromoSection />
       <CollectionSelection />
       <IncentiveSection />
+      <SecondaryHighlightSection />
     </>
   );
 };
