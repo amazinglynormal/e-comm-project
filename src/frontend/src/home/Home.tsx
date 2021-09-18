@@ -1,5 +1,11 @@
+import { PromoSection } from "./PromoSection";
+
 const Home = () => {
-  return <h2>Home Page</h2>;
+  return (
+    <div>
+      <PromoSection />
+    </div>
+  );
 };
 
 export default Home;
