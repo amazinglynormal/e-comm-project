@@ -9,6 +9,7 @@ import LogIn from "./login/LogIn";
 import ProductDetails from "./product/ProductDetails";
 
 import "tailwindcss/tailwind.css";
+import Products from "./product/Products";
 
 const App = () => {
   return (
@@ -17,6 +18,9 @@ const App = () => {
       <Switch>
         <Route path="/product/:id">
           <ProductDetails />
+        </Route>
+        <Route path="/product">
+          <Products />
         </Route>
         <Route path="/login">
           <LogIn />
