@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export const PromoSection = () => {
   return (
     <div className="bg-white">
@@ -24,12 +26,12 @@ export const PromoSection = () => {
             options from our summer small-batch release while they&apos;re still
             in stock.
           </p>
-          <a
-            href="/"
+          <Link
+            to="/products"
             className="mt-8 inline-block bg-white border border-transparent rounded-md py-3 px-8 text-base font-medium text-gray-900 hover:bg-gray-100"
           >
             Shop New Arrivals
-          </a>
+          </Link>
         </div>
       </div>
     </div>
