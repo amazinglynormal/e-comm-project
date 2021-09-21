@@ -4,13 +4,13 @@ import { StoreNavigation } from "./navigation/StoreNavigation";
 import { Footer } from "./components/Footer";
 
 import ProductDetails from "./product/ProductDetails";
-import Checkout from "./checkout/Checkout";
 import Products from "./product/Products";
+import Checkout from "./order/Checkout";
 import Profile from "./user/Profile";
 import SignUp from "./user/SignUp";
 import LogIn from "./user/LogIn";
 import Home from "./home/Home";
-import Cart from "./cart/Cart";
+import Cart from "./order/Cart";
 
 import "tailwindcss/tailwind.css";
 
