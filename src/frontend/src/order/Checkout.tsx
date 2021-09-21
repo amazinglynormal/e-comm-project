@@ -3,6 +3,7 @@ import { RadioGroup } from "@headlessui/react";
 import { CheckCircleIcon, TrashIcon } from "@heroicons/react/solid";
 
 import { classNames } from "../utils/classNames";
+import { useHistory } from "react-router";
 
 const products = [
   {
@@ -37,12 +38,21 @@ const Checkout = () => {
   const [selectedDeliveryMethod, setSelectedDeliveryMethod] = useState(
     deliveryMethods[0]
   );
+
+  const history = useHistory();
+
+  const onSubmit = () => {
+    history.push("/ordersummary");
+  };
   return (
     <div className="bg-gray-50">
       <div className="max-w-2xl mx-auto pt-16 pb-24 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
         <h2 className="sr-only">Checkout</h2>
 
-        <form className="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
+        <form
+          onSubmit={onSubmit}
+          className="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16"
+        >
           <div>
             <div>
               <h2 className="text-lg font-medium text-gray-900">

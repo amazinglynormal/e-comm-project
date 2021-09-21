@@ -13,6 +13,7 @@ import Home from "./home/Home";
 import Cart from "./order/Cart";
 
 import "tailwindcss/tailwind.css";
+import { OrderSummary } from "./order/OrderSummary";
 
 const App = () => {
   return (
@@ -27,6 +28,9 @@ const App = () => {
         </Route>
         <Route path="/cart">
           <Cart />
+        </Route>
+        <Route path="/ordersummary">
+          <OrderSummary />
         </Route>
         <Route path="/profile">
           <Profile />
