@@ -3,13 +3,14 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { StoreNavigation } from "./navigation/StoreNavigation";
 import { Footer } from "./components/Footer";
 
-import Home from "./home/Home";
+import ProductDetails from "./product/ProductDetails";
+import Checkout from "./checkout/Checkout";
+import Products from "./product/Products";
+import Profile from "./user/Profile";
 import SignUp from "./user/SignUp";
 import LogIn from "./user/LogIn";
-import ProductDetails from "./product/ProductDetails";
-import Products from "./product/Products";
+import Home from "./home/Home";
 import Cart from "./cart/Cart";
-import Profile from "./user/Profile";
 
 import "tailwindcss/tailwind.css";
 
@@ -29,6 +30,9 @@ const App = () => {
         </Route>
         <Route path="/profile">
           <Profile />
+        </Route>
+        <Route path="/checkout">
+          <Checkout />
         </Route>
         <Route path="/login">
           <LogIn />
