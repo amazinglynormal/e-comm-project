@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export const SecondaryHighlightSection = () => {
   return (
     <div className="bg-white">
@@ -22,12 +24,12 @@ export const SecondaryHighlightSection = () => {
                 announcements. Reflect on the shallow nature of existence. At
                 least you have a really nice desk setup.
               </p>
-              <a
-                href="/"
+              <Link
+                to="/profile"
                 className="mt-8 w-full block bg-white border border-transparent rounded-md py-3 px-8 text-base font-medium text-gray-900 hover:bg-gray-100 sm:w-auto"
               >
                 Shop Workspace
-              </a>
+              </Link>
             </div>
           </div>
         </div>

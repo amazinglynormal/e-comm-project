@@ -9,6 +9,7 @@ import LogIn from "./user/LogIn";
 import ProductDetails from "./product/ProductDetails";
 import Products from "./product/Products";
 import Cart from "./cart/Cart";
+import Profile from "./user/Profile";
 
 import "tailwindcss/tailwind.css";
 
@@ -25,6 +26,9 @@ const App = () => {
         </Route>
         <Route path="/cart">
           <Cart />
+        </Route>
+        <Route path="/profile">
+          <Profile />
         </Route>
         <Route path="/login">
           <LogIn />
