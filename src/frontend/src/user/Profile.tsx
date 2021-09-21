@@ -2,10 +2,11 @@ import { useState } from "react";
 import { Switch } from "@headlessui/react";
 
 import { classNames } from "../utils/classNames";
+import { Link } from "react-router-dom";
 
 const tabs = [
-  { name: "General", href: "#", current: true },
-  { name: "Password", href: "#", current: false },
+  { name: "General", href: "/", current: true },
+  { name: "Order History", href: "/orderhistory", current: false },
   { name: "Notifications", href: "#", current: false },
   { name: "Plan", href: "#", current: false },
   { name: "Billing", href: "#", current: false },
@@ -52,9 +53,9 @@ const Profile = () => {
                     <div className="border-b border-gray-200">
                       <nav className="-mb-px flex space-x-8">
                         {tabs.map((tab) => (
-                          <a
+                          <Link
                             key={tab.name}
-                            href={tab.href}
+                            to={tab.href}
                             className={classNames(
                               tab.current
                                 ? "border-purple-500 text-purple-600"
@@ -63,7 +64,7 @@ const Profile = () => {
                             )}
                           >
                             {tab.name}
-                          </a>
+                          </Link>
                         ))}
                       </nav>
                     </div>

@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import { StoreNavigation } from "./navigation/StoreNavigation";
+import { OrderSummary } from "./order/OrderSummary";
 import { Footer } from "./components/Footer";
 
 import ProductDetails from "./product/ProductDetails";
@@ -9,11 +10,11 @@ import Checkout from "./order/Checkout";
 import Profile from "./user/Profile";
 import SignUp from "./user/SignUp";
 import LogIn from "./user/LogIn";
-import Home from "./home/Home";
 import Cart from "./order/Cart";
+import Home from "./home/Home";
 
 import "tailwindcss/tailwind.css";
-import { OrderSummary } from "./order/OrderSummary";
+import { OrderHistory } from "./order/OrderHistory";
 
 const App = () => {
   return (
@@ -31,6 +32,9 @@ const App = () => {
         </Route>
         <Route path="/ordersummary">
           <OrderSummary />
+        </Route>
+        <Route path="/orderhistory">
+          <OrderHistory />
         </Route>
         <Route path="/profile">
           <Profile />
