@@ -4,8 +4,8 @@ import { StoreNavigation } from "./navigation/StoreNavigation";
 import { Footer } from "./components/Footer";
 
 import Home from "./home/Home";
-import SignUp from "./signup/SignUp";
-import LogIn from "./login/LogIn";
+import SignUp from "./user/SignUp";
+import LogIn from "./user/LogIn";
 import ProductDetails from "./product/ProductDetails";
 import Products from "./product/Products";
 import Cart from "./cart/Cart";
