@@ -8,6 +8,7 @@ import SignUp from "./signup/SignUp";
 import LogIn from "./login/LogIn";
 import ProductDetails from "./product/ProductDetails";
 import Products from "./product/Products";
+import Cart from "./cart/Cart";
 
 import "tailwindcss/tailwind.css";
 
@@ -21,6 +22,9 @@ const App = () => {
         </Route>
         <Route path="/products">
           <Products />
+        </Route>
+        <Route path="/cart">
+          <Cart />
         </Route>
         <Route path="/login">
           <LogIn />
