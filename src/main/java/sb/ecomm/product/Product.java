@@ -1,25 +1,17 @@
 package sb.ecomm.product;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+
 import sb.ecomm.category.Category;
 
 import javax.persistence.*;
 
-@NoArgsConstructor
-@Getter
-@Setter
 @Entity(name = "Product")
-@Table(name = "PRODUCT")
+@Table(name = "product")
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-    @ManyToOne
-    private Category category;
 
     @Column
     private String name;
@@ -44,4 +36,106 @@ public class Product {
 
     @Column
     private double priceGBP;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false, referencedColumnName
+            = "id", foreignKey = @ForeignKey(name = "category_product_fk"))
+    private Category category;
+
+    public Product() {
+    }
+
+    public Product(String name, String description, String features,
+                   double priceCAD, double priceUSD, double priceAUD,
+                   double priceEUR, double priceGBP, Category category) {
+        this.name = name;
+        this.description = description;
+        this.features = features;
+        this.priceCAD = priceCAD;
+        this.priceUSD = priceUSD;
+        this.priceAUD = priceAUD;
+        this.priceEUR = priceEUR;
+        this.priceGBP = priceGBP;
+        this.category = category;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getFeatures() {
+        return features;
+    }
+
+    public void setFeatures(String features) {
+        this.features = features;
+    }
+
+    public double getPriceCAD() {
+        return priceCAD;
+    }
+
+    public void setPriceCAD(double priceCAD) {
+        this.priceCAD = priceCAD;
+    }
+
+    public double getPriceUSD() {
+        return priceUSD;
+    }
+
+    public void setPriceUSD(double priceUSD) {
+        this.priceUSD = priceUSD;
+    }
+
+    public double getPriceAUD() {
+        return priceAUD;
+    }
+
+    public void setPriceAUD(double priceAUD) {
+        this.priceAUD = priceAUD;
+    }
+
+    public double getPriceEUR() {
+        return priceEUR;
+    }
+
+    public void setPriceEUR(double priceEUR) {
+        this.priceEUR = priceEUR;
+    }
+
+    public double getPriceGBP() {
+        return priceGBP;
+    }
+
+    public void setPriceGBP(double priceGBP) {
+        this.priceGBP = priceGBP;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 }
