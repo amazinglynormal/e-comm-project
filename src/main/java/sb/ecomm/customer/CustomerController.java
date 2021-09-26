@@ -1,11 +1,11 @@
-package sb.ecomm.user;
+package sb.ecomm.customer;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 
 @AllArgsConstructor
 @RestController
-public class UserController {
+public class CustomerController {
 
-    private final UserService userService;
+    private final CustomerService customerService;
 }

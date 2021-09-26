@@ -1,12 +1,12 @@
-package sb.ecomm.user;
+package sb.ecomm.customer;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
 @Service
-public class UserService {
+public class CustomerService {
 
-    private final UserRepository userRepository;
+    private final CustomerRepository customerRepository;
 
 }
