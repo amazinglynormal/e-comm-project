@@ -25,7 +25,7 @@ public class CategoryService {
     }
 
     Category findCategoryById(Long id) {
-       return categoryRepository.findById(id).orElseThrow(() -> new RuntimeException());
+       return categoryRepository.findById(id).orElseThrow(RuntimeException::new);
 
     }
 
