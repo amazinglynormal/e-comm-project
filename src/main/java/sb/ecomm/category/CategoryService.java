@@ -24,13 +24,9 @@ public class CategoryService {
         return categoryRepository.save(newCategory);
     }
 
-    Optional<Category> findCategoryById(Long id) {
-       Optional<Category> category = categoryRepository.findById(id);
-       if (category.isPresent()) {
-           return category;
-       } else {
-           throw new RuntimeException();
-       }
+    Category findCategoryById(Long id) {
+       return categoryRepository.findById(id).orElseThrow(() -> new RuntimeException());
+
     }
 
     Category updateCategory(Long id, Category updatedCategory) {
