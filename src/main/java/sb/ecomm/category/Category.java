@@ -1,6 +1,8 @@
 package sb.ecomm.category;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import sb.ecomm.product.Product;
 
 import javax.persistence.*;
@@ -20,7 +22,8 @@ public class Category {
     @Column
     private String description;
 
-    @OneToMany(mappedBy = "category")
+    @JsonIgnoreProperties("category")
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     private Set<Product> products;
 
     public Category() {

@@ -1,6 +1,7 @@
 package sb.ecomm.product;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import sb.ecomm.category.Category;
 
 import javax.persistence.*;
@@ -37,6 +38,7 @@ public class Product {
     @Column
     private double priceGBP;
 
+    @JsonIgnoreProperties("products")
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false, referencedColumnName
             = "id", foreignKey = @ForeignKey(name = "category_product_fk"))
