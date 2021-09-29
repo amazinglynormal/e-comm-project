@@ -1,11 +1,11 @@
-package sb.ecomm.product;
+package sb.ecomm.product.dto;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class CreateProductDTO {
+public class UpdateProductDTO {
 
     private String name;
 
