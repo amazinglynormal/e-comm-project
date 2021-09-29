@@ -1,4 +1,4 @@
-package sb.ecomm.category;
+package sb.ecomm.category.dto;
 
 public class CreateCategoryDTO {
 
