@@ -1,43 +1,55 @@
 package sb.ecomm.category;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private ModelMapper mapper;
 
     @Autowired
-    public CategoryService(CategoryRepository categoryRepository) {
+    public CategoryService(CategoryRepository categoryRepository, ModelMapper mapper) {
         this.categoryRepository = categoryRepository;
+        this.mapper = mapper;
     }
 
-    Iterable<Category> findAllCategories() {
-        return categoryRepository.findAll();
+    Iterable<CategoryDTO> findAllCategories() {
+        Iterable<Category> categories = categoryRepository.findAll();
+        List<CategoryDTO> categoryDTOs = new ArrayList<>();
+        categories.forEach(category -> categoryDTOs.add(mapper.map(category, CategoryDTO.class)));
+
+        return categoryDTOs;
     }
 
-    Category addNewCategory(Category newCategory) {
-        return categoryRepository.save(newCategory);
+    CategoryDTO addNewCategory(CreateCategoryDTO newCategoryDTO) {
+        Category newCategory = mapper.map(newCategoryDTO, Category.class);
+        Category savedCategory = categoryRepository.save(newCategory);
+        return mapper.map(savedCategory, CategoryDTO.class);
     }
 
-    Category findCategoryById(Long id) {
-       return categoryRepository.findById(id).orElseThrow(RuntimeException::new);
-
+    CategoryDTO findCategoryById(Long id) {
+       Category category =
+               categoryRepository.findById(id).orElseThrow(RuntimeException::new);
+       return mapper.map(category, CategoryDTO.class);
     }
 
-    Category updateCategory(Long id, Category updatedCategory) {
-        Optional<Category> category = categoryRepository.findById(id);
-        if (category.isPresent()) {
-            category.get().setName(updatedCategory.getName());
-            category.get().setDescription(updatedCategory.getDescription());
-            return categoryRepository.save(category.get());
-        } else {
-            throw new RuntimeException();
-        }
+    CategoryDTO updateCategory(Long id, UpdateCategoryDTO updatedCategoryDTO) {
+        Category updatedCategory =  mapper.map(updatedCategoryDTO,
+                Category.class);
+        Category category =
+                categoryRepository.findById(id).orElseThrow(RuntimeException::new);
+        category.setName(updatedCategory.getName());
+        category.setDescription(updatedCategory.getDescription());
+
+        Category savedCategory = categoryRepository.save(category);
+        return mapper.map(savedCategory, CategoryDTO.class);
     }
 
     void deleteCategoryById(Long id) {

@@ -1,7 +1,6 @@
 package sb.ecomm.category;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import sb.ecomm.product.Product;
 
