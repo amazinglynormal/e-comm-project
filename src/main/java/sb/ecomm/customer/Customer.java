@@ -23,7 +23,7 @@ public class Customer {
     @Column
     private String refreshToken;
 
-    @Column
+    @Column(columnDefinition = "boolean DEFAULT false NOT NULL")
     private boolean active;
 
     @Column
