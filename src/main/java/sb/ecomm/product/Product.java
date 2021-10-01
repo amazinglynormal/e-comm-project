@@ -24,13 +24,7 @@ public class Product {
     private String features;
 
     @Column
-    private double priceCAD;
-
-    @Column
     private double priceUSD;
-
-    @Column
-    private double priceAUD;
 
     @Column
     private double priceEUR;
@@ -48,14 +42,11 @@ public class Product {
     }
 
     public Product(String name, String description, String features,
-                   double priceCAD, double priceUSD, double priceAUD,
-                   double priceEUR, double priceGBP, Category category) {
+                   double priceUSD, double priceEUR, double priceGBP, Category category) {
         this.name = name;
         this.description = description;
         this.features = features;
-        this.priceCAD = priceCAD;
         this.priceUSD = priceUSD;
-        this.priceAUD = priceAUD;
         this.priceEUR = priceEUR;
         this.priceGBP = priceGBP;
         this.category = category;
@@ -93,14 +84,6 @@ public class Product {
         this.features = features;
     }
 
-    public double getPriceCAD() {
-        return priceCAD;
-    }
-
-    public void setPriceCAD(double priceCAD) {
-        this.priceCAD = priceCAD;
-    }
-
     public double getPriceUSD() {
         return priceUSD;
     }
@@ -109,13 +92,6 @@ public class Product {
         this.priceUSD = priceUSD;
     }
 
-    public double getPriceAUD() {
-        return priceAUD;
-    }
-
-    public void setPriceAUD(double priceAUD) {
-        this.priceAUD = priceAUD;
-    }
 
     public double getPriceEUR() {
         return priceEUR;
