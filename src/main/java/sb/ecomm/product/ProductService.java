@@ -65,25 +65,68 @@ public class ProductService {
     }
 
     ProductDTO updateProduct(Long id, UpdateProductDTO updatedProductDTO) {
-        Optional<Product> optionalProduct = productRepository.findById(id);
-        if (optionalProduct.isPresent()) {
-            Product product = optionalProduct.get();
-            product.setName(updatedProductDTO.getName());
-            product.setDescription(updatedProductDTO.getDescription());
-            product.setFeatures(updatedProductDTO.getFeatures());
-            product.setPriceAUD(updatedProductDTO.getPriceAUD());
-            product.setPriceCAD(updatedProductDTO.getPriceCAD());
-            product.setPriceEUR(updatedProductDTO.getPriceEUR());
-            product.setPriceGBP(updatedProductDTO.getPriceGBP());
-            product.setPriceUSD(updatedProductDTO.getPriceUSD());
-            Product savedProduct = productRepository.save(product);
-            return mapper.map(savedProduct, ProductDTO.class);
-        } else {
-            throw new RuntimeException();
-        }
+        Product product =
+                productRepository.findById(id).orElseThrow(RuntimeException::new);
+        updateProductName(product,updatedProductDTO);
+        updateProductDescription(product,updatedProductDTO);
+        updateProductFeatures(product,updatedProductDTO);
+        updateProductPriceEUR(product,updatedProductDTO);
+        updateProductPriceGBP(product,updatedProductDTO);
+        updateProductPriceUSD(product,updatedProductDTO);
+        updateProductCategory(product, updatedProductDTO);
+
+        productRepository.save(product);
+
+        return mapper.map(product, ProductDTO.class);
     }
 
     void deleteProductById(Long id) {
         productRepository.deleteById(id);
     }
+
+    private void updateProductName(Product product, UpdateProductDTO updateProductDTO) {
+        if (!product.getName().equals(updateProductDTO.getName())) {
+            product.setName(updateProductDTO.getName());
+        }
+    }
+
+    private void updateProductDescription(Product product, UpdateProductDTO updateProductDTO) {
+        if (!product.getDescription().equals(updateProductDTO.getDescription())) {
+            product.setDescription(updateProductDTO.getDescription());
+        }
+    }
+
+    private void updateProductFeatures(Product product, UpdateProductDTO updateProductDTO) {
+        if (!product.getFeatures().equals(updateProductDTO.getFeatures())) {
+            product.setFeatures(updateProductDTO.getFeatures());
+        }
+    }
+
+    private void updateProductPriceEUR(Product product, UpdateProductDTO updateProductDTO) {
+        if (product.getPriceEUR() != updateProductDTO.getPriceEUR()) {
+            product.setPriceEUR(updateProductDTO.getPriceEUR());
+        }
+    }
+
+    private void updateProductPriceGBP(Product product, UpdateProductDTO updateProductDTO) {
+        if (product.getPriceGBP() != updateProductDTO.getPriceGBP()) {
+            product.setPriceGBP(updateProductDTO.getPriceGBP());
+        }
+    }
+
+    private void updateProductPriceUSD(Product product, UpdateProductDTO updateProductDTO) {
+        if (product.getPriceUSD() != updateProductDTO.getPriceUSD()) {
+            product.setPriceUSD(updateProductDTO.getPriceUSD());
+        }
+    }
+
+    private void updateProductCategory(Product product,
+                                       UpdateProductDTO updateProductDTO) {
+        if (product.getCategory().getId() != updateProductDTO.getCategoryId()) {
+            Category newCategory =
+                    categoryRepository.findById(updateProductDTO.getCategoryId()).orElseThrow(RuntimeException::new);
+            product.setCategory(newCategory);
+        }
+    }
+
 }
