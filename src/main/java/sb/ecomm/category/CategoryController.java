@@ -1,11 +1,46 @@
 package sb.ecomm.category;
 
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import sb.ecomm.category.dto.CategoryDTO;
+import sb.ecomm.category.dto.CreateCategoryDTO;
+import sb.ecomm.category.dto.UpdateCategoryDTO;
 
-@AllArgsConstructor
-@Service
+
+@RestController
+@RequestMapping("/api/v1/categories")
 public class CategoryController {
 
-    private final CategoryRepository categoryRepository;
+    private final CategoryService categoryService;
+
+    @Autowired
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
+
+    @GetMapping
+    public Iterable<CategoryDTO> getAllCategories() {
+        return categoryService.findAllCategories();
+    }
+
+    @PostMapping
+    public CategoryDTO addNewCategory(@RequestBody CreateCategoryDTO newCategory) {
+        return categoryService.addNewCategory(newCategory);
+    }
+
+    @GetMapping("/{id}")
+    public CategoryDTO findCategoryById(@PathVariable long id) {
+        return categoryService.findCategoryById(id);
+    }
+
+    @PutMapping("/{id}")
+    public CategoryDTO updateCategory(@PathVariable long id,
+                                             @RequestBody UpdateCategoryDTO updatedCategory) {
+        return categoryService.updateCategory(id, updatedCategory);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteCategory(@PathVariable long id) {
+        categoryService.deleteCategoryById(id);
+    }
 }
