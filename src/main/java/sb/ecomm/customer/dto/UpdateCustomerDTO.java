@@ -9,6 +9,4 @@ public class UpdateCustomerDTO {
 
     private String email;
     private String password;
-    private String verificationHash;
-    private String resetToken;
 }

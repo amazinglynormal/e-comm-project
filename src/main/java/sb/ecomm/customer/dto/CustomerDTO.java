@@ -10,6 +10,7 @@ import java.util.Set;
 @Setter
 public class CustomerDTO {
 
+    private Long id;
     private String email;
     private Set<OrderDTO> orders;
 }
