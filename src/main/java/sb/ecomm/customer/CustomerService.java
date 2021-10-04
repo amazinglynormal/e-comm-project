@@ -22,7 +22,7 @@ public class CustomerService {
 
     CustomerDTO findCustomerById(long id) {
         Customer customer =
-                customerRepository.findById(id).orElseThrow(RuntimeException::new);
+                customerRepository.findById(id).orElseThrow(() -> new CustomerNotFoundException(id));
 
         return mapper.map(customer, CustomerDTO.class);
     }
@@ -36,7 +36,7 @@ public class CustomerService {
     CustomerDTO updateCustomerAccount(long id,
                                       UpdateCustomerDTO updateCustomerDTO) {
         Customer customer =
-                customerRepository.findById(id).orElseThrow(RuntimeException::new);
+                customerRepository.findById(id).orElseThrow(() -> new CustomerNotFoundException(id));
         updateCustomerEmail(customer,updateCustomerDTO);
         updateCustomerPassword(customer, updateCustomerDTO);
 

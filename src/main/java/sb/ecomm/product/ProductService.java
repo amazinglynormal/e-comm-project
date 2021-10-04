@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sb.ecomm.category.Category;
+import sb.ecomm.category.CategoryNotFoundException;
 import sb.ecomm.category.CategoryRepository;
 import sb.ecomm.product.dto.CreateProductDTO;
 import sb.ecomm.product.dto.ProductDTO;
@@ -11,7 +12,6 @@ import sb.ecomm.product.dto.UpdateProductDTO;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -39,7 +39,7 @@ public class ProductService {
 
     ProductDTO findProductById(Long id) {
         Product product =
-                productRepository.findById(id).orElseThrow(RuntimeException::new);
+                productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
         return mapper.map(product, ProductDTO.class);
     }
 
@@ -58,7 +58,7 @@ public class ProductService {
         System.out.println(newProductDto.toString());
         Product newProduct = mapper.map(newProductDto, Product.class);
         Category category =
-                categoryRepository.findById(newProductDto.getCategoryId()).orElseThrow(RuntimeException::new);
+                categoryRepository.findById(newProductDto.getCategoryId()).orElseThrow(() -> new CategoryNotFoundException(newProductDto.getCategoryId()));
         newProduct.setCategory(category);
         Product savedProduct = productRepository.save(newProduct);
         return mapper.map(savedProduct, ProductDTO.class);
@@ -66,7 +66,7 @@ public class ProductService {
 
     ProductDTO updateProduct(Long id, UpdateProductDTO updatedProductDTO) {
         Product product =
-                productRepository.findById(id).orElseThrow(RuntimeException::new);
+                productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
         updateProductName(product,updatedProductDTO);
         updateProductDescription(product,updatedProductDTO);
         updateProductFeatures(product,updatedProductDTO);

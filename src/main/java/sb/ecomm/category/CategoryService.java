@@ -39,7 +39,7 @@ public class CategoryService {
 
     CategoryDTO findCategoryById(Long id) {
        Category category =
-               categoryRepository.findById(id).orElseThrow(RuntimeException::new);
+               categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
        return mapper.map(category, CategoryDTO.class);
     }
 
@@ -47,7 +47,7 @@ public class CategoryService {
         Category updatedCategory =  mapper.map(updatedCategoryDTO,
                 Category.class);
         Category category =
-                categoryRepository.findById(id).orElseThrow(RuntimeException::new);
+                categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
         category.setName(updatedCategory.getName());
         category.setDescription(updatedCategory.getDescription());
 

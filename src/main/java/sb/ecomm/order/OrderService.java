@@ -4,11 +4,13 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sb.ecomm.customer.Customer;
+import sb.ecomm.customer.CustomerNotFoundException;
 import sb.ecomm.customer.CustomerRepository;
 import sb.ecomm.order.dto.CreateOrderDTO;
 import sb.ecomm.order.dto.OrderDTO;
 import sb.ecomm.order.dto.UpdateOrderDTO;
 import sb.ecomm.product.Product;
+import sb.ecomm.product.ProductNotFoundException;
 import sb.ecomm.product.ProductRepository;
 
 import java.util.ArrayList;
@@ -32,7 +34,7 @@ public class OrderService {
 
     OrderDTO findOrderById(Long id) {
         Order order =
-                orderRepository.findById(id).orElseThrow(RuntimeException::new);
+                orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException(id));
 
         return mapper.map(order, OrderDTO.class);
     }
@@ -40,7 +42,7 @@ public class OrderService {
     OrderDTO addNewOrder(CreateOrderDTO createOrderDTO) {
         Order newOrder = mapper.map(createOrderDTO, Order.class);
         Customer customer =
-                customerRepository.findById(createOrderDTO.getCustomerId()).orElseThrow(RuntimeException::new);
+                customerRepository.findById(createOrderDTO.getCustomerId()).orElseThrow(() -> new CustomerNotFoundException(createOrderDTO.getCustomerId()));
         newOrder.setCustomer(customer);
         List<Product> initialOrderedProducts =
                 getInitialOrderProductsList(createOrderDTO.getProductIds());
@@ -51,7 +53,7 @@ public class OrderService {
 
     OrderDTO updateOrder(long id, UpdateOrderDTO updateOrderDTO) {
         Order order =
-                orderRepository.findById(id).orElseThrow(RuntimeException::new);
+                orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException(id));
 
         updateOrderStatus(order, updateOrderDTO);
         updateOrderProducts(order, updateOrderDTO);
@@ -69,7 +71,7 @@ public class OrderService {
         List<Product> products = new ArrayList<>();
         productIds.forEach(id -> {
             Product product =
-                    productRepository.findById(id).orElseThrow(RuntimeException::new);
+                    productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
             products.add(product);
         });
 
@@ -87,7 +89,7 @@ public class OrderService {
 
         if (updateOrderDTO.getAddProduct() != null) {
             Product product =
-                    productRepository.findById(updateOrderDTO.getAddProduct()).orElseThrow(RuntimeException::new);
+                    productRepository.findById(updateOrderDTO.getAddProduct()).orElseThrow(() -> new ProductNotFoundException(updateOrderDTO.getAddProduct()));
             productsOrdered.add(product);
         }
 
