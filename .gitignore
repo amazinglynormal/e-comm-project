@@ -32,6 +32,10 @@ build/
 ### VS Code ###
 .vscode/
 
+config/
+!/config/*.example
+
+
 ### Frontend ###
 **/node_modules
 **/node
