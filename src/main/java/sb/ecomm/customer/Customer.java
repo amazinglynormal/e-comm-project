@@ -33,7 +33,7 @@ public class Customer {
     private String verificationHash;
 
     @Column
-    private String resetToken;
+    private String passwordResetToken;
 
     @OneToMany(mappedBy = "customer")
     private Set<Order> orders;
@@ -42,7 +42,7 @@ public class Customer {
     }
 
     public Customer(String firstName, String email, String password, String refreshToken,
-                    boolean active, String verificationHash, String resetToken,
+                    boolean active, String verificationHash, String passwordResetToken,
                     Set<Order> orders) {
         this.firstName = firstName;
         this.email = email;
@@ -50,7 +50,7 @@ public class Customer {
         this.refreshToken = refreshToken;
         this.active = active;
         this.verificationHash = verificationHash;
-        this.resetToken = resetToken;
+        this.passwordResetToken = passwordResetToken;
         this.orders = orders;
     }
 
@@ -111,12 +111,12 @@ public class Customer {
         this.verificationHash = verificationHash;
     }
 
-    public String getResetToken() {
-        return resetToken;
+    public String getPasswordResetToken() {
+        return passwordResetToken;
     }
 
-    public void setResetToken(String resetToken) {
-        this.resetToken = resetToken;
+    public void setPasswordResetToken(String passwordResetToken) {
+        this.passwordResetToken = passwordResetToken;
     }
 
     public Set<Order> getOrders() {
