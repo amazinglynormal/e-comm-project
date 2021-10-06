@@ -2,6 +2,7 @@ package sb.ecomm.customer;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import sb.ecomm.customer.dto.CreateCustomerDTO;
 import sb.ecomm.customer.dto.CustomerDTO;
@@ -11,12 +12,14 @@ import sb.ecomm.customer.dto.UpdateCustomerDTO;
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
+    private final PasswordEncoder passwordEncoder;
     private ModelMapper mapper;
 
     @Autowired
     public CustomerService(CustomerRepository customerRepository,
-                           ModelMapper mapper) {
+                           PasswordEncoder passwordEncoder, ModelMapper mapper) {
         this.customerRepository = customerRepository;
+        this.passwordEncoder = passwordEncoder;
         this.mapper = mapper;
     }
 
@@ -29,6 +32,7 @@ public class CustomerService {
 
     CustomerDTO createNewCustomerAccount(CreateCustomerDTO createCustomerDTO) {
         Customer customer = mapper.map(createCustomerDTO, Customer.class);
+        customer.setPassword(passwordEncoder.encode(customer.getPassword()));
         Customer newCustomer = customerRepository.save(customer);
         return mapper.map(newCustomer, CustomerDTO.class);
     }
@@ -59,7 +63,7 @@ public class CustomerService {
     private void updateCustomerPassword(Customer customer,
                                  UpdateCustomerDTO updateCustomerDTO) {
         if (updateCustomerDTO.getPassword() != null) {
-            customer.setPassword(updateCustomerDTO.getPassword());
+            customer.setPassword(passwordEncoder.encode(updateCustomerDTO.getPassword()));
         }
     }
 }
