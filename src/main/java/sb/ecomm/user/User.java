@@ -1,14 +1,14 @@
-package sb.ecomm.customer;
+package sb.ecomm.user;
 
 import sb.ecomm.order.Order;
 
 import javax.persistence.*;
 import java.util.Set;
 
-@Entity(name = "Customer")
-@Table(name = "customer", uniqueConstraints = {@UniqueConstraint(name =
-        "customer_email_unique", columnNames = "email")})
-public class Customer {
+@Entity(name = "User")
+@Table(name = "user", uniqueConstraints = {@UniqueConstraint(name =
+        "user_email_unique", columnNames = "email")})
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -38,12 +38,12 @@ public class Customer {
     @OneToMany(mappedBy = "customer")
     private Set<Order> orders;
 
-    public Customer() {
+    public User() {
     }
 
-    public Customer(String firstName, String email, String password, String refreshToken,
-                    boolean active, String verificationHash, String passwordResetToken,
-                    Set<Order> orders) {
+    public User(String firstName, String email, String password, String refreshToken,
+                boolean active, String verificationHash, String passwordResetToken,
+                Set<Order> orders) {
         this.firstName = firstName;
         this.email = email;
         this.password = password;

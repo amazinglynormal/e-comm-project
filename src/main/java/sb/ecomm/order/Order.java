@@ -1,13 +1,13 @@
 package sb.ecomm.order;
 
-import sb.ecomm.customer.Customer;
+import sb.ecomm.user.User;
 import sb.ecomm.product.Product;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity(name = "Order")
-@Table(name = "customer_order")
+@Table(name = "user_order")
 public class Order {
 
     @Id
@@ -18,9 +18,9 @@ public class Order {
     private OrderStatus status;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false, referencedColumnName
-            = "id", foreignKey = @ForeignKey(name = "customer_order_fk"))
-    private Customer customer;
+    @JoinColumn(name = "user_id", nullable = false, referencedColumnName
+            = "id", foreignKey = @ForeignKey(name = "user_order_fk"))
+    private User user;
 
     @OneToMany
     @JoinColumn(name = "product_id", referencedColumnName = "id", foreignKey
@@ -30,9 +30,9 @@ public class Order {
     public Order() {
     }
 
-    public Order(OrderStatus status, Customer customer) {
+    public Order(OrderStatus status, User user) {
         this.status = status;
-        this.customer = customer;
+        this.user = user;
     }
 
     public Long getId() {
@@ -51,12 +51,12 @@ public class Order {
         this.status = status;
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public User getUser() {
+        return user;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public List<Product> getProducts() {

@@ -1,12 +1,13 @@
-package sb.ecomm.customer.dto;
+package sb.ecomm.user.dto;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class UpdateCustomerDTO {
+public class CreateUserDTO {
 
     private String email;
     private String password;
+
 }

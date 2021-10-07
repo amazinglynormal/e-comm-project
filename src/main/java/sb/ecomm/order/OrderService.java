@@ -3,9 +3,9 @@ package sb.ecomm.order;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sb.ecomm.customer.Customer;
-import sb.ecomm.customer.CustomerNotFoundException;
-import sb.ecomm.customer.CustomerRepository;
+import sb.ecomm.user.User;
+import sb.ecomm.user.UserNotFoundException;
+import sb.ecomm.user.UserRepository;
 import sb.ecomm.order.dto.CreateOrderDTO;
 import sb.ecomm.order.dto.OrderDTO;
 import sb.ecomm.order.dto.UpdateOrderDTO;
@@ -21,14 +21,16 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
-    private final CustomerRepository customerRepository;
+    private final UserRepository userRepository;
     private ModelMapper mapper;
 
     @Autowired
-    public OrderService(OrderRepository orderRepository, ProductRepository productRepository, CustomerRepository customerRepository, ModelMapper mapper) {
+    public OrderService(OrderRepository orderRepository,
+                        ProductRepository productRepository,
+                        UserRepository userRepository, ModelMapper mapper) {
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
-        this.customerRepository = customerRepository;
+        this.userRepository = userRepository;
         this.mapper = mapper;
     }
 
@@ -41,9 +43,9 @@ public class OrderService {
 
     OrderDTO addNewOrder(CreateOrderDTO createOrderDTO) {
         Order newOrder = mapper.map(createOrderDTO, Order.class);
-        Customer customer =
-                customerRepository.findById(createOrderDTO.getCustomerId()).orElseThrow(() -> new CustomerNotFoundException(createOrderDTO.getCustomerId()));
-        newOrder.setCustomer(customer);
+        User user =
+                userRepository.findById(createOrderDTO.getUserId()).orElseThrow(() -> new UserNotFoundException(createOrderDTO.getUserId()));
+        newOrder.setUser(user);
         List<Product> initialOrderedProducts =
                 getInitialOrderProductsList(createOrderDTO.getProductIds());
         newOrder.setProducts(initialOrderedProducts);

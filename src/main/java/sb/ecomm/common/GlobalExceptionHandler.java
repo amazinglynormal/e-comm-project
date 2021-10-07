@@ -5,16 +5,16 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import sb.ecomm.category.CategoryNotFoundException;
-import sb.ecomm.customer.CustomerNotFoundException;
+import sb.ecomm.user.UserNotFoundException;
 import sb.ecomm.order.OrderNotFoundException;
 import sb.ecomm.product.ProductNotFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(CustomerNotFoundException.class)
+    @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    private String customerNotFoundHandler(CustomerNotFoundException ex) {
+    private String customerNotFoundHandler(UserNotFoundException ex) {
         return ex.getMessage();
     }
 

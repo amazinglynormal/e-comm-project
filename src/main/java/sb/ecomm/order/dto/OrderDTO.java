@@ -13,6 +13,6 @@ public class OrderDTO {
 
     private Long id;
     private OrderStatus status;
-    private Long customerId;
+    private Long userId;
     private List<Product> products;
 }

@@ -12,6 +12,6 @@ import java.util.List;
 public class CreateOrderDTO {
 
     private OrderStatus status;
-    private Long customerId;
+    private Long userId;
     private List<Long> productIds;
 }
