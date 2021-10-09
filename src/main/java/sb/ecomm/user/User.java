@@ -3,6 +3,7 @@ package sb.ecomm.user;
 import sb.ecomm.order.Order;
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity(name = "User")
@@ -15,7 +16,7 @@ public class User {
     private Long id;
 
     @Column(nullable = false)
-    private String firstName;
+    private String username;
 
     @Column(nullable = false)
     private String email;
@@ -23,11 +24,11 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     @Column
     private String refreshToken;
-
-    @Column(columnDefinition = "boolean DEFAULT false NOT NULL")
-    private boolean active;
 
     @Column
     private String verificationHash;
@@ -35,22 +36,34 @@ public class User {
     @Column
     private String passwordResetToken;
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "user")
     private Set<Order> orders;
+
+    @Column(columnDefinition = "boolean DEFAULT false NOT NULL")
+    private boolean isEnabled;
+
+    @Column(columnDefinition = "boolean DEFAULT true NOT NULL")
+    private boolean isAccountNonExpired;
+
+    @Column(columnDefinition = "boolean DEFAULT true NOT NULL")
+    private boolean isAccountNonLocked;
+
+    @Column(columnDefinition = "boolean DEFAULT true NOT NULL")
+    private boolean isCredentialsNonExpired;
 
     public User() {
     }
 
-    public User(String firstName, String email, String password, String refreshToken,
-                boolean active, String verificationHash, String passwordResetToken,
+    public User(String username,
+                String email,
+                String password,
+                Role role, String verificationHash,
                 Set<Order> orders) {
-        this.firstName = firstName;
+        this.username = username;
         this.email = email;
         this.password = password;
-        this.refreshToken = refreshToken;
-        this.active = active;
+        this.role = role;
         this.verificationHash = verificationHash;
-        this.passwordResetToken = passwordResetToken;
         this.orders = orders;
     }
 
@@ -63,12 +76,12 @@ public class User {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getEmail() {
@@ -87,20 +100,20 @@ public class User {
         this.password = password;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
     public String getRefreshToken() {
         return refreshToken;
     }
 
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
     }
 
     public String getVerificationHash() {
@@ -125,5 +138,50 @@ public class User {
 
     public void setOrders(Set<Order> orders) {
         this.orders = orders;
+    }
+
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
+    }
+
+    public boolean isAccountNonExpired() {
+        return isAccountNonExpired;
+    }
+
+    public void setAccountNonExpired(boolean accountNonExpired) {
+        isAccountNonExpired = accountNonExpired;
+    }
+
+    public boolean isAccountNonLocked() {
+        return isAccountNonLocked;
+    }
+
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        isAccountNonLocked = accountNonLocked;
+    }
+
+    public boolean isCredentialsNonExpired() {
+        return isCredentialsNonExpired;
+    }
+
+    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
+        isCredentialsNonExpired = credentialsNonExpired;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id.equals(user.id) && email.equals(user.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email);
     }
 }
