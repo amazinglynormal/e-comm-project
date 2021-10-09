@@ -1,13 +1,9 @@
-package sb.ecomm.common;
+package sb.ecomm.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import sb.ecomm.category.CategoryNotFoundException;
-import sb.ecomm.user.UserNotFoundException;
-import sb.ecomm.order.OrderNotFoundException;
-import sb.ecomm.product.ProductNotFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -36,5 +32,10 @@ public class GlobalExceptionHandler {
         return ex.getMessage();
     }
 
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    private String userAlreadyExistsHandler(UserAlreadyExistsException ex) {
+        return ex.getMessage();
+    }
 
 }

@@ -1,4 +1,4 @@
-package sb.ecomm.order;
+package sb.ecomm.exceptions;
 
 public class OrderNotFoundException extends RuntimeException {
     public OrderNotFoundException(Long id) {

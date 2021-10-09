@@ -1,4 +1,4 @@
-package sb.ecomm.product;
+package sb.ecomm.exceptions;
 
 public class ProductNotFoundException extends RuntimeException {
     public ProductNotFoundException(Long id) {
