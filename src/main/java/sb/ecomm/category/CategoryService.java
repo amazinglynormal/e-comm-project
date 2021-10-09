@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import sb.ecomm.category.dto.CategoryDTO;
 import sb.ecomm.category.dto.CreateCategoryDTO;
 import sb.ecomm.category.dto.UpdateCategoryDTO;
+import sb.ecomm.exceptions.CategoryNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -3,14 +3,15 @@ package sb.ecomm.order;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sb.ecomm.exceptions.OrderNotFoundException;
 import sb.ecomm.user.User;
-import sb.ecomm.user.UserNotFoundException;
+import sb.ecomm.exceptions.UserNotFoundException;
 import sb.ecomm.user.UserRepository;
 import sb.ecomm.order.dto.CreateOrderDTO;
 import sb.ecomm.order.dto.OrderDTO;
 import sb.ecomm.order.dto.UpdateOrderDTO;
 import sb.ecomm.product.Product;
-import sb.ecomm.product.ProductNotFoundException;
+import sb.ecomm.exceptions.ProductNotFoundException;
 import sb.ecomm.product.ProductRepository;
 
 import java.util.ArrayList;
