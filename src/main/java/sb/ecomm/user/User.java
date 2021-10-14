@@ -1,11 +1,13 @@
 package sb.ecomm.user;
 
+import lombok.ToString;
 import sb.ecomm.order.Order;
 
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
 
+@ToString
 @Entity(name = "User")
 @Table(name = "\"user\"", uniqueConstraints = {@UniqueConstraint(name =
         "user_email_unique", columnNames = "email")})
@@ -39,17 +41,17 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<Order> orders;
 
-    @Column(columnDefinition = "boolean DEFAULT false NOT NULL")
-    private boolean isEnabled;
+    @Column
+    private boolean isEnabled = true;
 
-    @Column(columnDefinition = "boolean DEFAULT true NOT NULL")
-    private boolean isAccountNonExpired;
+    @Column
+    private boolean isAccountNonExpired = true;
 
-    @Column(columnDefinition = "boolean DEFAULT true NOT NULL")
-    private boolean isAccountNonLocked;
+    @Column
+    private boolean isAccountNonLocked = true;
 
-    @Column(columnDefinition = "boolean DEFAULT true NOT NULL")
-    private boolean isCredentialsNonExpired;
+    @Column
+    private boolean isCredentialsNonExpired = true;
 
     public User() {
     }
