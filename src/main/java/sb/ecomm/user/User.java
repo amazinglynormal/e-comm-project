@@ -1,21 +1,20 @@
 package sb.ecomm.user;
 
-import lombok.ToString;
 import sb.ecomm.order.Order;
 
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
-@ToString
 @Entity(name = "User")
 @Table(name = "\"user\"", uniqueConstraints = {@UniqueConstraint(name =
         "user_email_unique", columnNames = "email")})
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue
+    private UUID id;
 
     @Column(nullable = false)
     private String username;
@@ -69,12 +68,11 @@ public class User {
         this.orders = orders;
     }
 
-
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

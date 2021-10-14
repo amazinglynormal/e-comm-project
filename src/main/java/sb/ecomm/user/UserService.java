@@ -9,6 +9,8 @@ import sb.ecomm.user.dto.CreateUserDTO;
 import sb.ecomm.user.dto.UserDTO;
 import sb.ecomm.user.dto.UpdateUserDTO;
 
+import java.util.UUID;
+
 @Service
 public class UserService {
 
@@ -24,7 +26,7 @@ public class UserService {
         this.mapper = mapper;
     }
 
-    UserDTO findUserById(long id) {
+    UserDTO findUserById(UUID id) {
         User user =
                 userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
 
@@ -39,7 +41,7 @@ public class UserService {
         return mapper.map(newUser, UserDTO.class);
     }
 
-    UserDTO updateUserAccount(long id,
+    UserDTO updateUserAccount(UUID id,
                                   UpdateUserDTO updateUserDTO) {
         User user =
                 userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
@@ -51,7 +53,7 @@ public class UserService {
         return mapper.map(savedUser, UserDTO.class);
     }
 
-    void deleteUserAccount(long id) {
+    void deleteUserAccount(UUID id) {
         userRepository.deleteById(id);
     }
 

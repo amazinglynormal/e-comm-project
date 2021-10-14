@@ -23,7 +23,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
-    private ModelMapper mapper;
+    private final ModelMapper mapper;
 
     @Autowired
     public OrderService(OrderRepository orderRepository,

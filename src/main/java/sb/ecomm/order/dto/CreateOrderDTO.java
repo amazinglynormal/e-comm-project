@@ -5,6 +5,7 @@ import lombok.Setter;
 import sb.ecomm.order.OrderStatus;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @Getter
@@ -12,6 +13,6 @@ import java.util.List;
 public class CreateOrderDTO {
 
     private OrderStatus status;
-    private Long userId;
+    private UUID userId;
     private List<Long> productIds;
 }

@@ -6,6 +6,8 @@ import sb.ecomm.user.dto.CreateUserDTO;
 import sb.ecomm.user.dto.UserDTO;
 import sb.ecomm.user.dto.UpdateUserDTO;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserController {
@@ -18,7 +20,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    UserDTO findUserById(@PathVariable long id) {
+    UserDTO findUserById(@PathVariable UUID id) {
         return userService.findUserById(id);
     }
 
@@ -28,13 +30,13 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    UserDTO updateUserAccount(@PathVariable long id,
+    UserDTO updateUserAccount(@PathVariable UUID id,
                                   @RequestBody UpdateUserDTO updateUserDTO) {
         return userService.updateUserAccount(id, updateUserDTO);
     }
 
     @DeleteMapping("/{id}")
-    void deleteUserAccount(@PathVariable long id) {
+    void deleteUserAccount(@PathVariable UUID id) {
         userService.deleteUserAccount(id);
     }
 }
