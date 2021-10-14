@@ -34,6 +34,7 @@ public class UserService {
     UserDTO createNewUserAccount(CreateUserDTO createUserDTO) {
         User user = mapper.map(createUserDTO, User.class);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole(Role.CUSTOMER);
         User newUser = userRepository.save(user);
         return mapper.map(newUser, UserDTO.class);
     }
