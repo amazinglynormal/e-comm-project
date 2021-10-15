@@ -57,7 +57,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                         .claim("email", user.getUsername())
                         .claim("authorities", authorities)
                         .claim("isEnabled", user.isEnabled())
-                        .setSubject(Long.toString(user.getId())).signWith(key,
+                        .setSubject(user.getId().toString()).signWith(key,
                 SignatureAlgorithm.HS512).setExpiration(exp).compact();
 
         response.addHeader("Authorization", "Bearer " + token);
