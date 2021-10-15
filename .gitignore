@@ -34,8 +34,7 @@ build/
 
 config/
 !/config/*.example
-**/src/main/java/sb/ecomm/constants/TempSecurityConstants
-
+src/main/java/sb/ecomm/constants/TempSecurityConstants.java
 
 ### Frontend ###
 **/node_modules
