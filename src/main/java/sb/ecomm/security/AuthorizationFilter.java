@@ -2,7 +2,6 @@ package sb.ecomm.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -38,15 +37,13 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
     }
 
     private UsernamePasswordAuthenticationToken authenticate(HttpServletRequest request) {
-        String token = request.getHeader("Authorization").substring(7);
+        String token = JwtUtils.getJwtTokenFromRequestHeader(request);
 
         if (!token.isEmpty()) {
-            Jws<Claims> user = Jwts.parserBuilder().setSigningKey(("z%C*F" +
-                    "-JaNdRgUkXp2s5u8x/A?D(G+KbPeShVmYq3t6w9y$B&E)" +
-                    "H@McQfTjWnZr4u").getBytes()).build().parseClaimsJws(token);
+            Jws<Claims> claims = JwtUtils.parseJwtTokenClaims(token);
 
-            if (user != null) {
-                return new UsernamePasswordAuthenticationToken(user, null,
+            if (claims != null) {
+                return new UsernamePasswordAuthenticationToken(claims, null,
                         new ArrayList<>());
             } else {
                 return null;
