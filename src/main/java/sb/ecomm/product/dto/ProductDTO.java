@@ -15,11 +15,7 @@ public class ProductDTO {
 
     private String features;
 
-    private double priceCAD;
-
     private double priceUSD;
-
-    private double priceAUD;
 
     private double priceEUR;
 
