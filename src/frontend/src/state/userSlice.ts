@@ -1,13 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
-import User from "../interfaces/user.interface";
+import Order from "../interfaces/order.interface";
 import { RootState } from "./store";
 
-const initialState: User = {
-  id: "",
-  username: "",
-  email: "",
-  role: "",
+interface UserState {
+  id: string | undefined;
+  username: string | undefined;
+  email: string | undefined;
+  role: "GUEST" | "CUSTOMER";
+  orders: Order[];
+  token: string | undefined;
+}
+
+const initialState: UserState = {
+  id: undefined,
+  username: undefined,
+  email: undefined,
+  role: "GUEST",
   orders: [],
+  token: undefined,
 };
 
 export const userSlice = createSlice({
