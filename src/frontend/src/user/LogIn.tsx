@@ -1,6 +1,54 @@
+import axios from "axios";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { Link } from "react-router-dom";
 
 const LogIn = () => {
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const onFormChange = (event: ChangeEvent<HTMLInputElement>) => {
+    switch (event.target.id) {
+      case "email":
+        setFormData((data) => {
+          return {
+            ...data,
+            email: event.target.value,
+          };
+        });
+        break;
+      case "password":
+        setFormData((data) => {
+          return {
+            ...data,
+            password: event.target.value,
+          };
+        });
+        break;
+      default:
+        return;
+    }
+  };
+
+  const sendLoginForm = async (email: string, password: string) => {
+    const response = await axios.post("/login", {
+      email,
+      password,
+    });
+    return response;
+  };
+
+  const onFormSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const { email, password } = formData;
+    if (email.length > 0 && password.length > 8) {
+      sendLoginForm(email, password).then((res) =>
+        console.log(res.status + " " + res.headers)
+      );
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -16,7 +64,7 @@ const LogIn = () => {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <form className="space-y-6" action="#" method="POST">
+          <form className="space-y-6" onSubmit={onFormSubmit}>
             <div>
               <label
                 htmlFor="email"
@@ -29,6 +77,8 @@ const LogIn = () => {
                   id="email"
                   name="email"
                   type="email"
+                  value={formData.email}
+                  onChange={onFormChange}
                   autoComplete="email"
                   required
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
@@ -48,6 +98,8 @@ const LogIn = () => {
                   id="password"
                   name="password"
                   type="password"
+                  value={formData.password}
+                  onChange={onFormChange}
                   autoComplete="current-password"
                   required
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
