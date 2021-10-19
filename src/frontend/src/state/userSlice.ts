@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import Order from "../interfaces/order.interface";
+import userLogin from "./async-thunks/userLogin";
 import { RootState } from "./store";
 
 interface UserState {
@@ -9,6 +10,8 @@ interface UserState {
   role: "GUEST" | "CUSTOMER";
   orders: Order[];
   token: string | undefined;
+  error: string | null;
+  status: "idle" | "pending" | "succeeded" | "failed";
 }
 
 const initialState: UserState = {
@@ -18,12 +21,33 @@ const initialState: UserState = {
   role: "GUEST",
   orders: [],
   token: undefined,
+  status: "idle",
+  error: null,
 };
 
 export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(userLogin.rejected, (state, action) => {
+      state.status = "failed";
+      if (action.error.message) {
+        state.error = action.error.message;
+      }
+    });
+
+    builder.addCase(userLogin.fulfilled, (state, action) => {
+      state.id = action.payload.id;
+      state.username = action.payload.username;
+      state.email = action.payload.email;
+      state.role = action.payload.role;
+      state.orders = action.payload.orders;
+      state.token = action.payload.token;
+      state.error = null;
+      state.status = "succeeded";
+    });
+  },
 });
 
 export const selectUser = (state: RootState) => state.user;

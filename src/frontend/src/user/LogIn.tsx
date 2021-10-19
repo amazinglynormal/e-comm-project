@@ -1,12 +1,16 @@
-import axios from "axios";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { Link } from "react-router-dom";
+import { useAppDispatch } from "../hooks/redux-hooks";
+import userLogin from "../state/async-thunks/userLogin";
+import { useHistory } from "react-router";
+import { unwrapResult } from "@reduxjs/toolkit";
+
+const defaultFormData = { email: "", password: "" };
 
 const LogIn = () => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const [formData, setFormData] = useState(defaultFormData);
+  const dispatch = useAppDispatch();
+  const history = useHistory();
 
   const onFormChange = (event: ChangeEvent<HTMLInputElement>) => {
     switch (event.target.id) {
@@ -31,21 +35,18 @@ const LogIn = () => {
     }
   };
 
-  const sendLoginForm = async (email: string, password: string) => {
-    const response = await axios.post("/login", {
-      email,
-      password,
-    });
-    return response;
-  };
-
-  const onFormSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const onFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const { email, password } = formData;
     if (email.length > 0 && password.length > 8) {
-      sendLoginForm(email, password).then((res) =>
-        console.log(res.status + " " + res.headers)
-      );
+      try {
+        const actionResult = await dispatch(userLogin({ email, password }));
+        unwrapResult(actionResult);
+        setFormData(defaultFormData);
+        history.push("/");
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
