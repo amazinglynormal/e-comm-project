@@ -1,14 +1,19 @@
-import axios from "axios";
+import { unwrapResult } from "@reduxjs/toolkit";
 import { ChangeEvent, FormEvent, useState } from "react";
-import { Link } from "react-router-dom";
-import User from "../interfaces/user.interface";
+import { Link, useHistory } from "react-router-dom";
+import { useAppDispatch } from "../hooks/redux-hooks";
+import userSignUp from "../state/async-thunks/userSignUp";
+
+const defaultFormData = {
+  name: "",
+  email: "",
+  password: "",
+};
 
 const SignUp = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
+  const [formData, setFormData] = useState(defaultFormData);
+  const dispatch = useAppDispatch();
+  const history = useHistory();
 
   const onFormChange = (event: ChangeEvent<HTMLInputElement>) => {
     switch (event.target.id) {
@@ -41,24 +46,21 @@ const SignUp = () => {
     }
   };
 
-  const sendSignUpForm = async (
-    name: string,
-    email: string,
-    password: string
-  ) => {
-    const response = await axios.post<User>("/api/v1/users", {
-      username: name,
-      email,
-      password,
-    });
-    return response.data;
-  };
-
-  const onFormSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const onFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const { name, email, password } = formData;
     if (name.length > 0 && email.length > 0 && password.length > 8) {
-      sendSignUpForm(name, email, password).then((res) => console.log(res));
+      try {
+        console.log(password);
+        const actionResult = await dispatch(
+          userSignUp({ username: name, email, password })
+        );
+        unwrapResult(actionResult);
+        setFormData(defaultFormData);
+        history.push("");
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
