@@ -1,3 +1,3 @@
-export const classNames = (...classes: string[]) => {
+export default function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
-};
+}
