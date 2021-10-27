@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Switch } from "@headlessui/react";
 
-import { classNames } from "../utils/classNames";
+import classNames from "../utils/classNames";
 import { Link } from "react-router-dom";
 
 const tabs = [

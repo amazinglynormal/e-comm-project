@@ -2,7 +2,7 @@ import { useState } from "react";
 import { RadioGroup } from "@headlessui/react";
 import { CheckCircleIcon, TrashIcon } from "@heroicons/react/solid";
 
-import { classNames } from "../utils/classNames";
+import classNames from "../utils/classNames";
 import { useHistory } from "react-router";
 
 const products = [

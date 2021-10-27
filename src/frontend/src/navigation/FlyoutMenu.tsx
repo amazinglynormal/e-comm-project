@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import { Popover, Transition } from "@headlessui/react";
 
-import { classNames } from "../utils/classNames";
+import classNames from "../utils/classNames";
 
 interface Category {
   name: string;

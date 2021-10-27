@@ -3,7 +3,7 @@ import { Transition, Dialog, Disclosure } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
 import { ChevronDownIcon } from "@heroicons/react/solid";
 
-import { classNames } from "../utils/classNames";
+import classNames from "../utils/classNames";
 
 const filters = [
   {

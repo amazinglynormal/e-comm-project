@@ -5,7 +5,7 @@ import { XIcon } from "@heroicons/react/outline";
 
 import { CurrencySelector } from "./CurrencySelector";
 
-import { classNames } from "../utils/classNames";
+import classNames from "../utils/classNames";
 
 const navigation = {
   categories: [
