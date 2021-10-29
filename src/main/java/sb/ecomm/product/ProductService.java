@@ -2,6 +2,8 @@ package sb.ecomm.product;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import sb.ecomm.category.Category;
 import sb.ecomm.exceptions.CategoryNotFoundException;
@@ -30,6 +32,20 @@ public class ProductService {
 
     Iterable<ProductDTO> findAllProducts() {
         Iterable<Product> products = productRepository.findAll();
+        List<ProductDTO> productDTOs = new ArrayList<>();
+        products.forEach(product -> {
+            productDTOs.add(mapper.map(product, ProductDTO.class));
+        });
+
+        return productDTOs;
+    }
+
+    Iterable<ProductDTO> findProductsInCategory(Long categoryId, int page) {
+        Category category =
+                categoryRepository.findById(categoryId).orElseThrow(() -> new CategoryNotFoundException(categoryId));
+        Pageable pageable = PageRequest.of(page, 15);
+        Iterable<Product> products =
+                productRepository.findProductByCategory(category, pageable);
         List<ProductDTO> productDTOs = new ArrayList<>();
         products.forEach(product -> {
             productDTOs.add(mapper.map(product, ProductDTO.class));

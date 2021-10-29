@@ -6,6 +6,7 @@ import sb.ecomm.product.dto.CreateProductDTO;
 import sb.ecomm.product.dto.ProductDTO;
 import sb.ecomm.product.dto.UpdateProductDTO;
 
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -20,9 +21,16 @@ public class ProductController {
     }
 
     @GetMapping
-    public Iterable<ProductDTO> getAllProducts(@RequestParam("name") Optional<String> name) {
+    public Iterable<ProductDTO> getAllProducts(
+            @RequestParam(name = "categoryId") Optional<Long> categoryId,
+            @RequestParam(name = "page") Optional<Integer> page,
+            @RequestParam(name = "name") Optional<String> name
+    ) {
         if (name.isPresent()) {
             return productService.findProductByName(name.get());
+        } else if (categoryId.isPresent() && page.isPresent()) {
+            return productService.findProductsInCategory(categoryId.get(),
+                    page.get());
         }
 
         return productService.findAllProducts();
