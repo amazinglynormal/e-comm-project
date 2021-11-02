@@ -252,7 +252,7 @@ export default function ProductDetails() {
                           as="div"
                           className="pb-6 prose prose-sm"
                         >
-                          <ul role="list">
+                          <ul>
                             {detail.items.map((item) => (
                               <li key={item}>{item}</li>
                             ))}
