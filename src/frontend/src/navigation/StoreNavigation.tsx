@@ -4,7 +4,7 @@ import { MobileMenu } from "./MobileMenu";
 import { DesktopNavigation } from "./DesktopNavigation";
 import { TopNavigation } from "./TopNavigation";
 
-export const StoreNavigation = () => {
+const StoreNavigation = () => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -19,3 +19,5 @@ export const StoreNavigation = () => {
     </div>
   );
 };
+
+export default StoreNavigation;

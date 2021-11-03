@@ -1,12 +1,11 @@
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
-import { StoreNavigation } from "./navigation/StoreNavigation";
-import { OrderSummary } from "./order/OrderSummary";
-import { Footer } from "./components/Footer";
-
+import StoreNavigation from "./navigation/StoreNavigation";
 import ProductDetails from "./product/ProductDetails";
+import OrderSummary from "./order/OrderSummary";
 import OrderHistory from "./order/OrderHistory";
 import Products from "./product/Products";
+import Footer from "./components/Footer";
 import Checkout from "./order/Checkout";
 import Profile from "./user/Profile";
 import SignUp from "./user/SignUp";

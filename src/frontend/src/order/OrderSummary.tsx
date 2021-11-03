@@ -13,7 +13,7 @@ const products = [
   },
 ];
 
-export const OrderSummary = () => {
+const OrderSummary = () => {
   return (
     <div className="bg-white">
       <div className="max-w-3xl mx-auto px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
@@ -153,3 +153,5 @@ export const OrderSummary = () => {
     </div>
   );
 };
+
+export default OrderSummary;

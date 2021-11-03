@@ -23,7 +23,7 @@ const orders = [
   // More orders...
 ];
 
-export const OrderHistory = () => {
+const OrderHistory = () => {
   return (
     <div className="bg-white">
       <div className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:pb-24 lg:px-8">
@@ -144,3 +144,5 @@ export const OrderHistory = () => {
     </div>
   );
 };
+
+export default OrderHistory;
