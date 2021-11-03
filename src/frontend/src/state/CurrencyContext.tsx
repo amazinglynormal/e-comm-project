@@ -1,18 +1,13 @@
 import { createContext, useContext, useState } from "react";
+import Currency from "../enums/Currency.enum";
 
 interface ProviderProps {
   children: JSX.Element | JSX.Element[];
 }
 
-const CURRENCIES = {
-  Eur: "EUR",
-  Gbp: "GBP",
-  Usd: "USD",
-};
-
 const CurrencyContext = createContext({
-  currency: CURRENCIES.Eur,
-  changeCurrency: (currency: string) => {
+  currency: Currency.EUR,
+  changeCurrency: (currency: Currency) => {
     console.log(currency);
   },
 });
@@ -20,7 +15,7 @@ const CurrencyContext = createContext({
 const useCurrency = () => {
   const { currency, changeCurrency } = useContext(CurrencyContext);
 
-  const handleCurrency = (value: string) => {
+  const handleCurrency = (value: Currency) => {
     changeCurrency(value);
   };
 
@@ -28,7 +23,7 @@ const useCurrency = () => {
 };
 
 const CurrencyProvider = ({ children }: ProviderProps) => {
-  const [currency, setCurrency] = useState(CURRENCIES.Eur);
+  const [currency, setCurrency] = useState(Currency.EUR);
 
   return (
     <CurrencyContext.Provider value={{ currency, changeCurrency: setCurrency }}>
@@ -37,4 +32,4 @@ const CurrencyProvider = ({ children }: ProviderProps) => {
   );
 };
 
-export { CurrencyProvider, CURRENCIES, useCurrency };
+export { CurrencyProvider, useCurrency };
