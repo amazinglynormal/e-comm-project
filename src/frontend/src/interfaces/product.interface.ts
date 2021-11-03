@@ -4,9 +4,11 @@ interface Product {
   description: string;
   features: string;
   categoryId: number;
-  priceEUR: number;
-  priceGBP: number;
-  priceUSD: number;
+  imageSrc: string;
+  imageAlt: string;
+  EUR: number;
+  GBP: number;
+  USD: number;
 }
 
 export default Product;
