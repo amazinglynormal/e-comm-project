@@ -1,8 +1,7 @@
-interface Product {
+interface GenericProduct {
   id: number;
   name: string;
   description: string;
-  features: string;
   categoryId: number;
   imageSrc: string;
   imageAlt: string;
@@ -11,4 +10,4 @@ interface Product {
   USD: number;
 }
 
-export default Product;
+export default GenericProduct;

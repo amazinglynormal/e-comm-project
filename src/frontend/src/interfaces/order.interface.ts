@@ -1,4 +1,4 @@
-import Product from "./product.interface";
+import Product from "../types/Product.type";
 
 interface Order {
   id: number;

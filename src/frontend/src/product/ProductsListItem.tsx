@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useCurrency } from "../state/CurrencyContext";
-import Product from "../interfaces/product.interface";
+import Product from "../types/Product.type";
 
 interface Props {
   product: Product;
