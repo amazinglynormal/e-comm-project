@@ -3,8 +3,9 @@ import ProductsList from "./ProductsList";
 import { PlusSmIcon } from "@heroicons/react/solid";
 import { MobileFilter } from "./MobileFilter";
 import { DesktopFilter } from "./DesktopFilter";
+import Shoe from "../interfaces/shoe.interface";
 
-const products = [
+const products: Shoe[] = [
   {
     id: 1,
     name: "Earthen Bottle",
@@ -34,11 +35,11 @@ const products = [
     imageSrc:
       "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-02.jpg",
     imageAlt:
-      "Olive drab green insulated bottle with flared screw lid and flat top.",
+      "Olive drab green insulated bottle with flablack screw lid and flat top.",
     sizeUK: 9,
     sizeUS: 9,
     sizeEUR: 9,
-    color: "red",
+    color: "black",
     collectionId: 1,
   },
   {
@@ -56,7 +57,7 @@ const products = [
     sizeUK: 9,
     sizeUS: 9,
     sizeEUR: 9,
-    color: "red",
+    color: "black",
     collectionId: 1,
   },
   {
@@ -74,10 +75,48 @@ const products = [
     sizeUK: 9,
     sizeUS: 9,
     sizeEUR: 9,
-    color: "red",
+    color: "black",
     collectionId: 1,
   },
   // More products...
+];
+
+const filters = [
+  {
+    id: "color",
+    name: "Color",
+    options: [
+      { value: "white", label: "White" },
+      { value: "beige", label: "Beige" },
+      { value: "blue", label: "Blue" },
+      { value: "brown", label: "Brown" },
+      { value: "green", label: "Green" },
+      { value: "purple", label: "Purple" },
+    ],
+  },
+  {
+    id: "category",
+    name: "Category",
+    options: [
+      { value: "new-arrivals", label: "All New Arrivals" },
+      { value: "tees", label: "Tees" },
+      { value: "crewnecks", label: "Crewnecks" },
+      { value: "sweatshirts", label: "Sweatshirts" },
+      { value: "pants-shorts", label: "Pants & Shorts" },
+    ],
+  },
+  {
+    id: "sizes",
+    name: "Sizes",
+    options: [
+      { value: "xs", label: "XS" },
+      { value: "s", label: "S" },
+      { value: "m", label: "M" },
+      { value: "l", label: "L" },
+      { value: "xl", label: "XL" },
+      { value: "2xl", label: "2XL" },
+    ],
+  },
 ];
 
 const Products = () => {
@@ -88,6 +127,7 @@ const Products = () => {
         <MobileFilter
           mobileFiltersOpen={mobileFiltersOpen}
           setMobileFiltersOpen={setMobileFiltersOpen}
+          filters={filters}
         />
         <main className="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
           <div className="border-b border-gray-200 pb-10">
@@ -118,7 +158,7 @@ const Products = () => {
                 />
               </button>
 
-              <DesktopFilter />
+              <DesktopFilter filters={filters} />
             </aside>
 
             {/* Product grid */}
