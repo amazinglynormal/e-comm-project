@@ -38,7 +38,7 @@ const LogIn = () => {
   const onFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const { email, password } = formData;
-    if (email.length > 0 && password.length > 8) {
+    if (email.length > 0 && password.length >= 8) {
       try {
         const actionResult = await dispatch(userLogin({ email, password }));
         unwrapResult(actionResult);
