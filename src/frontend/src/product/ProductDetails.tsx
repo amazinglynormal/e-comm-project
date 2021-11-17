@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Disclosure, RadioGroup, Tab } from "@headlessui/react";
-import { StarIcon } from "@heroicons/react/solid";
-import { HeartIcon, MinusSmIcon, PlusSmIcon } from "@heroicons/react/outline";
+import { MinusSmIcon, PlusSmIcon } from "@heroicons/react/outline";
+import AddToCartButton from "../order/AddToCartButton";
+import classNames from "../utils/classNames";
 
 const product = {
+  id: 1,
   name: "Zip Tote Basket",
   price: "$140",
   rating: 4,
@@ -48,10 +50,6 @@ const product = {
     // More sections...
   ],
 };
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
-}
 
 export default function ProductDetails() {
   const [selectedColor, setSelectedColor] = useState(product.colors[0]);
@@ -118,28 +116,6 @@ export default function ProductDetails() {
               <p className="text-3xl text-gray-900">{product.price}</p>
             </div>
 
-            {/* Reviews */}
-            <div className="mt-3">
-              <h3 className="sr-only">Reviews</h3>
-              <div className="flex items-center">
-                <div className="flex items-center">
-                  {[0, 1, 2, 3, 4].map((rating) => (
-                    <StarIcon
-                      key={rating}
-                      className={classNames(
-                        product.rating > rating
-                          ? "text-indigo-500"
-                          : "text-gray-300",
-                        "h-5 w-5 flex-shrink-0"
-                      )}
-                      aria-hidden="true"
-                    />
-                  ))}
-                </div>
-                <p className="sr-only">{product.rating} out of 5 stars</p>
-              </div>
-            </div>
-
             <div className="mt-6">
               <h3 className="sr-only">Description</h3>
 
@@ -192,24 +168,8 @@ export default function ProductDetails() {
                 </RadioGroup>
               </div>
 
-              <div className="mt-10 flex sm:flex-col1">
-                <button
-                  type="submit"
-                  className="max-w-xs flex-1 bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500 sm:w-full"
-                >
-                  Add to bag
-                </button>
-
-                <button
-                  type="button"
-                  className="ml-4 py-3 px-3 rounded-md flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-500"
-                >
-                  <HeartIcon
-                    className="h-6 w-6 flex-shrink-0"
-                    aria-hidden="true"
-                  />
-                  <span className="sr-only">Add to favorites</span>
-                </button>
+              <div className="mt-10">
+                <AddToCartButton productId={product.id} />
               </div>
             </form>
 
