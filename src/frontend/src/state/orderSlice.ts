@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { RootState } from "./store";
 
 import createOrder from "./async-thunks/createOrder";
+import deleteOrder from "./async-thunks/deleteOrder";
 import Order from "../interfaces/order.interface";
 
 interface OrderState {
@@ -30,11 +31,25 @@ export const orderSlice = createSlice({
       state.activeOrder = { ...action.payload };
       state.status = "idle";
     });
+
     builder.addCase(createOrder.rejected, (state, action) => {
       state.status = "failed";
       if (action.error.message) {
         state.error = action.error.message;
       }
+    });
+
+    builder.addCase(deleteOrder.rejected, (state, action) => {
+      state.status = "failed";
+      if (action.error.message) {
+        state.error = action.error.message;
+      }
+    });
+
+    builder.addCase(deleteOrder.fulfilled, (state) => {
+      state.status = "succeeded";
+      state.activeOrder = initialState.activeOrder;
+      state.status = "idle";
     });
   },
 });
