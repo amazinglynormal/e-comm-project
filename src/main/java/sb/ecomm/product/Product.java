@@ -14,23 +14,38 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private String name;
 
-    @Column
+    @Column(nullable = false)
     private String description;
 
-    @Column
-    private String features;
+    @Column(nullable = false)
+    private double USD;
 
-    @Column
-    private double priceUSD;
+    @Column(nullable = false)
+    private double EUR;
 
-    @Column
-    private double priceEUR;
+    @Column(nullable = false)
+    private double GBP;
 
-    @Column
-    private double priceGBP;
+    @Column(nullable = false)
+    private String imageSrc;
+
+    @Column(nullable = false)
+    private String imageAlt;
+
+    @Enumerated(EnumType.STRING)
+    private Color color;
+
+    @Column(nullable = false)
+    private int sizeEUR;
+
+    @Column(nullable = false)
+    private int sizeUK;
+
+    @Column(nullable = false)
+    private int sizeUS;
 
     @JsonIgnoreProperties("products")
     @ManyToOne
@@ -41,14 +56,29 @@ public class Product {
     public Product() {
     }
 
-    public Product(String name, String description, String features,
-                   double priceUSD, double priceEUR, double priceGBP, Category category) {
+    public Product(String name,
+                   String description,
+                   double USD,
+                   double EUR,
+                   double GBP,
+                   String imageSrc,
+                   String imageAlt,
+                   Color color,
+                   int sizeEUR,
+                   int sizeUK,
+                   int sizeUS,
+                   Category category) {
         this.name = name;
         this.description = description;
-        this.features = features;
-        this.priceUSD = priceUSD;
-        this.priceEUR = priceEUR;
-        this.priceGBP = priceGBP;
+        this.USD = USD;
+        this.EUR = EUR;
+        this.GBP = GBP;
+        this.imageSrc = imageSrc;
+        this.imageAlt = imageAlt;
+        this.color = color;
+        this.sizeEUR = sizeEUR;
+        this.sizeUK = sizeUK;
+        this.sizeUS = sizeUS;
         this.category = category;
     }
 
@@ -76,37 +106,76 @@ public class Product {
         this.description = description;
     }
 
-    public String getFeatures() {
-        return features;
+    public double getUSD() {
+        return USD;
     }
 
-    public void setFeatures(String features) {
-        this.features = features;
+    public void setUSD(double USD) {
+        this.USD = USD;
     }
 
-    public double getPriceUSD() {
-        return priceUSD;
+    public double getEUR() {
+        return EUR;
     }
 
-    public void setPriceUSD(double priceUSD) {
-        this.priceUSD = priceUSD;
+    public void setEUR(double EUR) {
+        this.EUR = EUR;
     }
 
-
-    public double getPriceEUR() {
-        return priceEUR;
+    public double getGBP() {
+        return GBP;
     }
 
-    public void setPriceEUR(double priceEUR) {
-        this.priceEUR = priceEUR;
+    public void setGBP(double GBP) {
+        this.GBP = GBP;
     }
 
-    public double getPriceGBP() {
-        return priceGBP;
+    public String getImageSrc() {
+        return imageSrc;
     }
 
-    public void setPriceGBP(double priceGBP) {
-        this.priceGBP = priceGBP;
+    public void setImageSrc(String imageSrc) {
+        this.imageSrc = imageSrc;
+    }
+
+    public String getImageAlt() {
+        return imageAlt;
+    }
+
+    public void setImageAlt(String imageAlt) {
+        this.imageAlt = imageAlt;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public int getSizeEUR() {
+        return sizeEUR;
+    }
+
+    public void setSizeEUR(int sizeEUR) {
+        this.sizeEUR = sizeEUR;
+    }
+
+    public int getSizeUK() {
+        return sizeUK;
+    }
+
+    public void setSizeUK(int sizeUK) {
+        this.sizeUK = sizeUK;
+    }
+
+    public int getSizeUS() {
+        return sizeUS;
+    }
+
+    public void setSizeUS(int sizeUS) {
+        this.sizeUS = sizeUS;
     }
 
     public Category getCategory() {
