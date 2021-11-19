@@ -53,6 +53,9 @@ public class Product {
             = "id", foreignKey = @ForeignKey(name = "category_product_fk"))
     private Category category;
 
+    @Column(nullable = false)
+    private String collection;
+
     public Product() {
     }
 
@@ -67,7 +70,8 @@ public class Product {
                    int sizeEUR,
                    int sizeUK,
                    int sizeUS,
-                   Category category) {
+                   Category category,
+                   String collection) {
         this.name = name;
         this.description = description;
         this.USD = USD;
@@ -80,6 +84,7 @@ public class Product {
         this.sizeUK = sizeUK;
         this.sizeUS = sizeUS;
         this.category = category;
+        this.collection = collection;
     }
 
     public Long getId() {
@@ -184,5 +189,13 @@ public class Product {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public String getCollection() {
+        return collection;
+    }
+
+    public void setCollection(String collection) {
+        this.collection = collection;
     }
 }
