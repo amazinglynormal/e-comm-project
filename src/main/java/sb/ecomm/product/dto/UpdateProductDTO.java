@@ -30,5 +30,7 @@ public class UpdateProductDTO {
 
     private int sizeUS;
 
+    private String collection;
+
     private Long categoryId;
 }

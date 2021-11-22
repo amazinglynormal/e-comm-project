@@ -2,6 +2,7 @@ package sb.ecomm.product.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import sb.ecomm.product.Color;
 
 @Getter
 @Setter
@@ -13,13 +14,25 @@ public class ProductDTO {
 
     private String description;
 
-    private String features;
+    private double USD;
 
-    private double priceUSD;
+    private double EUR;
 
-    private double priceEUR;
+    private double GBP;
 
-    private double priceGBP;
+    private String imageAlt;
+
+    private String imageSrc;
+
+    private Color color;
+
+    private int sizeEUR;
+
+    private int sizeUK;
+
+    private int sizeUS;
+
+    private String collection;
 
     private Long categoryId;
 }
