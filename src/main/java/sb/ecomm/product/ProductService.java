@@ -72,7 +72,6 @@ public class ProductService {
     }
 
     ProductDTO addNewProduct(CreateProductDTO newProductDto) {
-        System.out.println(newProductDto.toString());
         Product newProduct = mapper.map(newProductDto, Product.class);
         Category category =
                 categoryRepository.findById(newProductDto.getCategoryId()).orElseThrow(() -> new CategoryNotFoundException(newProductDto.getCategoryId()));
