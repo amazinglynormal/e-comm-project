@@ -1,12 +1,31 @@
+import { ChangeEvent } from "react";
+import { useCurrency } from "../state/CurrencyContext";
+import Currency from "../enums/Currency.enum";
 import classNames from "../utils/classNames";
-
-const currencies = ["CAD", "USD", "AUD", "EUR", "GBP"];
 
 interface Props {
   version: "desktop" | "mobile";
 }
 
 export const CurrencySelector = ({ version }: Props) => {
+  const { onChange } = useCurrency();
+
+  const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    switch (event.target.value) {
+      case "EUR":
+        onChange(Currency.EUR);
+        break;
+      case "GBP":
+        onChange(Currency.GBP);
+        break;
+      case "USD":
+        onChange(Currency.USD);
+        break;
+      default:
+        return;
+    }
+  };
+
   return (
     <form>
       <div className={version === "mobile" ? "inline-block" : ""}>
@@ -23,9 +42,12 @@ export const CurrencySelector = ({ version }: Props) => {
                 : "bg-none text-gray-900 group-hover:text-gray-900",
               "bg-none border-transparent rounded-md py-0.5 pl-2 pr-5 flex items-center text-sm font-medium  focus:outline-none focus:ring-0 focus:border-gray-900"
             )}
+            onChange={handleChange}
           >
-            {currencies.map((currency) => (
-              <option key={currency}>{currency}</option>
+            {Object.values(Currency).map((currency) => (
+              <option key={currency} value={currency}>
+                {currency}
+              </option>
             ))}
           </select>
           <div className="absolute right-0 inset-y-0 flex items-center pointer-events-none">

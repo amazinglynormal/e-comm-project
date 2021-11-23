@@ -1,5 +1,6 @@
 import axios from "axios";
 import useSWR from "swr";
+import Product from "../types/Product.type";
 
 const productsFetcher = async (url: string) => {
   const res = await axios.get(url);
@@ -15,6 +16,6 @@ export default function useProductsSWR(categoryId: number, page: number) {
   return {
     isError: error,
     isLoading: !error && !data,
-    products: data,
+    products: data as Product[],
   };
 }

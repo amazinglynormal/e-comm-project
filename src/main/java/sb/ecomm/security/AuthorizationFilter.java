@@ -35,8 +35,15 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
 
         UsernamePasswordAuthenticationToken authentication;
 
-        if (isUriForUserEndpoint(requestUri)) {
-            String resourceId = getResourceIdFromUri(requestUri);
+        if (isUriForUserEndpoint(requestUri) || isUriForOrdersEndpoint(requestUri)) {
+
+            String resourceId;
+            if (isUriForUserEndpoint(requestUri)) {
+                resourceId = getResourceIdFromUri(requestUri);
+            } else {
+                resourceId = getUserIdFromOrdersEndpoint(requestUri);
+            }
+
             authentication =
                     authenticateWithUserIdMatchesResourceIdCheck(request,
                             resourceId);
@@ -47,6 +54,17 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         chain.doFilter(request, response);
 
+    }
+
+    private boolean isUriForOrdersEndpoint(String uri) {
+        Pattern pattern = Pattern.compile("api/v1/users/\\w*/orders",
+                Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(uri);
+        return matcher.find();
+    }
+
+    private String getUserIdFromOrdersEndpoint(String uri) {
+        return uri.split("users/")[1].split("/orders")[0];
     }
 
 

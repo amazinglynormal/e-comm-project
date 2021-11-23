@@ -1,4 +1,4 @@
-import Product from "../interfaces/product.interface";
+import Product from "../types/Product.type";
 import ProductsListItem from "./ProductsListItem";
 
 interface Props {

@@ -39,3 +39,4 @@ src/main/java/sb/ecomm/constants/TempSecurityConstants.java
 ### Frontend ###
 **/node_modules
 **/node
+**/src/dev-images/

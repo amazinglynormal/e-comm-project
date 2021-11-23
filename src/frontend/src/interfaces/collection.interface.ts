@@ -1,10 +1,10 @@
 import Product from "../types/Product.type";
 
-interface Category {
+interface Collection {
   id: number;
   name: string;
   description: string;
-  collections: Product[];
+  products: Product[];
 }
 
-export default Category;
+export default Collection;

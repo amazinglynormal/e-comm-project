@@ -1,8 +1,8 @@
-import Product from "./product.interface";
+import Product from "../types/Product.type";
 
 interface Order {
   id: number;
-  status: "INACTIVE" | "ACTIVE" | "DISPATCHED" | "DELIVERED";
+  orderStatus: "INACTIVE" | "ACTIVE" | "DISPATCHED" | "DELIVERED";
   userId: string;
   products: Product[];
 }

@@ -7,7 +7,7 @@ import sb.ecomm.order.dto.OrderDTO;
 import sb.ecomm.order.dto.UpdateOrderDTO;
 
 @RestController
-@RequestMapping("/api/v1/orders")
+@RequestMapping("/api/v1/users/*/orders")
 public class OrderController {
 
     private final OrderService orderService;

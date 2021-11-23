@@ -72,7 +72,6 @@ public class ProductService {
     }
 
     ProductDTO addNewProduct(CreateProductDTO newProductDto) {
-        System.out.println(newProductDto.toString());
         Product newProduct = mapper.map(newProductDto, Product.class);
         Category category =
                 categoryRepository.findById(newProductDto.getCategoryId()).orElseThrow(() -> new CategoryNotFoundException(newProductDto.getCategoryId()));
@@ -86,7 +85,6 @@ public class ProductService {
                 productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
         updateProductName(product,updatedProductDTO);
         updateProductDescription(product,updatedProductDTO);
-        updateProductFeatures(product,updatedProductDTO);
         updateProductPriceEUR(product,updatedProductDTO);
         updateProductPriceGBP(product,updatedProductDTO);
         updateProductPriceUSD(product,updatedProductDTO);
@@ -113,27 +111,21 @@ public class ProductService {
         }
     }
 
-    private void updateProductFeatures(Product product, UpdateProductDTO updateProductDTO) {
-        if (!product.getFeatures().equals(updateProductDTO.getFeatures())) {
-            product.setFeatures(updateProductDTO.getFeatures());
-        }
-    }
-
     private void updateProductPriceEUR(Product product, UpdateProductDTO updateProductDTO) {
-        if (product.getPriceEUR() != updateProductDTO.getPriceEUR()) {
-            product.setPriceEUR(updateProductDTO.getPriceEUR());
+        if (product.getEUR() != updateProductDTO.getEUR()) {
+            product.setEUR(updateProductDTO.getEUR());
         }
     }
 
     private void updateProductPriceGBP(Product product, UpdateProductDTO updateProductDTO) {
-        if (product.getPriceGBP() != updateProductDTO.getPriceGBP()) {
-            product.setPriceGBP(updateProductDTO.getPriceGBP());
+        if (product.getGBP() != updateProductDTO.getGBP()) {
+            product.setGBP(updateProductDTO.getGBP());
         }
     }
 
     private void updateProductPriceUSD(Product product, UpdateProductDTO updateProductDTO) {
-        if (product.getPriceUSD() != updateProductDTO.getPriceUSD()) {
-            product.setPriceUSD(updateProductDTO.getPriceUSD());
+        if (product.getUSD() != updateProductDTO.getUSD()) {
+            product.setUSD(updateProductDTO.getUSD());
         }
     }
 
