@@ -4,6 +4,7 @@ import { PlusSmIcon } from "@heroicons/react/solid";
 import { MobileFilter } from "./MobileFilter";
 import { DesktopFilter } from "./DesktopFilter";
 import Shoe from "../interfaces/shoe.interface";
+import CollectionHeader from "./CollectionHeader";
 
 const products: Shoe[] = [
   {
@@ -22,7 +23,7 @@ const products: Shoe[] = [
     sizeUS: 9,
     sizeEUR: 9,
     color: "red",
-    collectionId: 1,
+    collection: "trainers",
   },
   {
     id: 2,
@@ -40,7 +41,7 @@ const products: Shoe[] = [
     sizeUS: 9,
     sizeEUR: 9,
     color: "black",
-    collectionId: 1,
+    collection: "trainers",
   },
   {
     id: 3,
@@ -58,7 +59,7 @@ const products: Shoe[] = [
     sizeUS: 9,
     sizeEUR: 9,
     color: "black",
-    collectionId: 1,
+    collection: "trainers",
   },
   {
     id: 4,
@@ -76,7 +77,7 @@ const products: Shoe[] = [
     sizeUS: 9,
     sizeEUR: 9,
     color: "black",
-    collectionId: 1,
+    collection: "trainers",
   },
   // More products...
 ];
@@ -130,15 +131,10 @@ const Products = () => {
           filters={filters}
         />
         <main className="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
-          <div className="border-b border-gray-200 pb-10">
-            <h1 className="text-4xl font-extrabold tracking-tight text-gray-900">
-              New Arrivals
-            </h1>
-            <p className="mt-4 text-base text-gray-500">
-              Checkout out the latest release of Basic Tees, new and improved
-              with four openings!
-            </p>
-          </div>
+          <CollectionHeader
+            collectionName={"Men's Trainers"}
+            collectionDescription={"Men's Trainers description will go here"}
+          />
 
           <div className="pt-12 lg:grid lg:grid-cols-3 lg:gap-x-8 xl:grid-cols-4">
             <aside>
