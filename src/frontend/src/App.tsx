@@ -1,17 +1,19 @@
+import React, { Suspense } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import StoreNavigation from "./navigation/StoreNavigation";
-import ProductDetails from "./product/ProductDetails";
 import OrderSummary from "./order/OrderSummary";
 import OrderHistory from "./order/OrderHistory";
-import Products from "./product/Products";
 import Footer from "./components/Footer";
 import Checkout from "./order/Checkout";
-import Profile from "./user/Profile";
-import SignUp from "./user/SignUp";
-import LogIn from "./user/LogIn";
 import Cart from "./order/Cart";
-import Home from "./home/Home";
+
+const ProductDetails = React.lazy(() => import("./product/ProductDetails"));
+const Products = React.lazy(() => import("./product/Products"));
+const Profile = React.lazy(() => import("./user/Profile"));
+const SignUp = React.lazy(() => import("./user/SignUp"));
+const LogIn = React.lazy(() => import("./user/LogIn"));
+const Home = React.lazy(() => import("./home/Home"));
 
 import { CurrencyProvider } from "./state/CurrencyContext";
 
@@ -22,38 +24,40 @@ const App = () => {
     <Router>
       <CurrencyProvider>
         <StoreNavigation />
-        <Switch>
-          <Route path="/products/:id">
-            <ProductDetails />
-          </Route>
-          <Route path="/products">
-            <Products />
-          </Route>
-          <Route path="/cart">
-            <Cart />
-          </Route>
-          <Route path="/ordersummary">
-            <OrderSummary />
-          </Route>
-          <Route path="/orderhistory">
-            <OrderHistory />
-          </Route>
-          <Route path="/profile">
-            <Profile />
-          </Route>
-          <Route path="/checkout">
-            <Checkout />
-          </Route>
-          <Route path="/login">
-            <LogIn />
-          </Route>
-          <Route path="/signup">
-            <SignUp />
-          </Route>
-          <Route exact path="/">
-            <Home />
-          </Route>
-        </Switch>
+        <Suspense fallback={<div>loading...</div>}>
+          <Switch>
+            <Route path="/products/:id">
+              <ProductDetails />
+            </Route>
+            <Route path="/products">
+              <Products />
+            </Route>
+            <Route path="/cart">
+              <Cart />
+            </Route>
+            <Route path="/ordersummary">
+              <OrderSummary />
+            </Route>
+            <Route path="/orderhistory">
+              <OrderHistory />
+            </Route>
+            <Route path="/profile">
+              <Profile />
+            </Route>
+            <Route path="/checkout">
+              <Checkout />
+            </Route>
+            <Route path="/login">
+              <LogIn />
+            </Route>
+            <Route path="/signup">
+              <SignUp />
+            </Route>
+            <Route exact path="/">
+              <Home />
+            </Route>
+          </Switch>
+        </Suspense>
         <Footer />
       </CurrencyProvider>
     </Router>
