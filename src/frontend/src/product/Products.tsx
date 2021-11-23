@@ -3,84 +3,85 @@ import ProductsList from "./ProductsList";
 import { PlusSmIcon } from "@heroicons/react/solid";
 import { MobileFilter } from "./MobileFilter";
 import { DesktopFilter } from "./DesktopFilter";
-import Shoe from "../interfaces/shoe.interface";
+// import Shoe from "../interfaces/shoe.interface";
 import CollectionHeader from "./CollectionHeader";
+import useProductsSWR from "../hooks/useProductSWR";
 
-const products: Shoe[] = [
-  {
-    id: 1,
-    name: "Earthen Bottle",
-    description: "abcd",
-    categoryId: 1,
-    EUR: 48,
-    GBP: 48,
-    USD: 48,
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-01.jpg",
-    imageAlt:
-      "Tall slender porcelain bottle with natural clay textured body and cork stopper.",
-    sizeUK: 9,
-    sizeUS: 9,
-    sizeEUR: 9,
-    color: "red",
-    collection: "trainers",
-  },
-  {
-    id: 2,
-    name: "Nomad Tumbler",
-    description: "abcd",
-    categoryId: 1,
-    EUR: 35,
-    GBP: 35,
-    USD: 35,
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-02.jpg",
-    imageAlt:
-      "Olive drab green insulated bottle with flablack screw lid and flat top.",
-    sizeUK: 9,
-    sizeUS: 9,
-    sizeEUR: 9,
-    color: "black",
-    collection: "trainers",
-  },
-  {
-    id: 3,
-    name: "Focus Paper Refill",
-    description: "abcd",
-    categoryId: 1,
-    EUR: 89,
-    GBP: 89,
-    USD: 89,
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-03.jpg",
-    imageAlt:
-      "Person using a pen to cross a task off a productivity paper card.",
-    sizeUK: 9,
-    sizeUS: 9,
-    sizeEUR: 9,
-    color: "black",
-    collection: "trainers",
-  },
-  {
-    id: 4,
-    name: "Machined Mechanical Pencil",
-    description: "abcd",
-    categoryId: 1,
-    EUR: 35,
-    GBP: 35,
-    USD: 35,
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-04.jpg",
-    imageAlt:
-      "Hand holding black machined steel mechanical pencil with brass tip and top.",
-    sizeUK: 9,
-    sizeUS: 9,
-    sizeEUR: 9,
-    color: "black",
-    collection: "trainers",
-  },
-  // More products...
-];
+// const products: Shoe[] = [
+//   {
+//     id: 1,
+//     name: "Earthen Bottle",
+//     description: "abcd",
+//     categoryId: 1,
+//     EUR: 48,
+//     GBP: 48,
+//     USD: 48,
+//     imageSrc:
+//       "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-01.jpg",
+//     imageAlt:
+//       "Tall slender porcelain bottle with natural clay textured body and cork stopper.",
+//     sizeUK: 9,
+//     sizeUS: 9,
+//     sizeEUR: 9,
+//     color: "red",
+//     collection: "trainers",
+//   },
+//   {
+//     id: 2,
+//     name: "Nomad Tumbler",
+//     description: "abcd",
+//     categoryId: 1,
+//     EUR: 35,
+//     GBP: 35,
+//     USD: 35,
+//     imageSrc:
+//       "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-02.jpg",
+//     imageAlt:
+//       "Olive drab green insulated bottle with flablack screw lid and flat top.",
+//     sizeUK: 9,
+//     sizeUS: 9,
+//     sizeEUR: 9,
+//     color: "black",
+//     collection: "trainers",
+//   },
+//   {
+//     id: 3,
+//     name: "Focus Paper Refill",
+//     description: "abcd",
+//     categoryId: 1,
+//     EUR: 89,
+//     GBP: 89,
+//     USD: 89,
+//     imageSrc:
+//       "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-03.jpg",
+//     imageAlt:
+//       "Person using a pen to cross a task off a productivity paper card.",
+//     sizeUK: 9,
+//     sizeUS: 9,
+//     sizeEUR: 9,
+//     color: "black",
+//     collection: "trainers",
+//   },
+//   {
+//     id: 4,
+//     name: "Machined Mechanical Pencil",
+//     description: "abcd",
+//     categoryId: 1,
+//     EUR: 35,
+//     GBP: 35,
+//     USD: 35,
+//     imageSrc:
+//       "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-04.jpg",
+//     imageAlt:
+//       "Hand holding black machined steel mechanical pencil with brass tip and top.",
+//     sizeUK: 9,
+//     sizeUS: 9,
+//     sizeEUR: 9,
+//     color: "black",
+//     collection: "trainers",
+//   },
+//   // More products...
+// ];
 
 const filters = [
   {
@@ -122,6 +123,9 @@ const filters = [
 
 const Products = () => {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+
+  const { products } = useProductsSWR(4, 1);
+
   return (
     <div className="bg-white">
       <div>
