@@ -6,7 +6,7 @@ interface Shoe extends GenericProduct {
   sizeEUR: number;
   sizeUK: number;
   sizeUS: number;
-  collectionId: number;
+  collection: string;
 }
 
 export default Shoe;
