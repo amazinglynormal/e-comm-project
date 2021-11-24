@@ -5,9 +5,9 @@ interface GenericProduct {
   categoryId: number;
   imageSrc: string;
   imageAlt: string;
-  EUR: number;
-  GBP: number;
-  USD: number;
+  eur: number;
+  gbp: number;
+  usd: number;
 }
 
 export default GenericProduct;

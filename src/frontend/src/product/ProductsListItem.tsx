@@ -6,10 +6,10 @@ interface Props {
   product: Product;
 }
 
-const currencySymbol = {
-  EUR: "€",
-  GBP: "£",
-  USD: "$",
+const currencySymbol: { [index: string]: string } = {
+  eur: "€",
+  gbp: "£",
+  usd: "$",
 };
 
 const ProductsListItem = ({ product }: Props) => {

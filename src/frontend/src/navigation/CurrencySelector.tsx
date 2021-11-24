@@ -12,13 +12,13 @@ export const CurrencySelector = ({ version }: Props) => {
 
   const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
     switch (event.target.value) {
-      case "EUR":
+      case "eur":
         onChange(Currency.EUR);
         break;
-      case "GBP":
+      case "gbp":
         onChange(Currency.GBP);
         break;
-      case "USD":
+      case "usd":
         onChange(Currency.USD);
         break;
       default:
@@ -46,7 +46,7 @@ export const CurrencySelector = ({ version }: Props) => {
           >
             {Object.values(Currency).map((currency) => (
               <option key={currency} value={currency}>
-                {currency}
+                {currency.toUpperCase()}
               </option>
             ))}
           </select>
