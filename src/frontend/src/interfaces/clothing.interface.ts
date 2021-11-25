@@ -1,11 +1,11 @@
 import Color from "../types/Color.type";
 import GenericProduct from "./generic-product.interface";
 
-interface Shoe extends GenericProduct {
-  color: Color;
+interface Clothing extends GenericProduct {
+  collection: string;
   allSizes: number[];
   availableSizes: number[];
-  collection: string;
+  color: Color;
 }
 
-export default Shoe;
+export default Clothing;
