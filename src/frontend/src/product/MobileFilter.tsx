@@ -3,13 +3,13 @@ import { Transition, Dialog, Disclosure } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
 import { ChevronDownIcon } from "@heroicons/react/solid";
 
-import Filter from "../interfaces/filter.interface";
 import classNames from "../utils/classNames";
+import FilterOptions from "../interfaces/filterOptions.interface";
 
 interface Props {
   mobileFiltersOpen: boolean;
   setMobileFiltersOpen: Dispatch<SetStateAction<boolean>>;
-  filters: Filter[];
+  filters: FilterOptions[];
 }
 
 export const MobileFilter = ({

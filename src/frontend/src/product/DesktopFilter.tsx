@@ -1,7 +1,7 @@
-import Filter from "../interfaces/filter.interface";
+import FilterOptions from "../interfaces/filterOptions.interface";
 
 interface Props {
-  filters: Filter[];
+  filters: FilterOptions[];
 }
 
 export const DesktopFilter = ({ filters }: Props) => {
