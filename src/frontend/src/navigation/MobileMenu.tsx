@@ -10,35 +10,35 @@ import classNames from "../utils/classNames";
 const navigation = {
   categories: [
     {
-      name: "Women",
+      name: "Clothing",
       featured: [
         {
-          name: "New Arrivals",
-          href: "#",
+          name: "T-shirts",
+          href: "products/clothing",
           imageSrc:
             "https://tailwindui.com/img/ecommerce-images/mega-menu-category-01.jpg",
           imageAlt:
             "Models sitting back to back, wearing Basic Tee in black and bone.",
         },
         {
-          name: "Basic Tees",
-          href: "#",
+          name: "Jeans",
+          href: "products/clothing",
           imageSrc:
             "https://tailwindui.com/img/ecommerce-images/mega-menu-category-02.jpg",
           imageAlt:
             "Close up of Basic Tee fall bundle with off-white, ochre, olive, and black tees.",
         },
         {
-          name: "Accessories",
-          href: "#",
+          name: "Hoodies",
+          href: "products/clothing",
           imageSrc:
             "https://tailwindui.com/img/ecommerce-images/mega-menu-category-03.jpg",
           imageAlt:
             "Model wearing minimalist watch with black wristband and white watch face.",
         },
         {
-          name: "Carry",
-          href: "#",
+          name: "Jackets",
+          href: "products/clothing",
           imageSrc:
             "https://tailwindui.com/img/ecommerce-images/mega-menu-category-04.jpg",
           imageAlt:
@@ -47,34 +47,34 @@ const navigation = {
       ],
     },
     {
-      name: "Men",
+      name: "Footwear",
       featured: [
         {
-          name: "New Arrivals",
-          href: "#",
+          name: "Boots",
+          href: "products/footwear",
           imageSrc:
             "https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-01.jpg",
           imageAlt:
             "Hats and sweaters on wood shelves next to various colors of t-shirts on hangers.",
         },
         {
-          name: "Basic Tees",
-          href: "#",
+          name: "Trainers",
+          href: "products/footwear",
           imageSrc:
             "https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-02.jpg",
           imageAlt: "Model wearing light heather gray t-shirt.",
         },
         {
-          name: "Accessories",
-          href: "#",
+          name: "Shoes",
+          href: "products/footwear",
           imageSrc:
             "https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-03.jpg",
           imageAlt:
             "Grey 6-panel baseball hat with black brim, black mountain graphic on front, and light heather gray body.",
         },
         {
-          name: "Carry",
-          href: "#",
+          name: "Slippers",
+          href: "products/footwear",
           imageSrc:
             "https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-04.jpg",
           imageAlt:
@@ -82,10 +82,42 @@ const navigation = {
         },
       ],
     },
-  ],
-  pages: [
-    { name: "Company", href: "#" },
-    { name: "Stores", href: "#" },
+    {
+      name: "Accessories",
+      featured: [
+        {
+          name: "Belts",
+          href: "products/accessories",
+          imageSrc:
+            "https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-01.jpg",
+          imageAlt:
+            "Hats and sweaters on wood shelves next to various colors of t-shirts on hangers.",
+        },
+        {
+          name: "Sunglasses",
+          href: "products/accessories",
+          imageSrc:
+            "https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-02.jpg",
+          imageAlt: "Model wearing light heather gray t-shirt.",
+        },
+        {
+          name: "Ties",
+          href: "products/accessories",
+          imageSrc:
+            "https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-03.jpg",
+          imageAlt:
+            "Grey 6-panel baseball hat with black brim, black mountain graphic on front, and light heather gray body.",
+        },
+        {
+          name: "Wallets",
+          href: "products/accessories",
+          imageSrc:
+            "https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-04.jpg",
+          imageAlt:
+            "Model putting folded cash into slim card holder olive leather wallet with hand stitching.",
+        },
+      ],
+    },
   ],
 };
 
@@ -172,8 +204,8 @@ export const MobileMenu = ({ open, setOpen }: Props) => {
                               className="object-center object-cover"
                             />
                           </div>
-                          <a
-                            href={item.href}
+                          <Link
+                            to={item.href}
                             className="mt-6 block text-sm font-medium text-gray-900"
                           >
                             <span
@@ -181,7 +213,7 @@ export const MobileMenu = ({ open, setOpen }: Props) => {
                               aria-hidden="true"
                             />
                             {item.name}
-                          </a>
+                          </Link>
                           <p
                             aria-hidden="true"
                             className="mt-1 text-sm text-gray-500"
@@ -195,19 +227,6 @@ export const MobileMenu = ({ open, setOpen }: Props) => {
                 ))}
               </Tab.Panels>
             </Tab.Group>
-
-            <div className="border-t border-gray-200 py-6 px-4 space-y-6">
-              {navigation.pages.map((page) => (
-                <div key={page.name} className="flow-root">
-                  <a
-                    href={page.href}
-                    className="-m-2 p-2 block font-medium text-gray-900"
-                  >
-                    {page.name}
-                  </a>
-                </div>
-              ))}
-            </div>
 
             <div className="border-t border-gray-200 py-6 px-4 space-y-6">
               <div className="flow-root">

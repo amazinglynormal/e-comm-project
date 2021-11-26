@@ -8,35 +8,35 @@ import { CartLink } from "./CartLink";
 const navigation = {
   categories: [
     {
-      name: "Women",
+      name: "Clothing",
       featured: [
         {
-          name: "New Arrivals",
-          href: "#",
+          name: "T-shirts",
+          href: "products/clothing",
           imageSrc:
             "https://tailwindui.com/img/ecommerce-images/mega-menu-category-01.jpg",
           imageAlt:
             "Models sitting back to back, wearing Basic Tee in black and bone.",
         },
         {
-          name: "Basic Tees",
-          href: "#",
+          name: "Jeans",
+          href: "products/clothing",
           imageSrc:
             "https://tailwindui.com/img/ecommerce-images/mega-menu-category-02.jpg",
           imageAlt:
             "Close up of Basic Tee fall bundle with off-white, ochre, olive, and black tees.",
         },
         {
-          name: "Accessories",
-          href: "#",
+          name: "Hoodies",
+          href: "products/clothing",
           imageSrc:
             "https://tailwindui.com/img/ecommerce-images/mega-menu-category-03.jpg",
           imageAlt:
             "Model wearing minimalist watch with black wristband and white watch face.",
         },
         {
-          name: "Carry",
-          href: "#",
+          name: "Jackets",
+          href: "products/clothing",
           imageSrc:
             "https://tailwindui.com/img/ecommerce-images/mega-menu-category-04.jpg",
           imageAlt:
@@ -45,34 +45,34 @@ const navigation = {
       ],
     },
     {
-      name: "Men",
+      name: "Footwear",
       featured: [
         {
-          name: "New Arrivals",
-          href: "#",
+          name: "Boots",
+          href: "products/footwear",
           imageSrc:
             "https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-01.jpg",
           imageAlt:
             "Hats and sweaters on wood shelves next to various colors of t-shirts on hangers.",
         },
         {
-          name: "Basic Tees",
-          href: "#",
+          name: "Trainers",
+          href: "products/footwear",
           imageSrc:
             "https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-02.jpg",
           imageAlt: "Model wearing light heather gray t-shirt.",
         },
         {
-          name: "Accessories",
-          href: "#",
+          name: "Shoes",
+          href: "products/footwear",
           imageSrc:
             "https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-03.jpg",
           imageAlt:
             "Grey 6-panel baseball hat with black brim, black mountain graphic on front, and light heather gray body.",
         },
         {
-          name: "Carry",
-          href: "#",
+          name: "Slippers",
+          href: "products/footwear",
           imageSrc:
             "https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-04.jpg",
           imageAlt:
@@ -80,10 +80,42 @@ const navigation = {
         },
       ],
     },
-  ],
-  pages: [
-    { name: "Company", href: "#" },
-    { name: "Stores", href: "#" },
+    {
+      name: "Accessories",
+      featured: [
+        {
+          name: "Belts",
+          href: "products/accessories",
+          imageSrc:
+            "https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-01.jpg",
+          imageAlt:
+            "Hats and sweaters on wood shelves next to various colors of t-shirts on hangers.",
+        },
+        {
+          name: "Sunglasses",
+          href: "products/accessories",
+          imageSrc:
+            "https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-02.jpg",
+          imageAlt: "Model wearing light heather gray t-shirt.",
+        },
+        {
+          name: "Ties",
+          href: "products/accessories",
+          imageSrc:
+            "https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-03.jpg",
+          imageAlt:
+            "Grey 6-panel baseball hat with black brim, black mountain graphic on front, and light heather gray body.",
+        },
+        {
+          name: "Wallets",
+          href: "products/accessories",
+          imageSrc:
+            "https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-04.jpg",
+          imageAlt:
+            "Model putting folded cash into slim card holder olive leather wallet with hand stitching.",
+        },
+      ],
+    },
   ],
 };
 
@@ -115,16 +147,6 @@ export const DesktopNavigation = ({ setOpen }: Props) => {
                 <div className="h-full flex justify-center space-x-8">
                   {navigation.categories.map((category) => (
                     <FlyoutMenu key={category.name} category={category} />
-                  ))}
-
-                  {navigation.pages.map((page) => (
-                    <a
-                      key={page.name}
-                      href={page.href}
-                      className="flex items-center text-sm font-medium text-gray-700 hover:text-gray-800"
-                    >
-                      {page.name}
-                    </a>
                   ))}
                 </div>
               </Popover.Group>

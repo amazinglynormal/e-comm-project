@@ -2,6 +2,7 @@ import { Fragment } from "react";
 import { Popover, Transition } from "@headlessui/react";
 
 import classNames from "../utils/classNames";
+import { Link } from "react-router-dom";
 
 interface Category {
   name: string;
@@ -64,8 +65,8 @@ export const FlyoutMenu = ({ category }: Props) => {
                             className="object-center object-cover"
                           />
                         </div>
-                        <a
-                          href={item.href}
+                        <Link
+                          to={item.href}
                           className="mt-4 block font-medium text-gray-900"
                         >
                           <span
@@ -73,7 +74,7 @@ export const FlyoutMenu = ({ category }: Props) => {
                             aria-hidden="true"
                           />
                           {item.name}
-                        </a>
+                        </Link>
                         <p aria-hidden="true" className="mt-1">
                           Shop now
                         </p>
