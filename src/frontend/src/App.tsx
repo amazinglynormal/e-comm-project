@@ -26,10 +26,12 @@ const App = () => {
         <StoreNavigation />
         <Suspense fallback={<div>loading...</div>}>
           <Switch>
-            <Route path="/products/:id">
+            <Route path="/products/:id/details">
               <ProductDetails />
             </Route>
-            <Route exact path="/products">
+            <Route
+              path={["/products/:category/:subCategory", "/products/:category"]}
+            >
               <Products />
             </Route>
             <Route path="/cart">
