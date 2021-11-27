@@ -56,7 +56,7 @@ const Cart = () => {
     <div className="bg-white">
       <div className="max-w-2xl mx-auto pt-16 pb-24 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
         <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-          Shopping Cart
+          Shopping Bag
         </h1>
         <form
           onSubmit={onSubmit}
@@ -64,11 +64,11 @@ const Cart = () => {
         >
           <section aria-labelledby="cart-heading" className="lg:col-span-7">
             <h2 id="cart-heading" className="sr-only">
-              Items in your shopping cart
+              Items in your shopping bag
             </h2>
 
             <ul className="border-t border-b border-gray-200 divide-y divide-gray-200">
-              {products.map((product, productIdx) => (
+              {products.map((product) => (
                 <li key={product.id} className="flex py-6 sm:py-10">
                   <div className="flex-shrink-0">
                     <img
@@ -105,27 +105,6 @@ const Cart = () => {
                       </div>
 
                       <div className="mt-4 sm:mt-0 sm:pr-9">
-                        <label
-                          htmlFor={`quantity-${productIdx}`}
-                          className="sr-only"
-                        >
-                          Quantity, {product.name}
-                        </label>
-                        <select
-                          id={`quantity-${productIdx}`}
-                          name={`quantity-${productIdx}`}
-                          className="max-w-full rounded-md border border-gray-300 py-1.5 text-base leading-5 font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                        >
-                          <option value={1}>1</option>
-                          <option value={2}>2</option>
-                          <option value={3}>3</option>
-                          <option value={4}>4</option>
-                          <option value={5}>5</option>
-                          <option value={6}>6</option>
-                          <option value={7}>7</option>
-                          <option value={8}>8</option>
-                        </select>
-
                         <div className="absolute top-0 right-0">
                           <RemoveFromCartButton productId={product.id} />
                         </div>
