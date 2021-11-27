@@ -1,38 +1,40 @@
-const colorOptions = {
-  id: "color",
+import FilterOptions from "../interfaces/filterOptions.interface";
+
+const colorOptions: FilterOptions = {
+  id: "colors",
   name: "Color",
   options: [
-    { value: "black", label: "Black" },
-    { value: "blue", label: "Blue" },
-    { value: "brown", label: "Brown" },
-    { value: "green", label: "Green" },
-    { value: "grey", label: "Grey" },
-    { value: "multi", label: "Multi" },
-    { value: "navy", label: "Navy" },
-    { value: "orange", label: "Ornage" },
-    { value: "pink", label: "Pink" },
-    { value: "purple", label: "Purple" },
-    { value: "red", label: "Red" },
-    { value: "tan", label: "Tan" },
-    { value: "white", label: "White" },
-    { value: "yellow", label: "Yellow" },
+    { value: 1, label: "Black" },
+    { value: 2, label: "Blue" },
+    { value: 3, label: "Brown" },
+    { value: 4, label: "Green" },
+    { value: 5, label: "Grey" },
+    { value: 6, label: "Multi" },
+    { value: 7, label: "Navy" },
+    { value: 8, label: "Ornage" },
+    { value: 9, label: "Pink" },
+    { value: 10, label: "Purple" },
+    { value: 11, label: "Red" },
+    { value: 12, label: "Tan" },
+    { value: 13, label: "White" },
+    { value: 14, label: "Yellow" },
   ],
 };
 
-const clothingSizes = {
+const clothingSizes: FilterOptions = {
   id: "sizes",
   name: "Sizes",
   options: [
-    { value: "xs", label: "XS" },
-    { value: "s", label: "S" },
-    { value: "m", label: "M" },
-    { value: "l", label: "L" },
-    { value: "xl", label: "XL" },
-    { value: "2xl", label: "2XL" },
+    { value: 1, label: "XS" },
+    { value: 2, label: "S" },
+    { value: 3, label: "M" },
+    { value: 4, label: "L" },
+    { value: 5, label: "XL" },
+    { value: 6, label: "2XL" },
   ],
 };
 
-const footwearSizes = {
+const footwearSizes: FilterOptions = {
   id: "sizes",
   name: "Sizes",
   options: [
@@ -52,39 +54,39 @@ const footwearSizes = {
   ],
 };
 
-const clothingCategories = {
-  id: "category",
+const clothingCategories: FilterOptions = {
+  id: "categories",
   name: "Category",
   options: [
-    { value: "tshirts", label: "T-shirts" },
-    { value: "jeans", label: "Jeans" },
-    { value: "shirts", label: "Shirts" },
-    { value: "hoodies", label: "Hoodies" },
-    { value: "joggers", label: "Joggers" },
-    { value: "jackets", label: "Jackets" },
+    { value: 1, label: "T-shirts" },
+    { value: 2, label: "Jeans" },
+    { value: 3, label: "Shirts" },
+    { value: 4, label: "Hoodies" },
+    { value: 5, label: "Joggers" },
+    { value: 6, label: "Jackets" },
   ],
 };
 
-const footwearCategories = {
-  id: "category",
+const footwearCategories: FilterOptions = {
+  id: "categories",
   name: "Category",
   options: [
-    { value: "boots", label: "Boots" },
-    { value: "shoes", label: "Shoes" },
-    { value: "trainers", label: "Trainers" },
-    { value: "sandals/flipflops", label: "Sandals/ Flip-flops" },
-    { value: "slippers", label: "Slippers" },
+    { value: 7, label: "Boots" },
+    { value: 8, label: "Shoes" },
+    { value: 9, label: "Trainers" },
+    { value: 10, label: "Sandals/ Flip-flops" },
+    { value: 11, label: "Slippers" },
   ],
 };
 
-const accessoriesCategories = {
-  id: "category",
+const accessoriesCategories: FilterOptions = {
+  id: "categories",
   name: "Category",
   options: [
-    { value: "belts", label: "Belts" },
-    { value: "sunglasses", label: "Sunglasses" },
-    { value: "ties", label: "Ties" },
-    { value: "wallets", label: "Wallets" },
+    { value: 12, label: "Belts" },
+    { value: 13, label: "Sunglasses" },
+    { value: 14, label: "Ties" },
+    { value: 15, label: "Wallets" },
   ],
 };
 

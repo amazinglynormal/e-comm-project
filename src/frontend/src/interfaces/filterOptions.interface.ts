@@ -1,7 +1,7 @@
 interface FilterOptions {
-  id: string;
+  id: "categories" | "colors" | "sizes";
   name: string;
-  options: { value: string | number; label: string }[];
+  options: { value: number; label: string }[];
 }
 
 export default FilterOptions;
