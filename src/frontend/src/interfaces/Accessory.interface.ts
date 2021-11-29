@@ -3,8 +3,8 @@ import GenericProduct from "./generic-product.interface";
 
 interface Accessory extends GenericProduct {
   color: Color;
-  allSizes: number[];
-  availableSizes: number[];
+  allSizes: string[];
+  availableSizes: string[];
   collection: string;
 }
 

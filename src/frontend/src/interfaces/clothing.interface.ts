@@ -3,8 +3,8 @@ import GenericProduct from "./generic-product.interface";
 
 interface Clothing extends GenericProduct {
   collection: string;
-  allSizes: number[];
-  availableSizes: number[];
+  allSizes: string[];
+  availableSizes: string[];
   color: Color;
 }
 
