@@ -1,7 +1,7 @@
 interface FilterForm {
-  categories: number[];
-  colors: number[];
-  sizes: number[];
+  categories: string[];
+  colors: string[];
+  sizes: string[];
 }
 
 export default FilterForm;
