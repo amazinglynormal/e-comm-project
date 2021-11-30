@@ -3,7 +3,7 @@ import FilterForm from "../interfaces/filterForm.interface";
 
 interface Props {
   category: { id: "categories" | "colors" | "sizes"; name: string };
-  option: { value: number; label: string };
+  option: { value: string; label: string };
   formChangeHandler: (event: ChangeEvent<HTMLInputElement>) => void;
   filterForm: FilterForm;
 }
@@ -19,9 +19,7 @@ const FilterCheckbox = ({
   );
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (checked) setChecked(false);
-    else setChecked(true);
-
+    setChecked((prev) => !prev);
     formChangeHandler(event);
   };
 
@@ -34,6 +32,7 @@ const FilterCheckbox = ({
         type="checkbox"
         className="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500"
         onChange={onChange}
+        checked={checked}
       />
       <label htmlFor={`${category.id}`} className="ml-3 text-sm text-gray-600">
         {option.label}
