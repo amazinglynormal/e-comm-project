@@ -32,6 +32,12 @@ public class GlobalExceptionHandler {
         return ex.getMessage();
     }
 
+    @ExceptionHandler(CategoryNameNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    private String categoryNameNotFoundHandler(CategoryNameNotFoundException ex) {
+        return ex.getMessage();
+    }
+
     @ExceptionHandler(UserAlreadyExistsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     private String userAlreadyExistsHandler(UserAlreadyExistsException ex) {
