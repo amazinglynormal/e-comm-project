@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import sb.ecomm.product.Color;
 
+import java.util.List;
+
 @Getter
 @Setter
 public class UpdateProductDTO {
@@ -24,13 +26,9 @@ public class UpdateProductDTO {
 
     private Color color;
 
-    private int sizeEUR;
+    private List<String> allSizes;
 
-    private int sizeUK;
-
-    private int sizeUS;
-
-    private String collection;
+    private List<String> availableSizes;
 
     private Long categoryId;
 }
