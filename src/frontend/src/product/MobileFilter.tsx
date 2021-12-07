@@ -1,21 +1,27 @@
-import { Dispatch, Fragment, SetStateAction } from "react";
+import { ChangeEvent, Dispatch, Fragment, SetStateAction } from "react";
 import { Transition, Dialog, Disclosure } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
 import { ChevronDownIcon } from "@heroicons/react/solid";
 
 import classNames from "../utils/classNames";
 import FilterOptions from "../interfaces/filterOptions.interface";
+import FilterForm from "../interfaces/filterForm.interface";
+import FilterCheckbox from "./FilterCheckbox";
 
 interface Props {
   mobileFiltersOpen: boolean;
   setMobileFiltersOpen: Dispatch<SetStateAction<boolean>>;
   filters: FilterOptions[];
+  formChangeHandler: (event: ChangeEvent<HTMLInputElement>) => void;
+  filterForm: FilterForm;
 }
 
 export const MobileFilter = ({
   mobileFiltersOpen,
   setMobileFiltersOpen,
   filters,
+  formChangeHandler,
+  filterForm,
 }: Props) => {
   return (
     <Transition.Root show={mobileFiltersOpen} as={Fragment}>
@@ -60,10 +66,10 @@ export const MobileFilter = ({
 
             {/* Filters */}
             <form className="mt-4">
-              {filters.map((section) => (
+              {filters.map((category) => (
                 <Disclosure
                   as="div"
-                  key={section.name}
+                  key={category.name}
                   className="border-t border-gray-200 pt-4 pb-4"
                 >
                   {({ open }) => (
@@ -71,7 +77,7 @@ export const MobileFilter = ({
                       <legend className="w-full px-2">
                         <Disclosure.Button className="w-full p-2 flex items-center justify-between text-gray-400 hover:text-gray-500">
                           <span className="text-sm font-medium text-gray-900">
-                            {section.name}
+                            {category.name}
                           </span>
                           <span className="ml-6 h-7 flex items-center">
                             <ChevronDownIcon
@@ -86,25 +92,14 @@ export const MobileFilter = ({
                       </legend>
                       <Disclosure.Panel className="pt-4 pb-2 px-4">
                         <div className="space-y-6">
-                          {section.options.map((option, optionIdx) => (
-                            <div
+                          {category.options.map((option) => (
+                            <FilterCheckbox
                               key={option.value}
-                              className="flex items-center"
-                            >
-                              <input
-                                id={`${section.id}-${optionIdx}-mobile`}
-                                name={`${section.id}[]`}
-                                defaultValue={option.value}
-                                type="checkbox"
-                                className="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500"
-                              />
-                              <label
-                                htmlFor={`${section.id}-${optionIdx}-mobile`}
-                                className="ml-3 text-sm text-gray-500"
-                              >
-                                {option.label}
-                              </label>
-                            </div>
+                              category={category}
+                              option={option}
+                              formChangeHandler={formChangeHandler}
+                              filterForm={filterForm}
+                            />
                           ))}
                         </div>
                       </Disclosure.Panel>
