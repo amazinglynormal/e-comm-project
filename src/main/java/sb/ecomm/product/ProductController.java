@@ -6,6 +6,7 @@ import sb.ecomm.product.dto.CreateProductDTO;
 import sb.ecomm.product.dto.ProductDTO;
 import sb.ecomm.product.dto.UpdateProductDTO;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -22,18 +23,22 @@ public class ProductController {
 
     @GetMapping
     public Iterable<ProductDTO> getAllProducts(
-            @RequestParam(name = "categoryId") Optional<Long> categoryId,
-            @RequestParam(name = "page") Optional<Integer> page,
-            @RequestParam(name = "name") Optional<String> name
+            @RequestParam(name = "categories") List<String> categories,
+            @RequestParam(name = "colors") Optional<List<String>> colors,
+            @RequestParam(name = "sizes") Optional<List<String>> sizes,
+            @RequestParam(name = "page") int page
     ) {
-        if (name.isPresent()) {
-            return productService.findProductByName(name.get());
-        } else if (categoryId.isPresent() && page.isPresent()) {
-            return productService.findProductsInCategory(categoryId.get(),
-                    page.get());
+
+        if (colors.isPresent() && sizes.isPresent()) {
+            return productService.findProductsByCategoriesAndColorsAndSizes(categories, colors.get(), sizes.get(), page);
+        } else if (colors.isPresent()) {
+            return productService.findProductsByCategoriesAndColors(categories, colors.get(), page);
+        } else if (sizes.isPresent()) {
+            return productService.findProductsByCategoriesAndSizes(categories
+                    , sizes.get(), page);
         }
 
-        return productService.findAllProducts();
+        return productService.findProductsByCategories(categories, page);
     }
 
     @GetMapping("/{id}")

@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import sb.ecomm.category.Category;
+import sb.ecomm.exceptions.CategoryNameNotFoundException;
 import sb.ecomm.exceptions.CategoryNotFoundException;
 import sb.ecomm.category.CategoryRepository;
 import sb.ecomm.exceptions.ProductNotFoundException;
@@ -21,7 +22,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
-    private ModelMapper mapper;
+    private final ModelMapper mapper;
 
     @Autowired
     public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, ModelMapper mapper) {
@@ -30,45 +31,64 @@ public class ProductService {
         this.mapper = mapper;
     }
 
-    Iterable<ProductDTO> findAllProducts() {
-        Iterable<Product> products = productRepository.findAll();
-        List<ProductDTO> productDTOs = new ArrayList<>();
-        products.forEach(product -> {
-            productDTOs.add(mapper.map(product, ProductDTO.class));
-        });
+    Iterable<ProductDTO> findProductsByCategoriesAndColorsAndSizes(List<String> categories,
+                                                                   List<String> colors,
+                                                                   List<String> sizes,
+                                                                   int page) {
+        List<Category> categoryList =
+                convertCategoryNamesIntoCategoryList(categories);
+        List<Color> colorsList = convertStringsToColors(colors);
+        Pageable pageable = PageRequest.of(page, 15);
 
-        return productDTOs;
+        Iterable<Product> products =
+                productRepository.findProductsByCategoryInAndColorInAndAvailableSizesIn(categoryList, colorsList, sizes, pageable);
+
+        return convertProductsToProductDTOs(products);
     }
 
-    Iterable<ProductDTO> findProductsInCategory(Long categoryId, int page) {
-        Category category =
-                categoryRepository.findById(categoryId).orElseThrow(() -> new CategoryNotFoundException(categoryId));
+    Iterable<ProductDTO> findProductsByCategories(List<String> categories, int page) {
+        List<Category> categoryList = convertCategoryNamesIntoCategoryList(categories);
         Pageable pageable = PageRequest.of(page, 15);
         Iterable<Product> products =
-                productRepository.findProductByCategory(category, pageable);
-        List<ProductDTO> productDTOs = new ArrayList<>();
-        products.forEach(product -> {
-            productDTOs.add(mapper.map(product, ProductDTO.class));
-        });
+                productRepository.findProductsByCategoryIn(categoryList,
+                        pageable);
 
-        return productDTOs;
+        return convertProductsToProductDTOs(products);
     }
+
+    Iterable<ProductDTO>findProductsByCategoriesAndColors(List<String> categories,
+                                                          List<String> colors,
+                                                          int page) {
+        List<Category> categoryList =
+                convertCategoryNamesIntoCategoryList(categories);
+        List<Color> colorsList = convertStringsToColors(colors);
+        Pageable pageable = PageRequest.of(page, 15);
+
+        Iterable<Product> products =
+                productRepository.findProductsByCategoryInAndColorIn(categoryList, colorsList, pageable);
+
+        return convertProductsToProductDTOs(products);
+    }
+
+    Iterable<ProductDTO>findProductsByCategoriesAndSizes(List<String> categories,
+                                                         List<String> sizes,
+                                                         int page) {
+
+        List<Category> categoryList =
+                convertCategoryNamesIntoCategoryList(categories);
+        Pageable pageable = PageRequest.of(page, 15);
+
+        Iterable<Product> products =
+                productRepository.findProductsByCategoryInAndAvailableSizesIn(categoryList, sizes, pageable);
+
+        return convertProductsToProductDTOs(products);
+    }
+
 
     ProductDTO findProductById(Long id) {
         Product product =
                 productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
         return mapper.map(product, ProductDTO.class);
-    }
-
-    List<ProductDTO> findProductByName(String name) {
-        List<Product> products =
-                productRepository.findByNameContainingIgnoreCase(name);
-        List<ProductDTO> productDTOs = new ArrayList<>();
-        products.forEach(product -> {
-            productDTOs.add(mapper.map(product, ProductDTO.class));
-        });
-
-        return productDTOs;
     }
 
     ProductDTO addNewProduct(CreateProductDTO newProductDto) {
@@ -83,11 +103,11 @@ public class ProductService {
     ProductDTO updateProduct(Long id, UpdateProductDTO updatedProductDTO) {
         Product product =
                 productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
-        updateProductName(product,updatedProductDTO);
-        updateProductDescription(product,updatedProductDTO);
-        updateProductPriceEUR(product,updatedProductDTO);
-        updateProductPriceGBP(product,updatedProductDTO);
-        updateProductPriceUSD(product,updatedProductDTO);
+        updateProductName(product, updatedProductDTO);
+        updateProductDescription(product, updatedProductDTO);
+        updateProductPriceEUR(product, updatedProductDTO);
+        updateProductPriceGBP(product, updatedProductDTO);
+        updateProductPriceUSD(product, updatedProductDTO);
         updateProductCategory(product, updatedProductDTO);
 
         productRepository.save(product);
@@ -131,11 +151,34 @@ public class ProductService {
 
     private void updateProductCategory(Product product,
                                        UpdateProductDTO updateProductDTO) {
-        if (product.getCategory().getId() != updateProductDTO.getCategoryId()) {
+        if (product.getCategory().getId().equals(updateProductDTO.getCategoryId())) {
             Category newCategory =
                     categoryRepository.findById(updateProductDTO.getCategoryId()).orElseThrow(RuntimeException::new);
             product.setCategory(newCategory);
         }
+    }
+
+    private List<Category> convertCategoryNamesIntoCategoryList(List<String> names) {
+        List<Category> categoryList = new ArrayList<>();
+        names.forEach(name -> {
+            Category category =
+                    categoryRepository.findByName(name).orElseThrow(() -> new CategoryNameNotFoundException(name));
+            categoryList.add(category);
+        });
+
+        return categoryList;
+    }
+
+    private List<Color> convertStringsToColors(List<String> colorStrings) {
+        List<Color> colors = new ArrayList<>();
+        colorStrings.forEach(colorString -> colors.add(Color.valueOf(colorString)));
+        return colors;
+    }
+
+    private List<ProductDTO> convertProductsToProductDTOs(Iterable<Product> products) {
+        List<ProductDTO> productDTOs = new ArrayList<>();
+        products.forEach(product -> productDTOs.add(mapper.map(product, ProductDTO.class)));
+        return productDTOs;
     }
 
 }
