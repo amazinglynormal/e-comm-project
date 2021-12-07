@@ -6,10 +6,20 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import sb.ecomm.category.Category;
 
-import java.util.List;
+import java.util.Collection;
 
 @Repository
 public interface ProductRepository extends PagingAndSortingRepository<Product, Long> {
-    List<Product> findByNameContainingIgnoreCase(String name);
-    Page<Product> findProductByCategory(Category category, Pageable pageable);
+    Page<Product> findProductsByCategory(Category category, Pageable pageable);
+
+    Page<Product> findProductsByCategoryIn(Collection<Category> categories,
+                                           Pageable pageable);
+
+    Page<Product> findProductsByCategoryInAndColorInAndAvailableSizesIn(Collection<Category> categories, Collection<Color> colors, Collection<String> sizes, Pageable pageable);
+
+    Page<Product> findProductsByCategoryInAndAvailableSizesIn(Collection<Category> categories, Collection<String> sizes, Pageable pageable);
+
+    Page<Product> findProductsByCategoryInAndColorIn(Collection<Category> categories, Collection<Color> colors,
+                                                  Pageable pageable);
+
 }
