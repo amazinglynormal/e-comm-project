@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import sb.ecomm.category.Category;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(name = "Product")
 @Table(name = "product")
@@ -38,23 +40,17 @@ public class Product {
     @Enumerated(EnumType.STRING)
     private Color color;
 
-    @Column(nullable = false)
-    private int sizeEUR;
+    @ElementCollection
+    private List<String> allSizes = new ArrayList<>();
 
-    @Column(nullable = false)
-    private int sizeUK;
-
-    @Column(nullable = false)
-    private int sizeUS;
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> availableSizes = new ArrayList<>();
 
     @JsonIgnoreProperties("products")
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false, referencedColumnName
             = "id", foreignKey = @ForeignKey(name = "category_product_fk"))
     private Category category;
-
-    @Column(nullable = false)
-    private String collection;
 
     public Product() {
     }
@@ -67,11 +63,9 @@ public class Product {
                    String imageSrc,
                    String imageAlt,
                    Color color,
-                   int sizeEUR,
-                   int sizeUK,
-                   int sizeUS,
-                   Category category,
-                   String collection) {
+                   List<String> allSizes,
+                   List<String> availableSizes,
+                   Category category) {
         this.name = name;
         this.description = description;
         this.USD = USD;
@@ -80,11 +74,9 @@ public class Product {
         this.imageSrc = imageSrc;
         this.imageAlt = imageAlt;
         this.color = color;
-        this.sizeEUR = sizeEUR;
-        this.sizeUK = sizeUK;
-        this.sizeUS = sizeUS;
+        this.allSizes = allSizes;
+        this.availableSizes = availableSizes;
         this.category = category;
-        this.collection = collection;
     }
 
     public Long getId() {
@@ -159,28 +151,20 @@ public class Product {
         this.color = color;
     }
 
-    public int getSizeEUR() {
-        return sizeEUR;
+    public List<String> getAllSizes() {
+        return allSizes;
     }
 
-    public void setSizeEUR(int sizeEUR) {
-        this.sizeEUR = sizeEUR;
+    public void setAllSizes(List<String> allSizes) {
+        this.allSizes = allSizes;
     }
 
-    public int getSizeUK() {
-        return sizeUK;
+    public List<String> getAvailableSizes() {
+        return availableSizes;
     }
 
-    public void setSizeUK(int sizeUK) {
-        this.sizeUK = sizeUK;
-    }
-
-    public int getSizeUS() {
-        return sizeUS;
-    }
-
-    public void setSizeUS(int sizeUS) {
-        this.sizeUS = sizeUS;
+    public void setAvailableSizes(List<String> availableSizes) {
+        this.availableSizes = availableSizes;
     }
 
     public Category getCategory() {
@@ -191,11 +175,4 @@ public class Product {
         this.category = category;
     }
 
-    public String getCollection() {
-        return collection;
-    }
-
-    public void setCollection(String collection) {
-        this.collection = collection;
-    }
 }
