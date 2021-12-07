@@ -10,8 +10,6 @@ import java.util.Collection;
 
 @Repository
 public interface ProductRepository extends PagingAndSortingRepository<Product, Long> {
-    Page<Product> findProductsByCategory(Category category, Pageable pageable);
-
     Page<Product> findProductsByCategoryIn(Collection<Category> categories,
                                            Pageable pageable);
 
