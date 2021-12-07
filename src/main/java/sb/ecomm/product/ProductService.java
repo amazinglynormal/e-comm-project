@@ -15,6 +15,7 @@ import sb.ecomm.product.dto.ProductDTO;
 import sb.ecomm.product.dto.UpdateProductDTO;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -109,6 +110,11 @@ public class ProductService {
         updateProductPriceGBP(product, updatedProductDTO);
         updateProductPriceUSD(product, updatedProductDTO);
         updateProductCategory(product, updatedProductDTO);
+        updateProductColor(product, updatedProductDTO);
+        updateProductImageSrc(product, updatedProductDTO);
+        updateProductImageAlt(product, updatedProductDTO);
+        updateProductAllSizes(product, updatedProductDTO);
+        updateProductAvailableSizes(product, updatedProductDTO);
 
         productRepository.save(product);
 
@@ -158,6 +164,43 @@ public class ProductService {
         }
     }
 
+    private void updateProductColor(Product product,
+                                    UpdateProductDTO updateProductDTO) {
+        if (!product.getColor().equals(updateProductDTO.getColor())) {
+            product.setColor(updateProductDTO.getColor());
+        }
+    }
+
+    private void updateProductImageSrc(Product product,
+                                       UpdateProductDTO updateProductDTO) {
+        if (!product.getImageSrc().equals(updateProductDTO.getImageSrc())) {
+            product.setImageSrc(updateProductDTO.getImageSrc());
+        }
+    }
+
+    private void updateProductImageAlt(Product product,
+                                       UpdateProductDTO updateProductDTO) {
+        if(!product.getImageAlt().equals(updateProductDTO.getImageAlt())) {
+            product.setImageAlt(updateProductDTO.getImageAlt());
+        }
+    }
+
+    private void updateProductAllSizes(Product product,
+                                       UpdateProductDTO updateProductDTO) {
+        if (!compareStringLists(product.getAllSizes(),
+                updateProductDTO.getAllSizes())) {
+            product.setAllSizes(updateProductDTO.getAllSizes());
+        }
+    }
+
+    private void updateProductAvailableSizes(Product product,
+                                             UpdateProductDTO updateProductDTO) {
+        if (!compareStringLists(product.getAvailableSizes(),
+                updateProductDTO.getAvailableSizes())) {
+            product.setAvailableSizes(updateProductDTO.getAvailableSizes());
+        }
+    }
+
     private List<Category> convertCategoryNamesIntoCategoryList(List<String> names) {
         List<Category> categoryList = new ArrayList<>();
         names.forEach(name -> {
@@ -172,6 +215,7 @@ public class ProductService {
     private List<Color> convertStringsToColors(List<String> colorStrings) {
         List<Color> colors = new ArrayList<>();
         colorStrings.forEach(colorString -> colors.add(Color.valueOf(colorString)));
+            
         return colors;
     }
 
@@ -179,6 +223,21 @@ public class ProductService {
         List<ProductDTO> productDTOs = new ArrayList<>();
         products.forEach(product -> productDTOs.add(mapper.map(product, ProductDTO.class)));
         return productDTOs;
+    }
+
+    private boolean compareStringLists(List<String> list1,
+                                       List<String> list2) {
+        if (list1.size() != list2.size()) {
+            return false;
+        }
+
+        List<String> copy1 = new ArrayList<>(list1);
+        List<String> copy2 = new ArrayList<>(list2);
+
+        Collections.sort(copy1);
+        Collections.sort(copy2);
+
+        return copy1.equals(copy2);
     }
 
 }
