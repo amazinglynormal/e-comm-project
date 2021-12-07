@@ -14,7 +14,7 @@ const navigation = {
       featured: [
         {
           name: "T-shirts",
-          href: "products/clothing",
+          href: "products/clothing/tshirts",
           imageSrc:
             "https://tailwindui.com/img/ecommerce-images/mega-menu-category-01.jpg",
           imageAlt:
@@ -22,7 +22,7 @@ const navigation = {
         },
         {
           name: "Jeans",
-          href: "products/clothing",
+          href: "products/clothing/jeans",
           imageSrc:
             "https://tailwindui.com/img/ecommerce-images/mega-menu-category-02.jpg",
           imageAlt:
@@ -30,7 +30,7 @@ const navigation = {
         },
         {
           name: "Hoodies",
-          href: "products/clothing",
+          href: "products/clothing/hoodies",
           imageSrc:
             "https://tailwindui.com/img/ecommerce-images/mega-menu-category-03.jpg",
           imageAlt:
@@ -38,7 +38,7 @@ const navigation = {
         },
         {
           name: "Jackets",
-          href: "products/clothing",
+          href: "products/clothing/jackets",
           imageSrc:
             "https://tailwindui.com/img/ecommerce-images/mega-menu-category-04.jpg",
           imageAlt:
@@ -51,7 +51,7 @@ const navigation = {
       featured: [
         {
           name: "Boots",
-          href: "products/footwear",
+          href: "products/footwear/boots",
           imageSrc:
             "https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-01.jpg",
           imageAlt:
@@ -59,14 +59,14 @@ const navigation = {
         },
         {
           name: "Trainers",
-          href: "products/footwear",
+          href: "products/footwear/trainers",
           imageSrc:
             "https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-02.jpg",
           imageAlt: "Model wearing light heather gray t-shirt.",
         },
         {
           name: "Shoes",
-          href: "products/footwear",
+          href: "products/footwear/shoes",
           imageSrc:
             "https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-03.jpg",
           imageAlt:
@@ -74,7 +74,7 @@ const navigation = {
         },
         {
           name: "Slippers",
-          href: "products/footwear",
+          href: "products/footwear/slippers",
           imageSrc:
             "https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-04.jpg",
           imageAlt:
@@ -87,7 +87,7 @@ const navigation = {
       featured: [
         {
           name: "Belts",
-          href: "products/accessories",
+          href: "products/accessories/belts",
           imageSrc:
             "https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-01.jpg",
           imageAlt:
@@ -95,14 +95,14 @@ const navigation = {
         },
         {
           name: "Sunglasses",
-          href: "products/accessories",
+          href: "products/accessories/sunglasses",
           imageSrc:
             "https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-02.jpg",
           imageAlt: "Model wearing light heather gray t-shirt.",
         },
         {
           name: "Ties",
-          href: "products/accessories",
+          href: "products/accessories/ties",
           imageSrc:
             "https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-03.jpg",
           imageAlt:
@@ -110,7 +110,7 @@ const navigation = {
         },
         {
           name: "Wallets",
-          href: "products/accessories",
+          href: "products/accessories/wallets",
           imageSrc:
             "https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-04.jpg",
           imageAlt:
