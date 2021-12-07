@@ -11,7 +11,7 @@ const colorOptions: FilterOptions = {
     { value: "GREY", label: "Grey" },
     { value: "MULTI", label: "Multi" },
     { value: "NAVY", label: "Navy" },
-    { value: "ORANGE", label: "Ornage" },
+    { value: "ORANGE", label: "Orange" },
     { value: "PINK", label: "Pink" },
     { value: "PURPLE", label: "Purple" },
     { value: "RED", label: "Red" },
