@@ -1,130 +1,204 @@
-import { useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import ProductsList from "./ProductsList";
 import { PlusSmIcon } from "@heroicons/react/solid";
 import { MobileFilter } from "./MobileFilter";
 import { DesktopFilter } from "./DesktopFilter";
-// import Shoe from "../interfaces/shoe.interface";
 import CollectionHeader from "./CollectionHeader";
 import useProductsSWR from "../hooks/useProductSWR";
+import Shoe from "../interfaces/shoe.interface";
+import FilterOptions from "../interfaces/filterOptions.interface";
+import FilterForm from "../interfaces/filterForm.interface";
+import {
+  clothingFilter,
+  footwearFilter,
+  accessoriesFilter,
+} from "../utils/filterOptions";
+import { useLocation } from "react-router";
+import ListPageSelect from "./ListPageSelect";
 
-// const products: Shoe[] = [
-//   {
-//     id: 1,
-//     name: "Earthen Bottle",
-//     description: "abcd",
-//     categoryId: 1,
-//     EUR: 48,
-//     GBP: 48,
-//     USD: 48,
-//     imageSrc:
-//       "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-01.jpg",
-//     imageAlt:
-//       "Tall slender porcelain bottle with natural clay textured body and cork stopper.",
-//     sizeUK: 9,
-//     sizeUS: 9,
-//     sizeEUR: 9,
-//     color: "red",
-//     collection: "trainers",
-//   },
-//   {
-//     id: 2,
-//     name: "Nomad Tumbler",
-//     description: "abcd",
-//     categoryId: 1,
-//     EUR: 35,
-//     GBP: 35,
-//     USD: 35,
-//     imageSrc:
-//       "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-02.jpg",
-//     imageAlt:
-//       "Olive drab green insulated bottle with flablack screw lid and flat top.",
-//     sizeUK: 9,
-//     sizeUS: 9,
-//     sizeEUR: 9,
-//     color: "black",
-//     collection: "trainers",
-//   },
-//   {
-//     id: 3,
-//     name: "Focus Paper Refill",
-//     description: "abcd",
-//     categoryId: 1,
-//     EUR: 89,
-//     GBP: 89,
-//     USD: 89,
-//     imageSrc:
-//       "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-03.jpg",
-//     imageAlt:
-//       "Person using a pen to cross a task off a productivity paper card.",
-//     sizeUK: 9,
-//     sizeUS: 9,
-//     sizeEUR: 9,
-//     color: "black",
-//     collection: "trainers",
-//   },
-//   {
-//     id: 4,
-//     name: "Machined Mechanical Pencil",
-//     description: "abcd",
-//     categoryId: 1,
-//     EUR: 35,
-//     GBP: 35,
-//     USD: 35,
-//     imageSrc:
-//       "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-04.jpg",
-//     imageAlt:
-//       "Hand holding black machined steel mechanical pencil with brass tip and top.",
-//     sizeUK: 9,
-//     sizeUS: 9,
-//     sizeEUR: 9,
-//     color: "black",
-//     collection: "trainers",
-//   },
-//   // More products...
-// ];
-
-const filters = [
+const devProducts: Shoe[] = [
   {
-    id: "color",
-    name: "Color",
-    options: [
-      { value: "white", label: "White" },
-      { value: "beige", label: "Beige" },
-      { value: "blue", label: "Blue" },
-      { value: "brown", label: "Brown" },
-      { value: "green", label: "Green" },
-      { value: "purple", label: "Purple" },
-    ],
+    id: 1,
+    name: "Earthen Bottle",
+    description: "abcd",
+    categoryId: 1,
+    eur: 48,
+    gbp: 48,
+    usd: 48,
+    imageSrc:
+      "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-01.jpg",
+    imageAlt:
+      "Tall slender porcelain bottle with natural clay textured body and cork stopper.",
+    allSizes: [6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 12, 13],
+    availableSizes: [7, 8, 9, 9.5, 11, 12],
+    color: "red",
+    collection: "trainers",
   },
   {
-    id: "category",
-    name: "Category",
-    options: [
-      { value: "new-arrivals", label: "All New Arrivals" },
-      { value: "tees", label: "Tees" },
-      { value: "crewnecks", label: "Crewnecks" },
-      { value: "sweatshirts", label: "Sweatshirts" },
-      { value: "pants-shorts", label: "Pants & Shorts" },
-    ],
+    id: 2,
+    name: "Nomad Tumbler",
+    description: "abcd",
+    categoryId: 1,
+    eur: 35,
+    gbp: 35,
+    usd: 35,
+    imageSrc:
+      "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-02.jpg",
+    imageAlt:
+      "Olive drab green insulated bottle with flablack screw lid and flat top.",
+    allSizes: [6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 12, 13],
+    availableSizes: [7, 8, 9, 9.5, 11, 12],
+    color: "black",
+    collection: "trainers",
   },
   {
-    id: "sizes",
-    name: "Sizes",
-    options: [
-      { value: "xs", label: "XS" },
-      { value: "s", label: "S" },
-      { value: "m", label: "M" },
-      { value: "l", label: "L" },
-      { value: "xl", label: "XL" },
-      { value: "2xl", label: "2XL" },
-    ],
+    id: 3,
+    name: "Focus Paper Refill",
+    description: "abcd",
+    categoryId: 1,
+    eur: 89,
+    gbp: 89,
+    usd: 89,
+    imageSrc:
+      "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-03.jpg",
+    imageAlt:
+      "Person using a pen to cross a task off a productivity paper card.",
+    allSizes: [6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 12, 13],
+    availableSizes: [7, 8, 9, 9.5, 11, 12],
+    color: "black",
+    collection: "trainers",
   },
+  {
+    id: 4,
+    name: "Machined Mechanical Pencil",
+    description: "abcd",
+    categoryId: 1,
+    eur: 35,
+    gbp: 35,
+    usd: 35,
+    imageSrc:
+      "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-04.jpg",
+    imageAlt:
+      "Hand holding black machined steel mechanical pencil with brass tip and top.",
+    allSizes: [6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 12, 13],
+    availableSizes: [7, 8, 9, 9.5, 11, 12],
+    color: "black",
+    collection: "trainers",
+  },
+  // More products...
 ];
 
+const defaultFilterForm: FilterForm = {
+  categories: [],
+  colors: [],
+  sizes: [],
+};
+
 const Products = () => {
+  const location = useLocation();
+  const locationArray = location.pathname.split("/");
+  const pathname = locationArray[2];
+  const categoryChosen = locationArray[3];
+
+  const [page, setPage] = useState(0);
+
+  const [filterOptions, setFilterOptions] =
+    useState<FilterOptions[]>(clothingFilter);
+
+  if (categoryChosen) {
+    defaultFilterForm.categories = [categoryChosen];
+  } else {
+    defaultFilterForm.categories = [
+      ...filterOptions[0].options.map((option) => option.value),
+    ];
+  }
+
+  const [filterForm, setFilterForm] = useState<FilterForm>(defaultFilterForm);
+
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
-  const { products } = useProductsSWR(4, 1);
+  const { products, isLoading, isError } = useProductsSWR(
+    filterForm.categories,
+    filterForm.colors,
+    filterForm.sizes,
+    page
+  );
+
+  const onPageChange = (newPage: number) => {
+    setPage(newPage);
+  };
+
+  const onFormChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const name = event.target.name;
+    const value = event.target.value;
+
+    if (name === "categories") {
+      if (filterForm[name].indexOf(value) !== -1) {
+        const newCategories = filterForm[name].filter((cat) => cat !== value);
+        setFilterForm((prev) => {
+          return { ...prev, categories: newCategories };
+        });
+      } else {
+        const newCategories = filterForm[name].slice();
+        newCategories.push(value);
+        setFilterForm((prev) => {
+          return { ...prev, categories: newCategories };
+        });
+      }
+    }
+
+    if (name === "colors") {
+      if (filterForm[name].indexOf(value) !== -1) {
+        const newColors = filterForm[name].filter((cat) => cat !== value);
+        setFilterForm((prev) => {
+          return { ...prev, colors: newColors };
+        });
+      } else {
+        const newColors = filterForm[name].slice();
+        newColors.push(value);
+        setFilterForm((prev) => {
+          return { ...prev, colors: newColors };
+        });
+      }
+    }
+
+    if (name === "sizes") {
+      if (filterForm[name].indexOf(value) !== -1) {
+        const newSizes = filterForm[name].filter((cat) => cat !== value);
+        setFilterForm((prev) => {
+          return { ...prev, sizes: newSizes };
+        });
+      } else {
+        const newSizes = filterForm[name].slice();
+        newSizes.push(value);
+        setFilterForm((prev) => {
+          return { ...prev, sizes: newSizes };
+        });
+      }
+    }
+  };
+
+  useEffect(() => {
+    switch (pathname) {
+      case "footwear":
+        setFilterOptions(footwearFilter);
+        break;
+      case "accessories":
+        setFilterOptions(accessoriesFilter);
+        break;
+      default:
+        setFilterOptions(clothingFilter);
+        break;
+    }
+  }, [pathname]);
+
+  useEffect(() => {
+    setFilterForm(defaultFilterForm);
+  }, [pathname]);
+
+  useEffect(() => {
+    setFilterForm(defaultFilterForm);
+  }, [categoryChosen]);
 
   return (
     <div className="bg-white">
@@ -132,7 +206,9 @@ const Products = () => {
         <MobileFilter
           mobileFiltersOpen={mobileFiltersOpen}
           setMobileFiltersOpen={setMobileFiltersOpen}
-          filters={filters}
+          filters={filterOptions}
+          formChangeHandler={onFormChange}
+          filterForm={filterForm}
         />
         <main className="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
           <CollectionHeader
@@ -158,12 +234,25 @@ const Products = () => {
                 />
               </button>
 
-              <DesktopFilter filters={filters} />
+              <DesktopFilter
+                filters={filterOptions}
+                formChangeHandler={onFormChange}
+                filterForm={filterForm}
+              />
             </aside>
 
             {/* Product grid */}
             <div className="lg:mt-0 lg:col-span-2 xl:col-span-3">
-              <ProductsList products={products} />
+              {isLoading ? (
+                <div className="text-9xl text-red-900">IS LOADING</div>
+              ) : (
+                <ProductsList products={isError ? devProducts : products} />
+              )}
+              <ListPageSelect
+                currentPage={page}
+                totalPages={10}
+                pageChangeHandler={onPageChange}
+              />
             </div>
           </div>
         </main>
