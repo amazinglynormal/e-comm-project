@@ -2,6 +2,7 @@ package sb.ecomm.product;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import sb.ecomm.category.CategoryRepository;
 import sb.ecomm.exceptions.ProductNotFoundException;
 import sb.ecomm.product.dto.CreateProductDTO;
 import sb.ecomm.product.dto.ProductDTO;
+import sb.ecomm.product.dto.QueryResults;
 import sb.ecomm.product.dto.UpdateProductDTO;
 
 import java.util.ArrayList;
@@ -32,7 +34,7 @@ public class ProductService {
         this.mapper = mapper;
     }
 
-    Iterable<ProductDTO> findProductsByCategoriesAndColorsAndSizes(List<String> categories,
+    QueryResults findProductsByCategoriesAndColorsAndSizes(List<String> categories,
                                                                    List<String> colors,
                                                                    List<String> sizes,
                                                                    int page) {
@@ -41,23 +43,29 @@ public class ProductService {
         List<Color> colorsList = convertStringsToColors(colors);
         Pageable pageable = PageRequest.of(page, 15);
 
-        Iterable<Product> products =
+        Page<Product> products =
                 productRepository.findProductsByCategoryInAndColorInAndAvailableSizesIn(categoryList, colorsList, sizes, pageable);
 
-        return convertProductsToProductDTOs(products);
+        List<ProductDTO> productDTOS = convertProductsToProductDTOs(products);
+
+        return new QueryResults(productDTOS, products.getNumberOfElements(),
+                products.getTotalPages());
     }
 
-    Iterable<ProductDTO> findProductsByCategories(List<String> categories, int page) {
+    QueryResults findProductsByCategories(List<String> categories, int page) {
         List<Category> categoryList = convertCategoryNamesIntoCategoryList(categories);
         Pageable pageable = PageRequest.of(page, 15);
-        Iterable<Product> products =
+        Page<Product> products =
                 productRepository.findProductsByCategoryIn(categoryList,
                         pageable);
 
-        return convertProductsToProductDTOs(products);
+        List<ProductDTO> productDTOS = convertProductsToProductDTOs(products);
+
+        return new QueryResults(productDTOS, products.getNumberOfElements(),
+                products.getTotalPages());
     }
 
-    Iterable<ProductDTO>findProductsByCategoriesAndColors(List<String> categories,
+    QueryResults findProductsByCategoriesAndColors(List<String> categories,
                                                           List<String> colors,
                                                           int page) {
         List<Category> categoryList =
@@ -65,13 +73,16 @@ public class ProductService {
         List<Color> colorsList = convertStringsToColors(colors);
         Pageable pageable = PageRequest.of(page, 15);
 
-        Iterable<Product> products =
+        Page<Product> products =
                 productRepository.findProductsByCategoryInAndColorIn(categoryList, colorsList, pageable);
 
-        return convertProductsToProductDTOs(products);
+        List<ProductDTO> productDTOS = convertProductsToProductDTOs(products);
+
+        return new QueryResults(productDTOS, products.getNumberOfElements(),
+                products.getTotalPages());
     }
 
-    Iterable<ProductDTO>findProductsByCategoriesAndSizes(List<String> categories,
+    QueryResults findProductsByCategoriesAndSizes(List<String> categories,
                                                          List<String> sizes,
                                                          int page) {
 
@@ -79,10 +90,13 @@ public class ProductService {
                 convertCategoryNamesIntoCategoryList(categories);
         Pageable pageable = PageRequest.of(page, 15);
 
-        Iterable<Product> products =
+        Page<Product> products =
                 productRepository.findProductsByCategoryInAndAvailableSizesIn(categoryList, sizes, pageable);
 
-        return convertProductsToProductDTOs(products);
+        List<ProductDTO> productDTOS = convertProductsToProductDTOs(products);
+
+        return new QueryResults(productDTOS, products.getNumberOfElements(),
+                products.getTotalPages());
     }
 
 
@@ -219,7 +233,8 @@ public class ProductService {
         return colors;
     }
 
-    private List<ProductDTO> convertProductsToProductDTOs(Iterable<Product> products) {
+    private List<ProductDTO> convertProductsToProductDTOs(Page<Product> products) {
+        System.out.println("GOT HERE!!!!!!!!!!!!!!!!!!!");
         List<ProductDTO> productDTOs = new ArrayList<>();
         products.forEach(product -> productDTOs.add(mapper.map(product, ProductDTO.class)));
         return productDTOs;

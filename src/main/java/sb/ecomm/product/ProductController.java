@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import sb.ecomm.product.dto.CreateProductDTO;
 import sb.ecomm.product.dto.ProductDTO;
+import sb.ecomm.product.dto.QueryResults;
 import sb.ecomm.product.dto.UpdateProductDTO;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public Iterable<ProductDTO> getAllProducts(
+    public QueryResults getAllProducts(
             @RequestParam(name = "categories") List<String> categories,
             @RequestParam(name = "colors") Optional<List<String>> colors,
             @RequestParam(name = "sizes") Optional<List<String>> sizes,
