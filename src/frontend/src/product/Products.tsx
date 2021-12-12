@@ -117,7 +117,7 @@ const Products = () => {
 
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
-  const { products, isLoading, isError } = useProductsSWR(
+  const { data, isLoading, isError } = useProductsSWR(
     filterForm.categories,
     filterForm.colors,
     filterForm.sizes,
@@ -246,11 +246,13 @@ const Products = () => {
               {isLoading ? (
                 <div className="text-9xl text-red-900">IS LOADING</div>
               ) : (
-                <ProductsList products={isError ? devProducts : products} />
+                <ProductsList
+                  products={isError ? devProducts : data.products}
+                />
               )}
               <ListPageSelect
                 currentPage={page}
-                totalPages={10}
+                totalPages={data.totalPages}
                 pageChangeHandler={onPageChange}
               />
             </div>
