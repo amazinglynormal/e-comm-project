@@ -3,6 +3,12 @@ import useSWR from "swr";
 import Product from "../types/Product.type";
 import qs from "qs";
 
+interface ReturnData {
+  products: Product[];
+  totalProducts: number;
+  totalPages: number;
+}
+
 const productsFetcher = async (url: string) => {
   const res = await axios.get(url);
   return res.data;
@@ -31,6 +37,6 @@ export default function useProductsSWR(
   return {
     isError: error,
     isLoading: !error && !data,
-    products: data as Product[],
+    data: data as ReturnData,
   };
 }
