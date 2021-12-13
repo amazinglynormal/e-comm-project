@@ -216,6 +216,7 @@ const Products = () => {
             collectionDescription={"Men's Trainers description will go here"}
           />
 
+          {/* Filter */}
           <div className="pt-12 lg:grid lg:grid-cols-3 lg:gap-x-8 xl:grid-cols-4">
             <aside>
               <h2 className="sr-only">Filters</h2>
@@ -246,15 +247,17 @@ const Products = () => {
               {isLoading ? (
                 <div className="text-9xl text-red-900">IS LOADING</div>
               ) : (
-                <ProductsList
-                  products={isError ? devProducts : data.products}
-                />
+                <>
+                  <ProductsList
+                    products={isError ? devProducts : data.products}
+                  />
+                  <ListPageSelect
+                    currentPage={page}
+                    totalPages={data.totalPages}
+                    pageChangeHandler={onPageChange}
+                  />
+                </>
               )}
-              <ListPageSelect
-                currentPage={page}
-                totalPages={data.totalPages}
-                pageChangeHandler={onPageChange}
-              />
             </div>
           </div>
         </main>
