@@ -48,7 +48,8 @@ public class ProductService {
 
         List<ProductDTO> productDTOS = convertProductsToProductDTOs(products);
 
-        return new QueryResults(productDTOS, products.getNumberOfElements(),
+        return new QueryResults(productDTOS,
+                products.getNumberOfElements(),
                 products.getTotalPages());
     }
 
@@ -61,7 +62,8 @@ public class ProductService {
 
         List<ProductDTO> productDTOS = convertProductsToProductDTOs(products);
 
-        return new QueryResults(productDTOS, products.getNumberOfElements(),
+        return new QueryResults(productDTOS,
+                products.getNumberOfElements(),
                 products.getTotalPages());
     }
 
@@ -78,7 +80,8 @@ public class ProductService {
 
         List<ProductDTO> productDTOS = convertProductsToProductDTOs(products);
 
-        return new QueryResults(productDTOS, products.getNumberOfElements(),
+        return new QueryResults(productDTOS,
+                products.getNumberOfElements(),
                 products.getTotalPages());
     }
 
@@ -95,7 +98,8 @@ public class ProductService {
 
         List<ProductDTO> productDTOS = convertProductsToProductDTOs(products);
 
-        return new QueryResults(productDTOS, products.getNumberOfElements(),
+        return new QueryResults(productDTOS,
+                products.getNumberOfElements(),
                 products.getTotalPages());
     }
 
@@ -234,7 +238,6 @@ public class ProductService {
     }
 
     private List<ProductDTO> convertProductsToProductDTOs(Page<Product> products) {
-        System.out.println("GOT HERE!!!!!!!!!!!!!!!!!!!");
         List<ProductDTO> productDTOs = new ArrayList<>();
         products.forEach(product -> productDTOs.add(mapper.map(product, ProductDTO.class)));
         return productDTOs;
