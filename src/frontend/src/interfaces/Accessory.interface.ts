@@ -4,7 +4,7 @@ import GenericProduct from "./generic-product.interface";
 interface Accessory extends GenericProduct {
   color: Color;
   size: string;
-  stockRemaining: number;
+  inStock: boolean;
 }
 
 export default Accessory;
