@@ -5,8 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import sb.ecomm.category.Category;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity(name = "Product")
 @Table(name = "product")
@@ -40,11 +38,14 @@ public class Product {
     @Enumerated(EnumType.STRING)
     private Color color;
 
-    @ElementCollection
-    private List<String> allSizes = new ArrayList<>();
+    @Column(nullable = false)
+    private String size;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    private List<String> availableSizes = new ArrayList<>();
+    @Column(nullable = false)
+    private boolean inStock;
+
+    @Column(nullable = false)
+    private int stockRemaining;
 
     @JsonIgnoreProperties("products")
     @ManyToOne
@@ -63,8 +64,9 @@ public class Product {
                    String imageSrc,
                    String imageAlt,
                    Color color,
-                   List<String> allSizes,
-                   List<String> availableSizes,
+                   String size,
+                   boolean inStock,
+                   int stockRemaining,
                    Category category) {
         this.name = name;
         this.description = description;
@@ -74,8 +76,9 @@ public class Product {
         this.imageSrc = imageSrc;
         this.imageAlt = imageAlt;
         this.color = color;
-        this.allSizes = allSizes;
-        this.availableSizes = availableSizes;
+        this.size = size;
+        this.inStock = inStock;
+        this.stockRemaining = stockRemaining;
         this.category = category;
     }
 
@@ -151,20 +154,28 @@ public class Product {
         this.color = color;
     }
 
-    public List<String> getAllSizes() {
-        return allSizes;
+    public String getSize() {
+        return size;
     }
 
-    public void setAllSizes(List<String> allSizes) {
-        this.allSizes = allSizes;
+    public void setSize(String size) {
+        this.size = size;
     }
 
-    public List<String> getAvailableSizes() {
-        return availableSizes;
+    public boolean isInStock() {
+        return inStock;
     }
 
-    public void setAvailableSizes(List<String> availableSizes) {
-        this.availableSizes = availableSizes;
+    public void setInStock(boolean inStock) {
+        this.inStock = inStock;
+    }
+
+    public int getStockRemaining() {
+        return stockRemaining;
+    }
+
+    public void setStockRemaining(int stockRemaining) {
+        this.stockRemaining = stockRemaining;
     }
 
     public Category getCategory() {

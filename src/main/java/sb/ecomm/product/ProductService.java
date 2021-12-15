@@ -44,7 +44,7 @@ public class ProductService {
         Pageable pageable = PageRequest.of(page, 15);
 
         Page<Product> products =
-                productRepository.findProductsByCategoryInAndColorInAndAvailableSizesIn(categoryList, colorsList, sizes, pageable);
+                productRepository.findProductsByCategoryInAndColorInAndSizeIn(categoryList, colorsList, sizes, pageable);
 
         List<ProductDTO> productDTOS = convertProductsToProductDTOs(products);
 
@@ -94,7 +94,7 @@ public class ProductService {
         Pageable pageable = PageRequest.of(page, 15);
 
         Page<Product> products =
-                productRepository.findProductsByCategoryInAndAvailableSizesIn(categoryList, sizes, pageable);
+                productRepository.findProductsByCategoryInAndSizeIn(categoryList, sizes, pageable);
 
         List<ProductDTO> productDTOS = convertProductsToProductDTOs(products);
 
@@ -131,8 +131,8 @@ public class ProductService {
         updateProductColor(product, updatedProductDTO);
         updateProductImageSrc(product, updatedProductDTO);
         updateProductImageAlt(product, updatedProductDTO);
-        updateProductAllSizes(product, updatedProductDTO);
-        updateProductAvailableSizes(product, updatedProductDTO);
+        updateProductSize(product, updatedProductDTO);
+        updateProductStockRemaining(product, updatedProductDTO);
 
         productRepository.save(product);
 
@@ -203,19 +203,28 @@ public class ProductService {
         }
     }
 
-    private void updateProductAllSizes(Product product,
+    private void updateProductSize(Product product,
                                        UpdateProductDTO updateProductDTO) {
-        if (!compareStringLists(product.getAllSizes(),
-                updateProductDTO.getAllSizes())) {
-            product.setAllSizes(updateProductDTO.getAllSizes());
+        if (!product.getSize().equals(updateProductDTO.getSize())) {
+            product.setSize(updateProductDTO.getSize());
         }
     }
 
-    private void updateProductAvailableSizes(Product product,
+    private void updateProductStockRemaining(Product product,
                                              UpdateProductDTO updateProductDTO) {
-        if (!compareStringLists(product.getAvailableSizes(),
-                updateProductDTO.getAvailableSizes())) {
-            product.setAvailableSizes(updateProductDTO.getAvailableSizes());
+
+        if (product.getStockRemaining() != updateProductDTO.getStockRemaining()) {
+            product.setStockRemaining(updateProductDTO.getStockRemaining());
+        }
+
+        updateStockAvailability(product);
+    }
+
+    private void updateStockAvailability(Product product) {
+        if (product.getStockRemaining() == 0) {
+            product.setInStock(false);
+        } else {
+            product.setInStock(true);
         }
     }
 

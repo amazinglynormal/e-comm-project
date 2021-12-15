@@ -26,9 +26,9 @@ public class UpdateProductDTO {
 
     private Color color;
 
-    private List<String> allSizes;
+    private String size;
 
-    private List<String> availableSizes;
+    private int stockRemaining;
 
     private Long categoryId;
 }

@@ -13,9 +13,9 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, L
     Page<Product> findProductsByCategoryIn(Collection<Category> categories,
                                            Pageable pageable);
 
-    Page<Product> findProductsByCategoryInAndColorInAndAvailableSizesIn(Collection<Category> categories, Collection<Color> colors, Collection<String> sizes, Pageable pageable);
+    Page<Product> findProductsByCategoryInAndColorInAndSizeIn(Collection<Category> categories, Collection<Color> colors, Collection<String> sizes, Pageable pageable);
 
-    Page<Product> findProductsByCategoryInAndAvailableSizesIn(Collection<Category> categories, Collection<String> sizes, Pageable pageable);
+    Page<Product> findProductsByCategoryInAndSizeIn(Collection<Category> categories, Collection<String> sizes, Pageable pageable);
 
     Page<Product> findProductsByCategoryInAndColorIn(Collection<Category> categories, Collection<Color> colors,
                                                   Pageable pageable);

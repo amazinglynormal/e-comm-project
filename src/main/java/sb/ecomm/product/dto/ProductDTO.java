@@ -4,8 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import sb.ecomm.product.Color;
 
-import java.util.List;
-
 @Getter
 @Setter
 public class ProductDTO {
@@ -28,9 +26,9 @@ public class ProductDTO {
 
     private Color color;
 
-    private List<String> allSizes;
+    private String size;
 
-    private List<String> availableSizes;
+    private boolean inStock;
 
     private Long categoryId;
 }
