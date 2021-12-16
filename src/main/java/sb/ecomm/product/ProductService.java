@@ -103,6 +103,19 @@ public class ProductService {
                 products.getTotalPages());
     }
 
+    Iterable<ProductDTO> findAlternativeSizesForProduct(Long id) {
+        Product product =
+                productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
+
+        Pageable pageable = PageRequest.of(0, 30);
+
+        Page<Product> matchingProducts =
+                productRepository.findProductsByNameAndCategoryAndColor(product.getName(),
+                        product.getCategory(), product.getColor(), pageable);
+
+        return convertProductsToProductDTOs(matchingProducts);
+    }
+
 
     ProductDTO findProductById(Long id) {
         Product product =
@@ -250,21 +263,6 @@ public class ProductService {
         List<ProductDTO> productDTOs = new ArrayList<>();
         products.forEach(product -> productDTOs.add(mapper.map(product, ProductDTO.class)));
         return productDTOs;
-    }
-
-    private boolean compareStringLists(List<String> list1,
-                                       List<String> list2) {
-        if (list1.size() != list2.size()) {
-            return false;
-        }
-
-        List<String> copy1 = new ArrayList<>(list1);
-        List<String> copy2 = new ArrayList<>(list2);
-
-        Collections.sort(copy1);
-        Collections.sort(copy2);
-
-        return copy1.equals(copy2);
     }
 
 }

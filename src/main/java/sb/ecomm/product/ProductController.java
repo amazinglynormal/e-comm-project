@@ -42,6 +42,11 @@ public class ProductController {
         return productService.findProductsByCategories(categories, page);
     }
 
+    @GetMapping("/{id}/altSizes")
+    public Iterable<ProductDTO> getAlternativeSizes(@PathVariable long id) {
+        return productService.findAlternativeSizesForProduct(id);
+    }
+
     @GetMapping("/{id}")
     public ProductDTO getProductById(@PathVariable long id) {
         return productService.findProductById(id);
