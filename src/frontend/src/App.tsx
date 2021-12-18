@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { HashRouter as Router, Route, Switch } from "react-router-dom";
 
 import StoreNavigation from "./navigation/StoreNavigation";
 import OrderSummary from "./order/OrderSummary";
@@ -26,15 +26,18 @@ const App = () => {
         <StoreNavigation />
         <Suspense fallback={<div>loading...</div>}>
           <Switch>
-            <Route path="/products/:id/details">
+            <Route path="/product/details/:id">
               <ProductDetails />
             </Route>
             <Route
-              path={["/products/:category/:subCategory", "/products/:category"]}
+              path={[
+                "/products/:category/:subCategory",
+                "/products/:category/",
+              ]}
             >
               <Products />
             </Route>
-            <Route path="/cart">
+            <Route path="/cart/:orderId">
               <Cart />
             </Route>
             <Route path="/ordersummary">
