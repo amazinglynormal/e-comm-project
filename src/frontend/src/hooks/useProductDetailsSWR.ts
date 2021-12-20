@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import useSWR from "swr";
 import Product from "../types/Product.type";
 
@@ -7,12 +7,28 @@ const fetcher = async (url: string) => {
   return res.data;
 };
 
+const useFetchAltSizes = (productId: string) => {
+  const { data, error } = useSWR(
+    `api/v1/product/${productId}/altSizes`,
+    fetcher
+  );
+
+  return {
+    isError: error as AxiosError,
+    isLoading: !error && !data,
+    products: data as Product[],
+  };
+};
+
 export default function useProductDetailsSWR(productId: string) {
   const { data, error } = useSWR(`/api/v1/products/${productId}`, fetcher);
 
+  const { products, isError, isLoading } = useFetchAltSizes(productId);
+
   return {
-    isError: error,
-    isLoading: !error && !data,
+    isError: isError || (error as AxiosError),
+    isLoading: (!error && !data) || isLoading,
     data: data as Product,
+    products,
   };
 }
