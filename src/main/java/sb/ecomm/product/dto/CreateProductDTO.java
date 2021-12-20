@@ -26,11 +26,11 @@ public class CreateProductDTO {
 
     private Color color;
 
-    private String sizes;
+    private String size;
 
     private boolean inStock;
 
-    private int StockRemaining;
+    private int stockRemaining;
 
     private Long categoryId;
 }
