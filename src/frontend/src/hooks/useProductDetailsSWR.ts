@@ -9,7 +9,7 @@ const fetcher = async (url: string) => {
 
 const useFetchAltSizes = (productId: string) => {
   const { data, error } = useSWR(
-    `api/v1/product/${productId}/altSizes`,
+    `api/v1/products/${productId}/altSizes`,
     fetcher
   );
 
