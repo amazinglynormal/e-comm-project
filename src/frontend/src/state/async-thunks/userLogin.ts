@@ -26,7 +26,7 @@ const userLogin = createAsyncThunk(
       }
     );
 
-    return { ...getUserInfoResponse.data, token };
+    return { user: getUserInfoResponse.data, token };
   }
 );
 

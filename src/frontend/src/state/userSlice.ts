@@ -1,26 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
-import Order from "../interfaces/order.interface";
+import User from "../interfaces/user.interface";
 import userLogin from "./async-thunks/userLogin";
 import userSignUp from "./async-thunks/userSignUp";
 import { RootState } from "./store";
 
 interface UserState {
-  id: string | undefined;
-  username: string | undefined;
-  email: string | undefined;
-  role: "GUEST" | "CUSTOMER";
-  orders: Order[];
+  user: User | undefined;
   token: string | undefined;
   error: string | null;
   status: "idle" | "pending" | "succeeded" | "failed";
 }
 
 const initialState: UserState = {
-  id: undefined,
-  username: undefined,
-  email: undefined,
-  role: "GUEST",
-  orders: [],
+  user: undefined,
   token: undefined,
   status: "idle",
   error: null,
@@ -39,11 +31,7 @@ export const userSlice = createSlice({
     });
 
     builder.addCase(userLogin.fulfilled, (state, action) => {
-      state.id = action.payload.id;
-      state.username = action.payload.username;
-      state.email = action.payload.email;
-      state.role = action.payload.role;
-      state.orders = action.payload.orders;
+      state.user = action.payload.user;
       state.token = action.payload.token;
       state.error = null;
       state.status = "succeeded";
@@ -57,25 +45,21 @@ export const userSlice = createSlice({
     });
 
     builder.addCase(userSignUp.fulfilled, (state, action) => {
-      state.id = action.payload.id;
-      state.username = action.payload.username;
-      state.email = action.payload.email;
-      state.role = action.payload.role;
-      state.orders = action.payload.orders;
+      state.user = action.payload;
       state.error = null;
       state.status = "succeeded";
     });
   },
 });
 
-export const selectUser = (state: RootState) => state.user;
+export const selectUser = (state: RootState) => state.user.user;
 
-export const selectUserOrders = (state: RootState) => state.user.orders;
+export const selectUserOrders = (state: RootState) => state.user.user?.orders;
 
 export const selectUserOrderById = (state: RootState, id: number) => {
-  return state.user.orders.find((order) => order.id === id);
+  return state.user.user?.orders.find((order) => order.id === id);
 };
 
-export const selectUsername = (state: RootState) => state.user.username;
+export const selectUsername = (state: RootState) => state.user.user?.username;
 
 export default userSlice.reducer;
