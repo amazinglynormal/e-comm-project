@@ -13,6 +13,5 @@ import java.util.UUID;
 public class CreateOrderDTO {
 
     private OrderStatus status;
-    private UUID userId;
     private List<Long> productIds;
 }
