@@ -4,6 +4,7 @@ import { MenuIcon } from "@heroicons/react/outline";
 
 import { FlyoutMenu } from "./FlyoutMenu";
 import { CartLink } from "./CartLink";
+import { Link } from "react-router-dom";
 
 const navigation = {
   categories: [
@@ -131,14 +132,14 @@ export const DesktopNavigation = ({ setOpen }: Props) => {
           <div className="h-16 flex items-center justify-between">
             {/* Logo (lg+) */}
             <div className="hidden lg:flex-1 lg:flex lg:items-center">
-              <a href="/">
+              <Link to="/">
                 <span className="sr-only">Workflow</span>
                 <img
                   className="h-8 w-auto"
                   src="https://tailwindui.com/img/logos/workflow-mark.svg?color=indigo&shade=600"
                   alt=""
                 />
-              </a>
+              </Link>
             </div>
 
             <div className="hidden h-full lg:flex">
@@ -165,14 +166,14 @@ export const DesktopNavigation = ({ setOpen }: Props) => {
             </div>
 
             {/* Logo (lg-) */}
-            <a href="/" className="lg:hidden">
+            <Link to="/" className="lg:hidden">
               <span className="sr-only">Workflow</span>
               <img
                 src="https://tailwindui.com/img/logos/workflow-mark.svg?color=indigo&shade=600"
                 alt=""
                 className="h-8 w-auto"
               />
-            </a>
+            </Link>
 
             <div className="flex-1 flex items-center justify-end">
               <div className="flex items-center lg:ml-8">
