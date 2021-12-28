@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "./store";
 
 import createOrder from "./async-thunks/createOrder";
@@ -21,7 +21,11 @@ const initialState: OrderState = {
 export const orderSlice = createSlice({
   name: "order",
   initialState,
-  reducers: {},
+  reducers: {
+    setAsActiveOrder: (state, action: PayloadAction<Order>) => {
+      state.activeOrder = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(createOrder.pending, (state) => {
       state.status = "pending";
@@ -72,12 +76,14 @@ export const orderSlice = createSlice({
   },
 });
 
+export const { setAsActiveOrder } = orderSlice.actions;
+
 export const selectOrder = (state: RootState) => state.order.activeOrder;
 
 export const selectOrderProducts = (state: RootState) =>
   state.order.activeOrder?.products;
 
 export const selectOrderStatus = (state: RootState) =>
-  state.order.activeOrder?.orderStatus;
+  state.order.activeOrder?.status;
 
 export default orderSlice.reducer;

@@ -5,7 +5,7 @@ import axios from "axios";
 const deleteOrder = createAsyncThunk<void, void, { state: RootState }>(
   "order/deleteOrder",
   async (_, { getState }) => {
-    const userId = getState().user.id;
+    const userId = getState().user.user?.id;
     const token = getState().user.token;
     const orderId = getState().order.activeOrder?.id;
 

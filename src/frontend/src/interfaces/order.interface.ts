@@ -2,7 +2,7 @@ import Product from "../types/Product.type";
 
 interface Order {
   id: number;
-  orderStatus: "INACTIVE" | "ACTIVE" | "DISPATCHED" | "DELIVERED";
+  status: "INACTIVE" | "ACTIVE" | "DISPATCHED" | "DELIVERED";
   userId: string;
   products: Product[];
 }

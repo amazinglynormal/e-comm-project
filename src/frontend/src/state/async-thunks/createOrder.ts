@@ -12,7 +12,7 @@ const createOrder = createAsyncThunk<Order, number, { state: RootState }>(
       `/api/v1/users/${userId}/orders`,
       {
         productIds: [productId],
-        orderStatus: "ACTIVE",
+        status: "ACTIVE",
       },
       {
         headers: {

@@ -12,7 +12,7 @@ interface ThunkArgs {
 const updateOrder = createAsyncThunk<Order, ThunkArgs, { state: RootState }>(
   "order/updateOrder",
   async (updateOrder: ThunkArgs, { getState }) => {
-    const userId = getState().user.id;
+    const userId = getState().user.user?.id;
     const token = getState().user.token;
     const orderId = getState().order.activeOrder?.id;
 

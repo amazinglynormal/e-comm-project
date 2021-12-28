@@ -4,6 +4,7 @@ import { useAppDispatch } from "../hooks/redux-hooks";
 import userLogin from "../state/async-thunks/userLogin";
 import { useHistory } from "react-router";
 import { unwrapResult } from "@reduxjs/toolkit";
+import { setAsActiveOrder } from "../state/orderSlice";
 
 const defaultFormData = { email: "", password: "" };
 
@@ -41,7 +42,13 @@ const LogIn = () => {
     if (email.length > 0 && password.length >= 8) {
       try {
         const actionResult = await dispatch(userLogin({ email, password }));
-        unwrapResult(actionResult);
+        const userState = unwrapResult(actionResult);
+        const activeOrder = userState.user.orders.find(
+          (order) => order.status === "ACTIVE"
+        );
+        if (activeOrder) {
+          dispatch(setAsActiveOrder(activeOrder));
+        }
         setFormData(defaultFormData);
         history.push("/");
       } catch (error) {
