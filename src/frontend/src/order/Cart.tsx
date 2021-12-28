@@ -1,58 +1,9 @@
-import { useHistory, useParams } from "react-router";
+import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import { useAppSelector } from "../hooks/redux-hooks";
 import { selectOrder } from "../state/orderSlice";
-import Product from "../types/Product.type";
 import CartItem from "./CartItem";
 import CartSummary from "./CartSummary";
-
-const products = [
-  {
-    id: 1,
-    name: "Basic Tee",
-    eur: 32.99,
-    usd: 32.99,
-    gbp: 32.99,
-    color: "red",
-    size: "L",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/shopping-cart-page-01-product-01.jpg",
-    imageAlt: "Front of men's Basic Tee in sienna.",
-    inStock: true,
-    categoryId: 1,
-    description: "test description",
-  },
-  {
-    id: 2,
-    name: "Basic Tee",
-    eur: 32.99,
-    usd: 32.99,
-    gbp: 32.99,
-    color: "blue",
-    size: "L",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/shopping-cart-page-01-product-02.jpg",
-    imageAlt: "Front of men's Basic Tee in black.",
-    inStock: true,
-    categoryId: 1,
-    description: "test description",
-  },
-  {
-    id: 3,
-    name: "Nomad Tumbler",
-    eur: 32.99,
-    usd: 32.99,
-    gbp: 32.99,
-    color: "black",
-    size: "L",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/shopping-cart-page-01-product-03.jpg",
-    imageAlt: "Insulated bottle with white base and black snap lid.",
-    inStock: false,
-    categoryId: 1,
-    description: "test description",
-  },
-] as Product[];
 
 const EmptyCart = () => {
   return (
@@ -68,15 +19,8 @@ const EmptyCart = () => {
   );
 };
 
-interface CartRouteParams {
-  orderId: string;
-}
-
 const Cart = () => {
   const history = useHistory();
-  const { orderId } = useParams<CartRouteParams>();
-
-  console.log(orderId);
 
   const order = useAppSelector(selectOrder);
 
@@ -103,7 +47,7 @@ const Cart = () => {
               <EmptyCart />
             ) : (
               <ul className="border-t border-b border-gray-200 divide-y divide-gray-200">
-                {products.map((product) => (
+                {order.products.map((product) => (
                   <CartItem key={product.id} product={product} />
                 ))}
               </ul>
