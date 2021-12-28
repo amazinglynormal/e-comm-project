@@ -34,7 +34,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "#/**",
                         "/api/v1/products/**",
                         "/images/**",
-                        "/api/v1/categories/**").permitAll()
+                        "/api/v1/categories/**",
+                        "/favicon.ico").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/users").permitAll()
                 .anyRequest().authenticated()
                 .and()
