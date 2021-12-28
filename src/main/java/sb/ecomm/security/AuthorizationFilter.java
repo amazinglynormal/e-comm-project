@@ -38,10 +38,10 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
         if (isUriForUserEndpoint(requestUri) || isUriForOrdersEndpoint(requestUri)) {
 
             String resourceId;
-            if (isUriForUserEndpoint(requestUri)) {
-                resourceId = getResourceIdFromUri(requestUri);
-            } else {
+            if (isUriForOrdersEndpoint(requestUri)) {
                 resourceId = getUserIdFromOrdersEndpoint(requestUri);
+            } else {
+                resourceId = getResourceIdFromUri(requestUri);
             }
 
             authentication =
@@ -57,7 +57,7 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
     }
 
     private boolean isUriForOrdersEndpoint(String uri) {
-        Pattern pattern = Pattern.compile("api/v1/users/\\w*/orders",
+        Pattern pattern = Pattern.compile("api/v1/users/[\\w-]*/orders",
                 Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(uri);
         return matcher.find();
@@ -69,7 +69,7 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
 
 
     private boolean isUriForUserEndpoint(String uri) {
-        Pattern pattern = Pattern.compile("api/v1/users/\\w*",
+        Pattern pattern = Pattern.compile("api/v1/users/[\\w-]*",
                 Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(uri);
         return matcher.find();
