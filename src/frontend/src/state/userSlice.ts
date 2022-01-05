@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import User from "../interfaces/user.interface";
 import userLogin from "./async-thunks/userLogin";
 import userSignUp from "./async-thunks/userSignUp";
+import userReauth from "./async-thunks/userReauth";
 import { RootState } from "./store";
 
 interface UserState {
@@ -48,6 +49,13 @@ export const userSlice = createSlice({
       state.user = action.payload;
       state.error = null;
       state.status = "succeeded";
+    });
+
+    builder.addCase(userReauth.rejected, (state, action) => {
+      state.status = "failed";
+      if (action.error.message) {
+        state.error = action.error.message;
+      }
     });
   },
 });
