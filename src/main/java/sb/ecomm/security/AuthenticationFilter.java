@@ -40,7 +40,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                             req.getPassword(),
                             new ArrayList<>()));
         } catch (IOException ex) {
-            throw new RuntimeException("Hit an IO EXCEPTION");
+            throw new RuntimeException("Hit authentication Exception");
         }
     }
 
