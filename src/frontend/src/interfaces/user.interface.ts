@@ -1,3 +1,4 @@
+import Address from "./Address.interface";
 import Order from "./order.interface";
 
 interface User {
@@ -6,6 +7,7 @@ interface User {
   email: string;
   role: "GUEST" | "CUSTOMER";
   orders: Order[];
+  address: Address;
 }
 
 export default User;
