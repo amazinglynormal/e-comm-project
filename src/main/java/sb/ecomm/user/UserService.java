@@ -53,6 +53,7 @@ public class UserService {
                                   UpdateUserDTO updateUserDTO) {
         User user =
                 userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        updateUserUsername(user, updateUserDTO);
         updateUserEmail(user,updateUserDTO);
         updateUserPassword(user, updateUserDTO);
         updateUserAddress(user, updateUserDTO);
@@ -96,6 +97,13 @@ public class UserService {
         }
 
         orderService.deleteOrderById(orderId);
+    }
+
+    private void updateUserUsername(User user,
+                               UpdateUserDTO updateUserDTO) {
+        if (updateUserDTO.getUsername() != null) {
+            user.setUsername(updateUserDTO.getUsername());
+        }
     }
 
     private void updateUserEmail(User user,
