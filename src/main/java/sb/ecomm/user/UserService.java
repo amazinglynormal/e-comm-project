@@ -114,6 +114,10 @@ public class UserService {
 
     private void updateUserAddress(User user, UpdateUserDTO updateUserDTO) {
         Address address = user.getAddress();
+        if (address == null) {
+            address = new Address();
+        }
+
         if (updateUserDTO.getLine1() != null) {
             address.setLine1(updateUserDTO.getLine1());
         }
