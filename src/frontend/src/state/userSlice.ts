@@ -3,6 +3,7 @@ import User from "../interfaces/user.interface";
 import userLogin from "./async-thunks/userLogin";
 import userSignUp from "./async-thunks/userSignUp";
 import userReauth from "./async-thunks/userReauth";
+import updateUserInfo from "./async-thunks/updateUserInfo";
 import { RootState } from "./store";
 
 interface UserState {
@@ -52,6 +53,18 @@ export const userSlice = createSlice({
     });
 
     builder.addCase(userReauth.rejected, (state, action) => {
+      state.status = "failed";
+      if (action.error.message) {
+        state.error = action.error.message;
+      }
+    });
+
+    builder.addCase(updateUserInfo.fulfilled, (state, action) => {
+      state.user = action.payload;
+      state.error = null;
+      state.status = "succeeded";
+    });
+    builder.addCase(updateUserInfo.rejected, (state, action) => {
       state.status = "failed";
       if (action.error.message) {
         state.error = action.error.message;
