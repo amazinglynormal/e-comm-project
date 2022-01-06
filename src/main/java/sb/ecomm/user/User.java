@@ -52,6 +52,9 @@ public class User {
     @Column
     private boolean isCredentialsNonExpired = true;
 
+    @Embedded
+    private Address address;
+
     public User() {
     }
 
@@ -170,6 +173,14 @@ public class User {
 
     public void setCredentialsNonExpired(boolean credentialsNonExpired) {
         isCredentialsNonExpired = credentialsNonExpired;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     @Override

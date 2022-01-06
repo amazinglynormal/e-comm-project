@@ -55,6 +55,7 @@ public class UserService {
                 userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         updateUserEmail(user,updateUserDTO);
         updateUserPassword(user, updateUserDTO);
+        updateUserAddress(user, updateUserDTO);
 
         User savedUser = userRepository.save(user);
 
@@ -109,5 +110,32 @@ public class UserService {
         if (updateUserDTO.getPassword() != null) {
             user.setPassword(passwordEncoder.encode(updateUserDTO.getPassword()));
         }
+    }
+
+    private void updateUserAddress(User user, UpdateUserDTO updateUserDTO) {
+        Address address = user.getAddress();
+        if (updateUserDTO.getLine1() != null) {
+            address.setLine1(updateUserDTO.getLine1());
+        }
+        if (updateUserDTO.getLine2() != null) {
+            address.setLine2(updateUserDTO.getLine2());
+        }
+        if (updateUserDTO.getLine3() != null) {
+            address.setLine3(updateUserDTO.getLine3());
+        }
+        if (updateUserDTO.getCity() != null) {
+            address.setCity(updateUserDTO.getCity());
+        }
+        if (updateUserDTO.getProvince() != null) {
+            address.setProvince(updateUserDTO.getProvince());
+        }
+        if (updateUserDTO.getCountry() != null) {
+            address.setCountry(updateUserDTO.getCountry());
+        }
+        if (updateUserDTO.getZipCode() != null) {
+            address.setZipCode(updateUserDTO.getZipCode());
+        }
+
+        user.setAddress(address);
     }
 }
