@@ -7,7 +7,7 @@ interface User {
   email: string;
   role: "GUEST" | "CUSTOMER";
   orders: Order[];
-  address: Address;
+  address?: Address;
 }
 
 export default User;

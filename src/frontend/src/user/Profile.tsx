@@ -1,5 +1,6 @@
 import { useAppSelector } from "../hooks/redux-hooks";
 import { selectUser } from "../state/userSlice";
+import DeleteUserAccountForm from "./DeleteUserAccountForm";
 import ProfileInformationItem from "./ProfileInformationItem";
 import ProfileInformationSection from "./ProfileInformationSection";
 
@@ -36,33 +37,35 @@ const Profile = () => {
                   >
                     <ProfileInformationItem
                       id="Line1"
-                      info={user?.address.line1}
+                      info={user?.address?.line1}
                     />
                     <ProfileInformationItem
                       id="Line2"
-                      info={user?.address.line2}
+                      info={user?.address?.line2}
                     />
                     <ProfileInformationItem
                       id="Line3"
-                      info={user?.address.line3}
+                      info={user?.address?.line3}
                     />
                     <ProfileInformationItem
                       id="City"
-                      info={user?.address.city}
+                      info={user?.address?.city}
                     />
                     <ProfileInformationItem
                       id="Province/State"
-                      info={user?.address.province}
+                      info={user?.address?.province}
                     />
                     <ProfileInformationItem
                       id="Country"
-                      info={user?.address.country}
+                      info={user?.address?.country}
                     />
                     <ProfileInformationItem
                       id="Zip Code"
-                      info={user?.address.zipCode}
+                      info={user?.address?.zipCode}
                     />
                   </ProfileInformationSection>
+
+                  <DeleteUserAccountForm />
                 </div>
               </div>
             </div>

@@ -5,9 +5,10 @@ import userSignUp from "./async-thunks/userSignUp";
 import userReauth from "./async-thunks/userReauth";
 import updateUserInfo from "./async-thunks/updateUserInfo";
 import { RootState } from "./store";
+import deleteUserAccount from "./async-thunks/deleteUserAccount";
 
 interface UserState {
-  user: User | undefined;
+  user: User | undefined | null;
   token: string | undefined;
   error: string | null;
   status: "idle" | "pending" | "succeeded" | "failed";
@@ -65,6 +66,19 @@ export const userSlice = createSlice({
       state.status = "succeeded";
     });
     builder.addCase(updateUserInfo.rejected, (state, action) => {
+      state.status = "failed";
+      if (action.error.message) {
+        state.error = action.error.message;
+      }
+    });
+
+    builder.addCase(deleteUserAccount.fulfilled, (state) => {
+      state.status = "succeeded";
+      state.token = "";
+      state.user = null;
+    });
+
+    builder.addCase(deleteUserAccount.rejected, (state, action) => {
       state.status = "failed";
       if (action.error.message) {
         state.error = action.error.message;
