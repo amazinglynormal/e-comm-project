@@ -7,6 +7,7 @@ import {
   FormEvent,
 } from "react";
 import { useAppDispatch } from "../hooks/redux-hooks";
+import { useAlert } from "../state/AlertContext";
 import updateUserInfo from "../state/async-thunks/updateUserInfo";
 import userReauth from "../state/async-thunks/userReauth";
 import classNames from "../utils/classNames";
@@ -29,6 +30,7 @@ const UpdateInfoForm = ({
   const [currentPassword, setCurrentPassword] = useState("");
   const [updatedDetail, setUpdatedDetail] = useState(currentInfo || "");
   const dispatch = useAppDispatch();
+  const { triggerAlert } = useAlert();
 
   const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.id === "current-password") {
@@ -46,10 +48,10 @@ const UpdateInfoForm = ({
     if (reauthRequired) {
       try {
         const reauth = await dispatch(userReauth({ currentPassword }));
-        const result = unwrapResult(reauth);
-        if (result !== 200) return;
+        unwrapResult(reauth);
       } catch (error) {
-        console.error();
+        triggerAlert("error", "Could not update. Please try again");
+        return;
       }
     }
 
@@ -60,18 +62,10 @@ const UpdateInfoForm = ({
       );
       unwrapResult(update);
       setShowUpdateForm(false);
-
-      //flash success message
+      triggerAlert("success", "Successfully Updated");
     } catch (error) {
-      console.error();
+      triggerAlert("error", "Could not update. Please try again");
     }
-
-    //reauth if necessary
-    //unwrap result
-    //update user
-    //unwrap result
-    //hide form
-    //flash success message?
   };
 
   return (
