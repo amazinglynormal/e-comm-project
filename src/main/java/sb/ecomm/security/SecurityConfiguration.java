@@ -44,6 +44,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .addFilter(new AuthenticationFilter(authenticationManager()))
                 .addFilter(new AuthorizationFilter(authenticationManager()))
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        http.headers()
+                .contentSecurityPolicy(" default-src 'none'; " +
+                        "script-src 'self'; connect-src 'self'; " +
+                        "img-src 'self'; style-src 'self'; frame-ancestors " +
+                        "'self'; form-action 'self';");
     }
 
     @Override
