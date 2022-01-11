@@ -1,6 +1,7 @@
 package sb.ecomm.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.hash.Hashing;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -13,16 +14,18 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import sb.ecomm.auth.AuthenticationRequest;
+import sb.ecomm.user.UserService;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
@@ -30,6 +33,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     public AuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
     }
+
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -54,17 +58,39 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         user.getAuthorities().forEach(authority -> authorities.add(authority.getAuthority()));
         Date exp = new Date(System.currentTimeMillis() + 1000L*60*30);
         Key key = Keys.hmacShaKeyFor("z%C*F-JaNdRgUkXp2s5u8x/A?D(G+KbPeShVmYq3t6w9y$B&E)H@McQfTjWnZr4u".getBytes());
-        String fingerprint = generateRandomStringForJwtFingerprint();
-        System.out.println(fingerprint);
-        String token =
+
+        String accessTokenFingerprint = generateRandomStringForJwtFingerprint();
+        String hashedAccessTokenFingerprint =
+                Hashing.sha256().hashString(accessTokenFingerprint,
+                StandardCharsets.UTF_8).toString();
+
+        String refreshTokenFingerprint =
+                generateRandomStringForJwtFingerprint();
+        String hashedRefreshTokenFingerprint =
+                Hashing.sha256().hashString(refreshTokenFingerprint,
+                StandardCharsets.UTF_8).toString();
+
+
+        String accessToken =
                 Jwts.builder()
                         .claim("email", user.getUsername())
                         .claim("authorities", authorities)
                         .claim("isEnabled", user.isEnabled())
+                        .claim("user_context", hashedAccessTokenFingerprint)
                         .setSubject(user.getId().toString()).signWith(key,
                 SignatureAlgorithm.HS512).setExpiration(exp).compact();
 
-        response.addHeader("Authorization", "Bearer " + token);
+        String refreshToken =
+                Jwts.builder()
+                        .claim("user_context", hashedRefreshTokenFingerprint)
+                        .setSubject(user.getId().toString()).signWith(key,
+                SignatureAlgorithm.HS512).setExpiration(exp).compact();
+
+        response.addHeader("Authorization", "Bearer " + accessToken);
+        response.addHeader("Authorization", "Refresh " + refreshToken);
+
+        addAccessTokenFingerprintCookieToHeader(response, accessTokenFingerprint);
+        addRefreshTokenFingerprintCookieToHeader(response, refreshTokenFingerprint);
 
     }
 
@@ -77,5 +103,38 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 new RandomStringGenerator.Builder().withinRange(pairs).usingRandom(rng::nextInt).build();
 
         return generator.generate(32);
+    }
+
+    private void addAccessTokenFingerprintCookieToHeader(HttpServletResponse response,
+                                              String fingerprint) {
+
+        Date expiresDate = new Date();
+        expiresDate.setTime(expiresDate.getTime() + (900 * 1000));
+        DateFormat gmtFormat = new SimpleDateFormat("EEE, dd-MMM-yyyy " +
+                "HH:mm:ss zzz", Locale.UK);
+        gmtFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        String cookieExpires = "expires=" + gmtFormat.format(expiresDate);
+
+        response.addHeader("Set-cookie",
+                "_Host-fingerprint=" + fingerprint + "; Max-Age=900; " +
+                        "Secure; " +
+                        "HttpOnly; SameSite=Strict; Path=/; " + cookieExpires);
+    }
+
+    private void addRefreshTokenFingerprintCookieToHeader(HttpServletResponse response,
+                                              String fingerprint) {
+
+        Date expiresDate = new Date();
+        expiresDate.setTime(expiresDate.getTime() + (86400 * 1000));
+        DateFormat gmtFormat = new SimpleDateFormat("EEE, dd-MMM-yyyy " +
+                "HH:mm:ss zzz", Locale.UK);
+        gmtFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        String cookieExpires = "expires=" + gmtFormat.format(expiresDate);
+
+        response.addHeader("Set-cookie",
+                "_Secure-fingerprint=" + fingerprint + "; Max-Age=86400; " +
+                        "Secure; " +
+                        "HttpOnly; SameSite=Strict; " +
+                        "Path=/api/v1/reauth/refresh; " + cookieExpires);
     }
 }
