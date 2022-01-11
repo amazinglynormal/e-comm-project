@@ -16,6 +16,7 @@ import sb.ecomm.product.ProductRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class OrderService {
@@ -28,24 +29,26 @@ public class OrderService {
     @Autowired
     public OrderService(OrderRepository orderRepository,
                         ProductRepository productRepository,
-                        UserRepository userRepository, ModelMapper mapper) {
+                        UserRepository userRepository,
+                        ModelMapper mapper) {
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
         this.mapper = mapper;
     }
 
-    OrderDTO findOrderById(Long id) {
+    public OrderDTO findOrderById(Long id) {
         Order order =
                 orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException(id));
 
         return mapper.map(order, OrderDTO.class);
     }
 
-    OrderDTO addNewOrder(CreateOrderDTO createOrderDTO) {
+    public OrderDTO addNewOrder(CreateOrderDTO createOrderDTO, UUID id) {
         Order newOrder = mapper.map(createOrderDTO, Order.class);
+        System.out.println(newOrder.getStatus());
         User user =
-                userRepository.findById(createOrderDTO.getUserId()).orElseThrow(() -> new UserNotFoundException(createOrderDTO.getUserId()));
+                userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         newOrder.setUser(user);
         List<Product> initialOrderedProducts =
                 getInitialOrderProductsList(createOrderDTO.getProductIds());
@@ -54,7 +57,7 @@ public class OrderService {
         return mapper.map(savedOrder, OrderDTO.class);
     }
 
-    OrderDTO updateOrder(long id, UpdateOrderDTO updateOrderDTO) {
+    public OrderDTO updateOrder(long id, UpdateOrderDTO updateOrderDTO) {
         Order order =
                 orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException(id));
 
@@ -66,7 +69,7 @@ public class OrderService {
         return mapper.map(savedOrder, OrderDTO.class);
     }
 
-    void deleteOrderById(Long id) {
+    public void deleteOrderById(Long id) {
         orderRepository.deleteById(id);
     }
 
@@ -82,7 +85,7 @@ public class OrderService {
     }
 
     private void updateOrderStatus(Order order, UpdateOrderDTO updateOrderDTO) {
-        if (order.getStatus() != updateOrderDTO.getStatus()) {
+        if (order.getStatus() != updateOrderDTO.getStatus() && updateOrderDTO.getStatus() != null) {
             order.setStatus(updateOrderDTO.getStatus());
         }
     }
