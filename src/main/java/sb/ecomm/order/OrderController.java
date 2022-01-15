@@ -7,7 +7,7 @@ import sb.ecomm.order.dto.OrderDTO;
 import sb.ecomm.order.dto.UpdateOrderDTO;
 
 @RestController
-@RequestMapping("/api/v1/users/*/orders")
+@RequestMapping("/api/v1/orders")
 public class OrderController {
 
     private final OrderService orderService;
@@ -20,11 +20,6 @@ public class OrderController {
     @GetMapping("/{id}")
     OrderDTO getOrderById(@PathVariable long id) {
         return orderService.findOrderById(id);
-    }
-
-    @PostMapping
-    OrderDTO addNewOrder(@RequestBody CreateOrderDTO createOrderDTO) {
-        return orderService.addNewOrder(createOrderDTO);
     }
 
     @PutMapping("/{id}")
