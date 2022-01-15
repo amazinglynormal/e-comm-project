@@ -1,5 +1,6 @@
 package sb.ecomm.auth;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -10,13 +11,20 @@ import sb.ecomm.security.UserDetailsImpl;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/reauth")
-public class ReauthenticationController {
+@RequestMapping("/api/v1/auth")
+public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
+    private final AuthenticationService authenticationService;
 
-    public ReauthenticationController(AuthenticationManager authenticationManager) {
+    public AuthenticationController(AuthenticationManager authenticationManager, AuthenticationService authenticationService) {
         this.authenticationManager = authenticationManager;
+        this.authenticationService = authenticationService;
+    }
+
+    @PostMapping("/login")
+    ResponseEntity authenticateUser(@RequestBody AuthenticationRequest authenticationRequest) {
+        return authenticationService.authenticateUser(authenticationRequest);
     }
 
     @PostMapping("/{id}")
