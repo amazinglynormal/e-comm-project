@@ -29,10 +29,9 @@ const devProducts: Shoe[] = [
       "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-01.jpg",
     imageAlt:
       "Tall slender porcelain bottle with natural clay textured body and cork stopper.",
-    allSizes: [6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 12, 13],
-    availableSizes: [7, 8, 9, 9.5, 11, 12],
+    size: "XS",
     color: "red",
-    collection: "trainers",
+    inStock: true,
   },
   {
     id: 2,
@@ -46,10 +45,9 @@ const devProducts: Shoe[] = [
       "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-02.jpg",
     imageAlt:
       "Olive drab green insulated bottle with flablack screw lid and flat top.",
-    allSizes: [6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 12, 13],
-    availableSizes: [7, 8, 9, 9.5, 11, 12],
+    size: "XS",
     color: "black",
-    collection: "trainers",
+    inStock: true,
   },
   {
     id: 3,
@@ -63,10 +61,9 @@ const devProducts: Shoe[] = [
       "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-03.jpg",
     imageAlt:
       "Person using a pen to cross a task off a productivity paper card.",
-    allSizes: [6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 12, 13],
-    availableSizes: [7, 8, 9, 9.5, 11, 12],
+    size: "XS",
     color: "black",
-    collection: "trainers",
+    inStock: true,
   },
   {
     id: 4,
@@ -80,10 +77,9 @@ const devProducts: Shoe[] = [
       "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-04.jpg",
     imageAlt:
       "Hand holding black machined steel mechanical pencil with brass tip and top.",
-    allSizes: [6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 12, 13],
-    availableSizes: [7, 8, 9, 9.5, 11, 12],
+    size: "XS",
     color: "black",
-    collection: "trainers",
+    inStock: true,
   },
   // More products...
 ];

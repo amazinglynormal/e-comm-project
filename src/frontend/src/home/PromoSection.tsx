@@ -27,7 +27,7 @@ export const PromoSection = () => {
             in stock.
           </p>
           <Link
-            to="/products"
+            to="/products/clothing"
             className="mt-8 inline-block bg-white border border-transparent rounded-md py-3 px-8 text-base font-medium text-gray-900 hover:bg-gray-100"
           >
             Shop New Arrivals
