@@ -35,8 +35,8 @@ build/
 config/
 !/config/*.example
 src/main/java/sb/ecomm/constants/TempSecurityConstants.java
+src/main/resources/images
 
 ### Frontend ###
 **/node_modules
 **/node
-**/src/dev-images/
