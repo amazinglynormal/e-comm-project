@@ -13,7 +13,10 @@ interface ThunkArgs {
 const userLogin = createAsyncThunk(
   "user/userLogin",
   async ({ email, password }: ThunkArgs) => {
-    const loginResponse = await axios.post("/login", { email, password });
+    const loginResponse = await axios.post("/api/v1/auth/login", {
+      email,
+      password,
+    });
 
     const token = extractJwtTokenFromResponseHeaders(loginResponse.headers);
 
