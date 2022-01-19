@@ -16,55 +16,60 @@ const LogIn = React.lazy(() => import("./user/LogIn"));
 const Home = React.lazy(() => import("./home/Home"));
 
 import { CurrencyProvider } from "./state/CurrencyContext";
+import { AlertProvider } from "./state/AlertContext";
 
 import "tailwindcss/tailwind.css";
+import AlertWithDismissButton from "./components/AlertWithDismissButton";
 
 const App = () => {
   return (
     <Router>
-      <CurrencyProvider>
-        <StoreNavigation />
-        <Suspense fallback={<div>loading...</div>}>
-          <Switch>
-            <Route path="/product/details/:id">
-              <ProductDetails />
-            </Route>
-            <Route
-              path={[
-                "/products/:category/:subCategory",
-                "/products/:category/",
-              ]}
-            >
-              <Products />
-            </Route>
-            <Route path="/cart/:orderId">
-              <Cart />
-            </Route>
-            <Route path="/ordersummary">
-              <OrderSummary />
-            </Route>
-            <Route path="/orderhistory">
-              <OrderHistory />
-            </Route>
-            <Route path="/profile">
-              <Profile />
-            </Route>
-            <Route path="/checkout">
-              <Checkout />
-            </Route>
-            <Route path="/login">
-              <LogIn />
-            </Route>
-            <Route path="/signup">
-              <SignUp />
-            </Route>
-            <Route exact path="/">
-              <Home />
-            </Route>
-          </Switch>
-        </Suspense>
-        <Footer />
-      </CurrencyProvider>
+      <AlertProvider>
+        <CurrencyProvider>
+          <StoreNavigation />
+          <Suspense fallback={<div>loading...</div>}>
+            <Switch>
+              <Route path="/product/details/:id">
+                <ProductDetails />
+              </Route>
+              <Route
+                path={[
+                  "/products/:category/:subCategory",
+                  "/products/:category/",
+                ]}
+              >
+                <Products />
+              </Route>
+              <Route path="/cart/:orderId">
+                <Cart />
+              </Route>
+              <Route path="/ordersummary">
+                <OrderSummary />
+              </Route>
+              <Route path="/orderhistory">
+                <OrderHistory />
+              </Route>
+              <Route path="/profile">
+                <Profile />
+              </Route>
+              <Route path="/checkout">
+                <Checkout />
+              </Route>
+              <Route path="/login">
+                <LogIn />
+              </Route>
+              <Route path="/signup">
+                <SignUp />
+              </Route>
+              <Route exact path="/">
+                <Home />
+              </Route>
+            </Switch>
+          </Suspense>
+          <Footer />
+        </CurrencyProvider>
+        <AlertWithDismissButton />
+      </AlertProvider>
     </Router>
   );
 };
