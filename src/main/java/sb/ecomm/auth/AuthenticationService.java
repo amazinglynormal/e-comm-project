@@ -124,7 +124,7 @@ public class AuthenticationService {
 
         long time = token.equals("refresh") ? 86400 : 900;
         String cookiePrefix = token.equals("refresh") ? "_Secure" : "_Host";
-        String path = token.equals("refresh") ? "/api/v1/reauth/refresh; " :
+        String path = token.equals("refresh") ? "/api/v1/auth/refresh; " :
                 "/; ";
 
         Date expiresDate = new Date();
