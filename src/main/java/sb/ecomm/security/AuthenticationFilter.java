@@ -34,7 +34,6 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         this.authenticationManager = authenticationManager;
     }
 
-
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
@@ -64,13 +63,6 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 Hashing.sha256().hashString(accessTokenFingerprint,
                 StandardCharsets.UTF_8).toString();
 
-        String refreshTokenFingerprint =
-                generateRandomStringForJwtFingerprint();
-        String hashedRefreshTokenFingerprint =
-                Hashing.sha256().hashString(refreshTokenFingerprint,
-                StandardCharsets.UTF_8).toString();
-
-
         String accessToken =
                 Jwts.builder()
                         .claim("email", user.getUsername())
@@ -80,17 +72,9 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                         .setSubject(user.getId().toString()).signWith(key,
                 SignatureAlgorithm.HS512).setExpiration(exp).compact();
 
-        String refreshToken =
-                Jwts.builder()
-                        .claim("user_context", hashedRefreshTokenFingerprint)
-                        .setSubject(user.getId().toString()).signWith(key,
-                SignatureAlgorithm.HS512).setExpiration(exp).compact();
-
         response.addHeader("Authorization", "Bearer " + accessToken);
-        response.addHeader("Authorization", "Refresh " + refreshToken);
 
         addAccessTokenFingerprintCookieToHeader(response, accessTokenFingerprint);
-        addRefreshTokenFingerprintCookieToHeader(response, refreshTokenFingerprint);
 
     }
 
@@ -119,22 +103,5 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 "_Host-fingerprint=" + fingerprint + "; Max-Age=900; " +
                         "Secure; " +
                         "HttpOnly; SameSite=Strict; Path=/; " + cookieExpires);
-    }
-
-    private void addRefreshTokenFingerprintCookieToHeader(HttpServletResponse response,
-                                              String fingerprint) {
-
-        Date expiresDate = new Date();
-        expiresDate.setTime(expiresDate.getTime() + (86400 * 1000));
-        DateFormat gmtFormat = new SimpleDateFormat("EEE, dd-MMM-yyyy " +
-                "HH:mm:ss zzz", Locale.UK);
-        gmtFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-        String cookieExpires = "expires=" + gmtFormat.format(expiresDate);
-
-        response.addHeader("Set-cookie",
-                "_Secure-fingerprint=" + fingerprint + "; Max-Age=86400; " +
-                        "Secure; " +
-                        "HttpOnly; SameSite=Strict; " +
-                        "Path=/api/v1/reauth/refresh; " + cookieExpires);
     }
 }
