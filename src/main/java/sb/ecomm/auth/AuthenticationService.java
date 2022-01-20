@@ -16,6 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
+import sb.ecomm.constants.TempSecurityConstants;
 import sb.ecomm.exceptions.UserNotFoundException;
 import sb.ecomm.security.UserDetailsImpl;
 import sb.ecomm.user.User;
@@ -65,7 +66,7 @@ public class AuthenticationService {
         List<String> authorities = new ArrayList<>();
         user.getAuthorities().forEach(authority -> authorities.add(authority.getAuthority()));
         Date exp = new Date(System.currentTimeMillis() + 1000L*60*30);
-        Key key = Keys.hmacShaKeyFor("z%C*F-JaNdRgUkXp2s5u8x/A?D(G+KbPeShVmYq3t6w9y$B&E)H@McQfTjWnZr4u".getBytes());
+        Key key = Keys.hmacShaKeyFor(TempSecurityConstants.jwtKey.getBytes());
 
         String accessTokenFingerprint = generateRandomStringForJwtFingerprint();
         String hashedAccessTokenFingerprint =
