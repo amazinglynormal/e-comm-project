@@ -14,7 +14,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import sb.ecomm.auth.AuthenticationRequest;
-import sb.ecomm.constants.TempSecurityConstants;
+import sb.ecomm.jwt.JwtTokenType;
+import sb.ecomm.jwt.JwtUtils;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -22,7 +23,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.security.Key;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -53,40 +53,19 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         UserDetailsImpl user = (UserDetailsImpl) authResult.getPrincipal();
-        List<String> authorities = new ArrayList<>();
-        user.getAuthorities().forEach(authority -> authorities.add(authority.getAuthority()));
-        Date exp = new Date(System.currentTimeMillis() + 1000L*60*30);
-        Key key = Keys.hmacShaKeyFor(TempSecurityConstants.jwtKey.getBytes());
 
-        String accessTokenFingerprint = generateRandomStringForJwtFingerprint();
+        String accessTokenFingerprint = JwtUtils.generateRandomStringForJwtFingerprint();
         String hashedAccessTokenFingerprint =
                 Hashing.sha256().hashString(accessTokenFingerprint,
                 StandardCharsets.UTF_8).toString();
 
-        String accessToken =
-                Jwts.builder()
-                        .claim("email", user.getUsername())
-                        .claim("authorities", authorities)
-                        .claim("isEnabled", user.isEnabled())
-                        .claim("user_context", hashedAccessTokenFingerprint)
-                        .setSubject(user.getId().toString()).signWith(key,
-                SignatureAlgorithm.HS512).setExpiration(exp).compact();
+        String accessToken = JwtUtils.generateJwtToken(user, hashedAccessTokenFingerprint,
+                JwtTokenType.ACCESS);
 
         response.addHeader("Authorization", "Bearer " + accessToken);
 
         addAccessTokenFingerprintCookieToHeader(response, accessTokenFingerprint);
 
-    }
-
-    private String generateRandomStringForJwtFingerprint() {
-        UniformRandomProvider rng = RandomSource.MT.create();
-
-        char[][] pairs = {{'0', '9'}, {'A', 'Z'}, {'a', 'z'}};
-
-        RandomStringGenerator generator =
-                new RandomStringGenerator.Builder().withinRange(pairs).usingRandom(rng::nextInt).build();
-
-        return generator.generate(32);
     }
 
     private void addAccessTokenFingerprintCookieToHeader(HttpServletResponse response,
