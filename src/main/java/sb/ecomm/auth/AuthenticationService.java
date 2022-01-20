@@ -1,12 +1,8 @@
 package sb.ecomm.auth;
 
 import com.google.common.hash.Hashing;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
-import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.simple.RandomSource;
-import org.apache.commons.text.RandomStringGenerator;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,15 +11,17 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
-import sb.ecomm.constants.TempSecurityConstants;
 import sb.ecomm.exceptions.UserNotFoundException;
+import sb.ecomm.jwt.JwtTokenType;
+import sb.ecomm.jwt.JwtUtils;
 import sb.ecomm.security.UserDetailsImpl;
 import sb.ecomm.user.User;
 import sb.ecomm.user.UserRepository;
 
 import java.nio.charset.StandardCharsets;
-import java.security.Key;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -47,6 +45,62 @@ public class AuthenticationService {
         return successfulAuthentication(authentication);
     }
 
+    ResponseEntity<HttpStatus> reauthenticateUser(AuthenticationRequest authenticationRequest,
+                                                  UUID userId) {
+        Authentication authentication = attemptAuthentication(authenticationRequest);
+
+        UserDetailsImpl user = (UserDetailsImpl) authentication.getPrincipal();
+
+        if (!authentication.isAuthenticated() ||
+                !isCorrectUser(user.getId(), userId)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    ResponseEntity<?> refreshUser(String refreshToken, String fingerprint) {
+        Jws<Claims> claims = JwtUtils.parseJwtTokenClaims(refreshToken);
+        String userContext = (String) claims.getBody().get("user_context");
+        String hashedFingerprint = Hashing.sha256().hashString(fingerprint,
+                StandardCharsets.UTF_8).toString();
+
+        if (!hashedFingerprint.equals(userContext)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        UUID userId = UUID.fromString(claims.getBody().getSubject());
+
+        User user =
+                userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+
+        String storedRefreshToken = user.getRefreshToken();
+
+        if (storedRefreshToken == null || !storedRefreshToken.equals(refreshToken)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        UserDetailsImpl userDetails = new UserDetailsImpl();
+        userDetails.setId(user.getId());
+        userDetails.setUsername(user.getEmail());
+        userDetails.setEnabled(user.isEnabled());
+        userDetails.setAuthorities(getAuthorities(user));
+
+        String accessTokenFingerprint = JwtUtils.generateRandomStringForJwtFingerprint();
+        String hashedAccessTokenFingerprint =
+                Hashing.sha256().hashString(accessTokenFingerprint,
+                        StandardCharsets.UTF_8).toString();
+
+        String accessToken = JwtUtils.generateJwtToken(userDetails, hashedAccessTokenFingerprint,
+                JwtTokenType.ACCESS);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + accessToken);
+
+        return new ResponseEntity<>(headers, HttpStatus.OK);
+
+    }
+
     private Authentication attemptAuthentication(AuthenticationRequest authenticationRequest) throws AuthenticationException {
         try {
             return authenticationManager.authenticate(
@@ -63,42 +117,28 @@ public class AuthenticationService {
 
     ResponseEntity<?> successfulAuthentication(Authentication authResult) {
         UserDetailsImpl user = (UserDetailsImpl) authResult.getPrincipal();
-        List<String> authorities = new ArrayList<>();
-        user.getAuthorities().forEach(authority -> authorities.add(authority.getAuthority()));
-        Date exp = new Date(System.currentTimeMillis() + 1000L*60*30);
-        Key key = Keys.hmacShaKeyFor(TempSecurityConstants.jwtKey.getBytes());
 
-        String accessTokenFingerprint = generateRandomStringForJwtFingerprint();
+        String accessTokenFingerprint = JwtUtils.generateRandomStringForJwtFingerprint();
         String hashedAccessTokenFingerprint =
                 Hashing.sha256().hashString(accessTokenFingerprint,
                         StandardCharsets.UTF_8).toString();
 
         String refreshTokenFingerprint =
-                generateRandomStringForJwtFingerprint();
+                JwtUtils.generateRandomStringForJwtFingerprint();
         String hashedRefreshTokenFingerprint =
                 Hashing.sha256().hashString(refreshTokenFingerprint,
                         StandardCharsets.UTF_8).toString();
 
 
-        String accessToken =
-                Jwts.builder()
-                        .claim("email", user.getUsername())
-                        .claim("authorities", authorities)
-                        .claim("isEnabled", user.isEnabled())
-                        .claim("user_context", hashedAccessTokenFingerprint)
-                        .setSubject(user.getId().toString()).signWith(key,
-                                SignatureAlgorithm.HS512).setExpiration(exp).compact();
+        String accessToken = JwtUtils.generateJwtToken(user, hashedAccessTokenFingerprint,
+                JwtTokenType.ACCESS);
 
-        String refreshToken =
-                Jwts.builder()
-                        .claim("user_context", hashedRefreshTokenFingerprint)
-                        .setSubject(user.getId().toString()).signWith(key,
-                                SignatureAlgorithm.HS512).setExpiration(exp).compact();
+        String refreshToken = JwtUtils.generateJwtToken(user, hashedRefreshTokenFingerprint,
+                JwtTokenType.REFRESH);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
-        headers.add("Authorization", "Refresh " + refreshToken);
-
+        addRefreshTokenCookieToHeader(headers, refreshToken);
         addTokenFingerprintCookieToHeader(headers, "access", accessTokenFingerprint);
         addTokenFingerprintCookieToHeader(headers, "refresh", refreshTokenFingerprint);
 
@@ -107,15 +147,17 @@ public class AuthenticationService {
         return new ResponseEntity<>(headers, HttpStatus.OK);
     }
 
-    private String generateRandomStringForJwtFingerprint() {
-        UniformRandomProvider rng = RandomSource.MT.create();
+    private void addRefreshTokenCookieToHeader(HttpHeaders headers, String refreshToken) {
+        long time =  86400;
+        String path = "/api/v1/auth/refresh; ";
 
-        char[][] pairs = {{'0', '9'}, {'A', 'Z'}, {'a', 'z'}};
+        String cookieExpires = getCookieExpiresString(time);
 
-        RandomStringGenerator generator =
-                new RandomStringGenerator.Builder().withinRange(pairs).usingRandom(rng::nextInt).build();
-
-        return generator.generate(32);
+        headers.add("Set-cookie", "_Secure-refresh=" + refreshToken + "; " +
+                        "Max-Age=86400; " +
+                        "Secure; " +
+                        "SameSite=Strict; " +
+                        "Path=" + path + cookieExpires);
     }
 
     private void addTokenFingerprintCookieToHeader(HttpHeaders headers,
@@ -127,19 +169,23 @@ public class AuthenticationService {
         String path = token.equals("refresh") ? "/api/v1/auth/refresh; " :
                 "/; ";
 
+        String cookieExpires = getCookieExpiresString(time);
+
+        headers.add("Set-cookie",
+                cookiePrefix + "-fingerprint=" + fingerprint + "; " +
+                        "Max-Age=86400; " +
+//                        "Secure; " +
+                        "HttpOnly; SameSite=Strict; " +
+                        "Path=" + path + cookieExpires);
+    }
+
+    private String getCookieExpiresString(long time) {
         Date expiresDate = new Date();
         expiresDate.setTime(expiresDate.getTime() + (time * 1000));
         DateFormat gmtFormat = new SimpleDateFormat("EEE, dd-MMM-yyyy " +
                 "HH:mm:ss zzz", Locale.UK);
         gmtFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-        String cookieExpires = "expires=" + gmtFormat.format(expiresDate);
-
-        headers.add("Set-cookie",
-                cookiePrefix + "-fingerprint=" + fingerprint + "; " +
-                        "Max-Age=86400; " +
-                        "Secure; " +
-                        "HttpOnly; SameSite=Strict; " +
-                        "Path=" + path + cookieExpires);
+        return "expires=" + gmtFormat.format(expiresDate);
     }
 
     private void persistRefreshToken(String refreshToken, UUID userId) {
@@ -150,5 +196,13 @@ public class AuthenticationService {
         userRepository.save(user);
     }
 
+    private boolean isCorrectUser(UUID authenticatedId, UUID suppliedId) {
+        return authenticatedId.equals(suppliedId);
+    }
 
+    private Collection<GrantedAuthority> getAuthorities(User user) {
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        user.getRole().getAuthorities().forEach(authority -> authorities.add(new SimpleGrantedAuthority(authority.getAuthority())));
+        return authorities;
+    }
 }
