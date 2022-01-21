@@ -14,7 +14,7 @@ const userReauth = createAsyncThunk<number, ThunkArgs, { state: RootState }>(
     const userEmail = getState().user.user?.email;
 
     const response = await axios.post(
-      `api/v1/reauth/${userId}`,
+      `api/v1/auth/${userId}`,
       {
         email: userEmail,
         password: currentPassword,
