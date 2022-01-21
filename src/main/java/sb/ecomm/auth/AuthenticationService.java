@@ -38,7 +38,7 @@ public class AuthenticationService {
         this.userRepository = userRepository;
     }
 
-    ResponseEntity<?> authenticateUser(AuthenticationRequest authenticationRequest) {
+    ResponseEntity<LoginResponse> authenticateUser(AuthenticationRequest authenticationRequest) {
         Authentication authentication =
                 attemptAuthentication(authenticationRequest);
 
@@ -115,7 +115,7 @@ public class AuthenticationService {
         }
     }
 
-    ResponseEntity<?> successfulAuthentication(Authentication authResult) {
+    ResponseEntity<LoginResponse> successfulAuthentication(Authentication authResult) {
         UserDetailsImpl user = (UserDetailsImpl) authResult.getPrincipal();
 
         String accessTokenFingerprint = JwtUtils.generateRandomStringForJwtFingerprint();
@@ -138,35 +138,23 @@ public class AuthenticationService {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
-        addRefreshTokenCookieToHeader(headers, refreshToken);
-        addTokenFingerprintCookieToHeader(headers, "access", accessTokenFingerprint);
-        addTokenFingerprintCookieToHeader(headers, "refresh", refreshTokenFingerprint);
+        addTokenFingerprintCookieToHeader(headers, JwtTokenType.ACCESS, accessTokenFingerprint);
+        addTokenFingerprintCookieToHeader(headers, JwtTokenType.REFRESH, refreshTokenFingerprint);
 
         persistRefreshToken(refreshToken, user.getId());
 
-        return new ResponseEntity<>(headers, HttpStatus.OK);
-    }
+        LoginResponse loginResponse = new LoginResponse(refreshToken);
 
-    private void addRefreshTokenCookieToHeader(HttpHeaders headers, String refreshToken) {
-        long time =  86400;
-        String path = "/api/v1/auth/refresh; ";
-
-        String cookieExpires = getCookieExpiresString(time);
-
-        headers.add("Set-cookie", "_Secure-refresh=" + refreshToken + "; " +
-                        "Max-Age=86400; " +
-                        "Secure; " +
-                        "SameSite=Strict; " +
-                        "Path=" + path + cookieExpires);
+        return new ResponseEntity<>(loginResponse, headers, HttpStatus.OK);
     }
 
     private void addTokenFingerprintCookieToHeader(HttpHeaders headers,
-                                                   String token,
+                                                   JwtTokenType tokenType,
                                                    String fingerprint) {
 
-        long time = token.equals("refresh") ? 86400 : 900;
-        String cookiePrefix = token.equals("refresh") ? "_Secure" : "_Host";
-        String path = token.equals("refresh") ? "/api/v1/auth/refresh; " :
+        long time = tokenType == JwtTokenType.REFRESH ? 86400 : 900;
+        String cookiePrefix = tokenType == JwtTokenType.REFRESH ? "_Secure" : "_Host";
+        String path = tokenType == JwtTokenType.REFRESH ? "/api/v1/auth/refresh; " :
                 "/; ";
 
         String cookieExpires = getCookieExpiresString(time);
