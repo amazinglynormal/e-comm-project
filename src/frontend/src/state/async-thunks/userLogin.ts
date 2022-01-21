@@ -20,6 +20,8 @@ const userLogin = createAsyncThunk(
 
     const token = extractJwtTokenFromResponseHeaders(loginResponse.headers);
 
+    sessionStorage.setItem("token", token);
+
     const decodedToken: DecodedToken = jwtDecode(token);
 
     const getUserInfoResponse = await axios.get<User>(

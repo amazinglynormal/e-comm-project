@@ -6,7 +6,7 @@ const deleteOrder = createAsyncThunk<void, void, { state: RootState }>(
   "order/deleteOrder",
   async (_, { getState }) => {
     const userId = getState().user.user?.id;
-    const token = getState().user.token;
+    const token = sessionStorage.getItem("token");
     const orderId = getState().order.activeOrder?.id;
 
     const response = await axios.delete<void>(

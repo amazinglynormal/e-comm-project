@@ -9,14 +9,12 @@ import deleteUserAccount from "./async-thunks/deleteUserAccount";
 
 interface UserState {
   user: User | undefined | null;
-  token: string | undefined;
   error: string | null;
   status: "idle" | "pending" | "succeeded" | "failed";
 }
 
 const initialState: UserState = {
   user: undefined,
-  token: undefined,
   status: "idle",
   error: null,
 };
@@ -35,7 +33,6 @@ export const userSlice = createSlice({
 
     builder.addCase(userLogin.fulfilled, (state, action) => {
       state.user = action.payload.user;
-      state.token = action.payload.token;
       state.error = null;
       state.status = "succeeded";
     });
@@ -74,7 +71,6 @@ export const userSlice = createSlice({
 
     builder.addCase(deleteUserAccount.fulfilled, (state) => {
       state.status = "succeeded";
-      state.token = "";
       state.user = null;
     });
 

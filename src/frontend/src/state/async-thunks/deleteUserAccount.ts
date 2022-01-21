@@ -5,7 +5,7 @@ import { RootState } from "../store";
 const deleteUserAccount = createAsyncThunk<number, void, { state: RootState }>(
   "user/deleteAccount",
   async (_, { getState }) => {
-    const token = getState().user.token;
+    const token = sessionStorage.getItem("token");
     const userId = getState().user.user?.id;
 
     const response = await axios.delete(`api/v1/users/${userId}`, {

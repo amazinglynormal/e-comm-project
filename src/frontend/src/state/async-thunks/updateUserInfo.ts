@@ -18,7 +18,7 @@ interface ThunkArgs {
 const updateUserInfo = createAsyncThunk<User, ThunkArgs, { state: RootState }>(
   "user/updateUserInfo",
   async (updateUserDTO: ThunkArgs, { getState }) => {
-    const token = getState().user.token;
+    const token = sessionStorage.getItem("token");
     const userId = getState().user.user?.id;
     const response = await axios.put<User>(
       `api/v1/users/${userId}`,
