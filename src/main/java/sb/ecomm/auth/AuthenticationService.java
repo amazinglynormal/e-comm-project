@@ -14,6 +14,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import sb.ecomm.exceptions.UserNotFoundException;
 import sb.ecomm.jwt.JwtTokenType;
 import sb.ecomm.jwt.JwtUtils;
@@ -60,7 +61,7 @@ public class AuthenticationService {
     }
 
     ResponseEntity<?> refreshUser(String refreshToken, String fingerprint) {
-        Jws<Claims> claims = JwtUtils.parseJwtTokenClaims(refreshToken);
+        Jws<Claims> claims = JwtUtils.parseJwtTokenClaims(refreshToken, fingerprint);
         String userContext = (String) claims.getBody().get("user_context");
         String hashedFingerprint = Hashing.sha256().hashString(fingerprint,
                 StandardCharsets.UTF_8).toString();
@@ -99,6 +100,19 @@ public class AuthenticationService {
 
         return new ResponseEntity<>(headers, HttpStatus.OK);
 
+    }
+
+    ResponseEntity<HttpStatus> logoutUser(String accessToken, String fingerprint) {
+        Jws<Claims> claims = JwtUtils.parseJwtTokenClaims(accessToken, fingerprint);
+
+        UUID userId = UUID.fromString(claims.getBody().getSubject());
+
+        User user =
+                userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+
+        user.setRefreshToken(null);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     private Authentication attemptAuthentication(AuthenticationRequest authenticationRequest) throws AuthenticationException {
