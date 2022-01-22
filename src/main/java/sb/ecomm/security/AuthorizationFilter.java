@@ -82,10 +82,11 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
 
     private UsernamePasswordAuthenticationToken authenticateWithUserIdMatchesResourceIdCheck(HttpServletRequest request, String resourceId) {
         String token = JwtUtils.getJwtTokenFromRequestHeader(request);
+        String fingerprint = JwtUtils.getJwtFingerprintFromRequestHeader(request);
 
         if (!token.isEmpty()) {
             Jws<Claims> claims =
-                    JwtUtils.parseJwtTokenClaimsWithRequiredSubject(token,
+                    JwtUtils.parseJwtTokenClaimsWithRequiredSubject(token, fingerprint,
                             resourceId);
 
             if (claims != null) {
@@ -101,9 +102,10 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
 
     private UsernamePasswordAuthenticationToken authenticate(HttpServletRequest request) {
         String token = JwtUtils.getJwtTokenFromRequestHeader(request);
+        String fingerprint = JwtUtils.getJwtFingerprintFromRequestHeader(request);
 
         if (!token.isEmpty()) {
-            Jws<Claims> claims = JwtUtils.parseJwtTokenClaims(token);
+            Jws<Claims> claims = JwtUtils.parseJwtTokenClaims(token, fingerprint);
 
             if (claims != null) {
                 return new UsernamePasswordAuthenticationToken(claims, null,
