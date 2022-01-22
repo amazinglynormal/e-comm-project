@@ -115,7 +115,7 @@ public class AuthenticationService {
         }
     }
 
-    ResponseEntity<LoginResponse> successfulAuthentication(Authentication authResult) {
+    private ResponseEntity<LoginResponse> successfulAuthentication(Authentication authResult) {
         UserDetailsImpl user = (UserDetailsImpl) authResult.getPrincipal();
 
         String accessTokenFingerprint = JwtUtils.generateRandomStringForJwtFingerprint();
