@@ -23,10 +23,21 @@ public class AuthenticationController {
     }
 
     @PostMapping("/refresh")
-    ResponseEntity<?> refreshUser(@RequestHeader(name = "Authorization") String authorizationHeader,
-                               @CookieValue(name = "_Secure-fingerprint") String fingerprint) {
+    ResponseEntity<?> refreshUser(
+            @RequestHeader(name = "Authorization") String authorizationHeader,
+            @CookieValue(name = "_Secure-fingerprint") String fingerprint
+    ) {
         String refreshToken = authorizationHeader.split(" ")[1];
         return authenticationService.refreshUser(refreshToken, fingerprint);
+    }
+
+    @PostMapping("/logout")
+    ResponseEntity<HttpStatus> logoutUser(
+            @RequestHeader(name = "Authorization") String authorizationHeader,
+            @CookieValue(name = "_Host-fingerprint") String fingerprint
+    ) {
+        String accessToken = authorizationHeader.split(" ")[1];
+        return authenticationService.logoutUser(accessToken, fingerprint);
     }
 
     @PostMapping("/{userId}")
