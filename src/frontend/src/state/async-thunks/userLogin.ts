@@ -29,8 +29,8 @@ const userLogin = createAsyncThunk(
       loginResponse.headers
     );
 
-    sessionStorage.setItem("token", accessToken);
-    localStorage.setItem("token", loginResponse.data.refreshToken);
+    sessionStorage.setItem("a_token", accessToken);
+    localStorage.setItem("r_token", loginResponse.data.refreshToken);
 
     const decodedToken: DecodedToken = jwtDecode(accessToken);
 
