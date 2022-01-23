@@ -2,13 +2,32 @@ import { Fragment } from "react";
 import { Popover, Transition } from "@headlessui/react";
 import { UserIcon } from "@heroicons/react/solid";
 import User from "../interfaces/user.interface";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import { useAppDispatch } from "../hooks/redux-hooks";
+import userLogout from "../state/async-thunks/userLogout";
+import { unwrapResult } from "@reduxjs/toolkit";
 
 interface Props {
   user: User;
 }
 
 const LoggedInUserButton = ({ user }: Props) => {
+  const dispatch = useAppDispatch();
+  const history = useHistory();
+
+  const onSignOutClick = async () => {
+    try {
+      const logoutResult = await dispatch(userLogout());
+      unwrapResult(logoutResult);
+      if (history.location.pathname !== "/") {
+        console.log(history.location.pathname);
+        history.push("/");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div>
       <Popover className="relative">
@@ -46,7 +65,10 @@ const LoggedInUserButton = ({ user }: Props) => {
                     >
                       Order History
                     </Link>
-                    <button className="w-full p-3 flex items-start rounded-lg hover:bg-gray-50">
+                    <button
+                      onClick={onSignOutClick}
+                      className="w-full p-3 flex items-start rounded-lg hover:bg-gray-50"
+                    >
                       Sign Out
                     </button>
                   </div>

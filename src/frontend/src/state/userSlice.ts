@@ -1,11 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
-import User from "../interfaces/user.interface";
 import { RootState } from "./store";
+
+import User from "../interfaces/user.interface";
 
 import deleteUserAccount from "./async-thunks/deleteUserAccount";
 import updateUserInfo from "./async-thunks/updateUserInfo";
 import userSignUp from "./async-thunks/userSignUp";
 import userReauth from "./async-thunks/userReauth";
+import userLogout from "./async-thunks/userLogout";
 import userLogin from "./async-thunks/userLogin";
 import refresh from "./async-thunks/refresh";
 
@@ -90,6 +92,21 @@ export const userSlice = createSlice({
     });
 
     builder.addCase(refresh.rejected, (state, action) => {
+      state.status = "failed";
+      if (action.error.message) {
+        state.error = action.error.message;
+      }
+    });
+
+    builder.addCase(userLogout.fulfilled, (state) => {
+      state.user = null;
+      state.status = "idle";
+      state.error = null;
+      sessionStorage.clear();
+      localStorage.clear();
+    });
+
+    builder.addCase(userLogout.rejected, (state, action) => {
       state.status = "failed";
       if (action.error.message) {
         state.error = action.error.message;
