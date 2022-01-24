@@ -6,6 +6,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import sb.ecomm.jwt.JwtTokenType;
 import sb.ecomm.jwt.JwtUtils;
 
 import javax.servlet.FilterChain;
@@ -82,7 +83,7 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
 
     private UsernamePasswordAuthenticationToken authenticateWithUserIdMatchesResourceIdCheck(HttpServletRequest request, String resourceId) {
         String token = JwtUtils.getJwtTokenFromRequestHeader(request);
-        String fingerprint = JwtUtils.getJwtFingerprintFromRequestHeader(request);
+        String fingerprint = JwtUtils.getJwtFingerprintFromRequestHeader(request, JwtTokenType.ACCESS);
 
         if (!token.isEmpty()) {
             Jws<Claims> claims =
@@ -102,7 +103,10 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
 
     private UsernamePasswordAuthenticationToken authenticate(HttpServletRequest request) {
         String token = JwtUtils.getJwtTokenFromRequestHeader(request);
-        String fingerprint = JwtUtils.getJwtFingerprintFromRequestHeader(request);
+        String requestUri = request.getRequestURI();
+        JwtTokenType tokenType = isUriForRefreshEndpoint(requestUri) ? JwtTokenType.REFRESH :
+                JwtTokenType.ACCESS;
+        String fingerprint = JwtUtils.getJwtFingerprintFromRequestHeader(request, tokenType);
 
         if (!token.isEmpty()) {
             Jws<Claims> claims = JwtUtils.parseJwtTokenClaims(token, fingerprint);
@@ -117,6 +121,13 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
 
         return null;
 
+    }
+
+    private boolean isUriForRefreshEndpoint(String uri) {
+        Pattern pattern = Pattern.compile("api/v1/auth/refresh",
+                Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(uri);
+        return matcher.find();
     }
 
 

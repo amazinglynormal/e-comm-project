@@ -88,15 +88,15 @@ public class AuthenticationService {
         userDetails.setAuthorities(getAuthorities(user));
 
         String accessTokenFingerprint = JwtUtils.generateRandomStringForJwtFingerprint();
-        String hashedAccessTokenFingerprint =
-                Hashing.sha256().hashString(accessTokenFingerprint,
-                        StandardCharsets.UTF_8).toString();
+        String hashedAccessTokenFingerprint = JwtUtils.hashJwtFingerprint(accessTokenFingerprint);
 
         String accessToken = JwtUtils.generateJwtToken(userDetails, hashedAccessTokenFingerprint,
                 JwtTokenType.ACCESS);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
+
+        addTokenFingerprintCookieToHeader(headers, JwtTokenType.ACCESS, accessTokenFingerprint);
 
         return new ResponseEntity<>(headers, HttpStatus.OK);
 
@@ -133,15 +133,12 @@ public class AuthenticationService {
         UserDetailsImpl user = (UserDetailsImpl) authResult.getPrincipal();
 
         String accessTokenFingerprint = JwtUtils.generateRandomStringForJwtFingerprint();
-        String hashedAccessTokenFingerprint =
-                Hashing.sha256().hashString(accessTokenFingerprint,
-                        StandardCharsets.UTF_8).toString();
+        String hashedAccessTokenFingerprint = JwtUtils.hashJwtFingerprint(accessTokenFingerprint);
 
         String refreshTokenFingerprint =
                 JwtUtils.generateRandomStringForJwtFingerprint();
         String hashedRefreshTokenFingerprint =
-                Hashing.sha256().hashString(refreshTokenFingerprint,
-                        StandardCharsets.UTF_8).toString();
+                JwtUtils.hashJwtFingerprint(refreshTokenFingerprint);
 
 
         String accessToken = JwtUtils.generateJwtToken(user, hashedAccessTokenFingerprint,

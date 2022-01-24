@@ -22,10 +22,17 @@ public class JwtUtils {
         return req.getHeader("Authorization").substring(7);
     }
 
-    public static String getJwtFingerprintFromRequestHeader(HttpServletRequest req) {
+    public static String getJwtFingerprintFromRequestHeader(HttpServletRequest req,
+                                                            JwtTokenType tokenType) {
+        String fingerprint = tokenType == JwtTokenType.ACCESS ? "_Host-fingerprint" : "_Secure" +
+                "-fingerprint";
+
         List<Cookie> cookies =
-                Arrays.stream(req.getCookies()).filter(cookie -> cookie.getName().equals("_Host" +
-                        "-fingerprint")).collect(Collectors.toList());
+                Arrays.stream(req.getCookies()).filter(cookie -> cookie.getName().equals(fingerprint)).collect(Collectors.toList());
+        for (Cookie cookie: cookies
+             ) {
+            System.out.println(cookie.getName() + " ---> " + cookie.getValue());
+        }
         return cookies.get(0).getValue();
     }
 
@@ -76,8 +83,10 @@ public class JwtUtils {
             String hashedFingerprint = hashJwtFingerprint(fingerprint);
             return Jwts.parserBuilder().require("user_context", hashedFingerprint).setSigningKey(TempSecurityConstants.jwtKey.getBytes()).build().parseClaimsJws(token);
         } catch (JwtException ex) {
+            System.out.println(ex.getMessage());
             throw new JwtException("User is not authorised to perform to request");
         }
+
     }
 
 
@@ -86,8 +95,10 @@ public class JwtUtils {
                                                                      String requiredSubject) {
         try {
             String hashedFingerprint = hashJwtFingerprint(fingerprint);
-            return Jwts.parserBuilder().require("user_context", hashedFingerprint).requireSubject(requiredSubject).setSigningKey(TempSecurityConstants.jwtKey.getBytes()).build().parseClaimsJws(token);
+            return Jwts.parserBuilder().requireSubject(requiredSubject).require("user_context",
+                    hashedFingerprint).setSigningKey(TempSecurityConstants.jwtKey.getBytes()).build().parseClaimsJws(token);
         } catch (IncorrectClaimException ex) {
+            System.out.println(ex.getMessage());
             throw new IncorrectClaimException(ex.getHeader(), ex.getClaims(),
                     "Not authorised to access this resource");
         }
