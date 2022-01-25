@@ -1,5 +1,8 @@
 package sb.ecomm.user;
 
+import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.simple.RandomSource;
+import org.apache.commons.text.RandomStringGenerator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -45,6 +48,8 @@ public class UserService {
         User user = mapper.map(createUserDTO, User.class);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.CUSTOMER);
+        String verificationHash = generateVerificationHash();
+        user.setVerificationHash(verificationHash);
         User newUser = userRepository.save(user);
         return mapper.map(newUser, UserDTO.class);
     }
@@ -149,5 +154,16 @@ public class UserService {
         }
 
         user.setAddress(address);
+    }
+
+    private String generateVerificationHash() {
+        UniformRandomProvider rng = RandomSource.MT.create();
+
+        char[][] pairs = {{'0', '9'}, {'A', 'Z'}, {'a', 'z'}};
+
+        RandomStringGenerator generator =
+                new RandomStringGenerator.Builder().withinRange(pairs).usingRandom(rng::nextInt).build();
+
+        return generator.generate(32);
     }
 }
