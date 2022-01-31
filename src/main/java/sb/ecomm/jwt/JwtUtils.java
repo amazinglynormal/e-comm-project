@@ -29,10 +29,6 @@ public class JwtUtils {
 
         List<Cookie> cookies =
                 Arrays.stream(req.getCookies()).filter(cookie -> cookie.getName().equals(fingerprint)).collect(Collectors.toList());
-        for (Cookie cookie: cookies
-             ) {
-            System.out.println(cookie.getName() + " ---> " + cookie.getValue());
-        }
         return cookies.get(0).getValue();
     }
 
