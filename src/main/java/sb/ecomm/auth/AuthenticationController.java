@@ -34,6 +34,11 @@ public class AuthenticationController {
         return authenticationService.refreshUser(refreshToken, fingerprint);
     }
 
+    @PostMapping("/verify/{verificationHash}")
+    ResponseEntity<HttpStatus> verifyUserEmail(@PathVariable String verificationHash) {
+        return authenticationService.verifyUserEmail(verificationHash);
+    }
+
     @PostMapping("/logout")
     ResponseEntity<HttpStatus> logoutUser(
             @RequestHeader(name = "Authorization") String authorizationHeader,

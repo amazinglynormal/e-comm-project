@@ -102,6 +102,18 @@ public class AuthenticationService {
 
     }
 
+    ResponseEntity<HttpStatus> verifyUserEmail(String verificationHash) {
+        User user = userRepository.findByVerificationHash(verificationHash).orElseThrow(() -> new RuntimeException("Could not verify, please try again"));
+
+        user.setEnabled(true);
+        user.setVerificationHash(null);
+
+        userRepository.save(user);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
+
     ResponseEntity<HttpStatus> logoutUser(String accessToken, String fingerprint) {
         Jws<Claims> claims = JwtUtils.parseJwtTokenClaims(accessToken, fingerprint);
 

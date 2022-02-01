@@ -41,7 +41,7 @@ public class User {
     private Set<Order> orders;
 
     @Column
-    private boolean isEnabled = true;
+    private boolean isEnabled = false;
 
     @Column
     private boolean isAccountNonExpired = true;

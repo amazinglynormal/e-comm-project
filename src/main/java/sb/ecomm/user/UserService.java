@@ -7,6 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import sb.ecomm.email.EmailService;
 import sb.ecomm.exceptions.UserNotFoundException;
 import sb.ecomm.order.OrderService;
 import sb.ecomm.order.dto.CreateOrderDTO;
@@ -25,16 +26,18 @@ public class UserService {
     private final OrderService orderService;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper mapper;
+    private final EmailService emailService;
 
     @Autowired
     public UserService(UserRepository userRepository,
                        OrderService orderService,
                        PasswordEncoder passwordEncoder,
-                       ModelMapper mapper) {
+                       ModelMapper mapper, EmailService emailService) {
         this.userRepository = userRepository;
         this.orderService = orderService;
         this.passwordEncoder = passwordEncoder;
         this.mapper = mapper;
+        this.emailService = emailService;
     }
 
     UserDTO findUserById(UUID id) {
@@ -51,6 +54,9 @@ public class UserService {
         String verificationHash = generateVerificationHash();
         user.setVerificationHash(verificationHash);
         User newUser = userRepository.save(user);
+
+        emailService.sendVerificationEmail(newUser.getUsername(), newUser.getEmail(), newUser.getVerificationHash());
+
         return mapper.map(newUser, UserDTO.class);
     }
 
