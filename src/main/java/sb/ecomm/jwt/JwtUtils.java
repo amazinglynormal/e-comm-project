@@ -79,7 +79,6 @@ public class JwtUtils {
             String hashedFingerprint = hashJwtFingerprint(fingerprint);
             return Jwts.parserBuilder().require("user_context", hashedFingerprint).setSigningKey(TempSecurityConstants.jwtKey.getBytes()).build().parseClaimsJws(token);
         } catch (JwtException ex) {
-            System.out.println(ex.getMessage());
             throw new JwtException("User is not authorised to perform to request");
         }
 
@@ -94,9 +93,16 @@ public class JwtUtils {
             return Jwts.parserBuilder().requireSubject(requiredSubject).require("user_context",
                     hashedFingerprint).setSigningKey(TempSecurityConstants.jwtKey.getBytes()).build().parseClaimsJws(token);
         } catch (IncorrectClaimException ex) {
-            System.out.println(ex.getMessage());
             throw new IncorrectClaimException(ex.getHeader(), ex.getClaims(),
                     "Not authorised to access this resource");
+        }
+    }
+
+    public static Jws<Claims> parseJwtResetToken(String token) {
+        try {
+            return Jwts.parserBuilder().setSigningKey(TempSecurityConstants.jwtKey.getBytes()).build().parseClaimsJws(token);
+        } catch (JwtException ex) {
+            throw new JwtException("User is not authorised to perform to request");
         }
     }
 

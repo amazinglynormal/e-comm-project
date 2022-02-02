@@ -4,7 +4,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
-import sb.ecomm.jwt.JwtUtils;
 
 import java.util.UUID;
 
@@ -29,8 +28,6 @@ public class AuthenticationController {
             @CookieValue(name = "_Secure-fingerprint") String fingerprint
     ) {
         String refreshToken = authorizationHeader.split(" ")[1];
-        System.out.println(fingerprint);
-        System.out.println(JwtUtils.hashJwtFingerprint(fingerprint));
         return authenticationService.refreshUser(refreshToken, fingerprint);
     }
 
@@ -40,8 +37,13 @@ public class AuthenticationController {
     }
 
     @PostMapping("/forgotpassword")
-    ResponseEntity<HttpStatus> requestPasswordReset(@RequestBody PasswordResetRequestDto passwordResetRequestDto) {
-        return authenticationService.requestPasswordReset(passwordResetRequestDto.getEmail());
+    ResponseEntity<HttpStatus> requestPasswordReset(@RequestBody RequestPasswordResetDto requestpasswordResetDto) {
+        return authenticationService.requestPasswordReset(requestpasswordResetDto.getEmail());
+    }
+
+    @PatchMapping("/resetpassword")
+    ResponseEntity<HttpStatus> resetPassword(@RequestBody ResetPasswordDto resetPasswordDto) {
+        return authenticationService.resetPassword(resetPasswordDto);
     }
 
     @PostMapping("/logout")
@@ -56,7 +58,6 @@ public class AuthenticationController {
     @PostMapping("/{userId}")
     ResponseEntity<HttpStatus> reauthenticateUser(@RequestBody AuthenticationRequest authenticationRequest,
                                                   @PathVariable UUID userId) throws AuthenticationException {
-
-            return authenticationService.reauthenticateUser(authenticationRequest, userId);
+        return authenticationService.reauthenticateUser(authenticationRequest, userId);
     }
 }

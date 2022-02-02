@@ -14,7 +14,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import sb.ecomm.email.EmailService;
 import sb.ecomm.exceptions.UserNotFoundException;
 import sb.ecomm.jwt.JwtTokenType;
@@ -118,7 +117,6 @@ public class AuthenticationService {
     }
 
     ResponseEntity<HttpStatus> requestPasswordReset(String suppliedEmail) {
-        System.out.println(suppliedEmail);
         User user = userRepository.findByEmail(suppliedEmail).orElseThrow(() -> new RuntimeException("User not found"));
         String randomString = JwtUtils.generateRandomStringForJwtFingerprint();
         String hashedString = JwtUtils.hashJwtFingerprint(randomString);
@@ -134,6 +132,29 @@ public class AuthenticationService {
         user.setPasswordResetToken(resetToken);
 
         emailService.sendPasswordResetEmail(user.getUsername(), user.getEmail(), resetToken);
+
+        userRepository.save(user);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    ResponseEntity<HttpStatus> resetPassword(ResetPasswordDto resetPasswordDto) {
+        Jws<Claims> claims = JwtUtils.parseJwtResetToken(resetPasswordDto.getResetToken());
+
+        UUID userId = UUID.fromString(claims.getBody().getSubject());
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+
+        String storedPasswordResetToken = user.getPasswordResetToken();
+
+        if (!storedPasswordResetToken.equals(resetPasswordDto.getResetToken())) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        user.setPassword(resetPasswordDto.getNewPassword());
+        user.setPasswordResetToken(null);
+
+        emailService.sendPasswordChangedEmail(user.getUsername(), user.getEmail());
 
         userRepository.save(user);
 
