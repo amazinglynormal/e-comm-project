@@ -15,6 +15,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import sb.ecomm.email.EmailService;
 import sb.ecomm.exceptions.UserNotFoundException;
 import sb.ecomm.jwt.JwtTokenType;
 import sb.ecomm.jwt.JwtUtils;
@@ -32,11 +33,13 @@ public class AuthenticationService {
 
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
+    private final EmailService emailService;
 
     @Autowired
-    public AuthenticationService(AuthenticationManager authenticationManager, UserRepository userRepository) {
+    public AuthenticationService(AuthenticationManager authenticationManager, UserRepository userRepository, EmailService emailService) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
+        this.emailService = emailService;
     }
 
     ResponseEntity<LoginResponse> authenticateUser(AuthenticationRequest authenticationRequest) {
@@ -112,6 +115,29 @@ public class AuthenticationService {
 
         return new ResponseEntity<>(HttpStatus.OK);
 
+    }
+
+    ResponseEntity<HttpStatus> requestPasswordReset(String suppliedEmail) {
+        System.out.println(suppliedEmail);
+        User user = userRepository.findByEmail(suppliedEmail).orElseThrow(() -> new RuntimeException("User not found"));
+        String randomString = JwtUtils.generateRandomStringForJwtFingerprint();
+        String hashedString = JwtUtils.hashJwtFingerprint(randomString);
+
+        UserDetailsImpl userDetails = new UserDetailsImpl();
+        userDetails.setId(user.getId());
+        userDetails.setUsername(user.getEmail());
+        userDetails.setEnabled(user.isEnabled());
+        userDetails.setAuthorities(getAuthorities(user));
+
+        String resetToken = JwtUtils.generateJwtToken(userDetails, hashedString, JwtTokenType.RESET);
+
+        user.setPasswordResetToken(resetToken);
+
+        emailService.sendPasswordResetEmail(user.getUsername(), user.getEmail(), resetToken);
+
+        userRepository.save(user);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     ResponseEntity<HttpStatus> logoutUser(String accessToken, String fingerprint) {

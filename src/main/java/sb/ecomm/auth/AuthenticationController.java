@@ -34,9 +34,14 @@ public class AuthenticationController {
         return authenticationService.refreshUser(refreshToken, fingerprint);
     }
 
-    @PostMapping("/verify/{verificationHash}")
+    @GetMapping("/verify/{verificationHash}")
     ResponseEntity<HttpStatus> verifyUserEmail(@PathVariable String verificationHash) {
         return authenticationService.verifyUserEmail(verificationHash);
+    }
+
+    @PostMapping("/forgotpassword")
+    ResponseEntity<HttpStatus> requestPasswordReset(@RequestBody PasswordResetRequestDto passwordResetRequestDto) {
+        return authenticationService.requestPasswordReset(passwordResetRequestDto.getEmail());
     }
 
     @PostMapping("/logout")

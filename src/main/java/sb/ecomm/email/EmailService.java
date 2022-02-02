@@ -46,4 +46,32 @@ public class EmailService {
         }
 
     }
+
+    public void sendPasswordResetEmail(String username, String email, String resetToken) {
+        MimeMessage message = emailSender.createMimeMessage();
+
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setSubject("Password reset request");
+            helper.setFrom("Ecomm <stephenbrady365@gmail.com>");
+            helper.setTo(email);
+            String plainText = "Hi " +  username + ",\n" +
+                    "    You recently requested to reset your password for Project Ideas. Simply copy the link below and paste it into your address bar to reset your password.\n" +
+                    "    http://localhost:8080/#/resetpassword/" + resetToken + "\n" +
+                    "    If you did not request a password reset, you can ignore this email. This reset link is only valid for one hour.\n" +
+                    "    Best regards,\n" +
+                    "    E-comm Team";
+            String htmlText = "<p>Hi " + username + ",</p>\n" +
+                    "    <p> You recently requested to reset your password for Project Ideas.</p>\n" +
+                    "    <a href=\"http://localhost:8080/#/resetpassword/" + resetToken + "\">Reset password</a>\n" +
+                    "    <p>If you did not request a password reset, you can ignore this email. This reset link is only valid for one hour.</p>\n" +
+                    "    <p>Best regards,</p>\n" +
+                    "    <p>E-comm Team</p>";
+            helper.setText(plainText, htmlText);
+            emailSender.send(message);
+        } catch (MessagingException ex) {
+            throw new RuntimeException(ex.getMessage());
+        }
+
+    }
 }

@@ -38,7 +38,7 @@ public class JwtUtils {
                                                          JwtTokenType tokenType) {
         List<String> authorities = new ArrayList<>();
         user.getAuthorities().forEach(authority -> authorities.add(authority.getAuthority()));
-        long expiryTime = tokenType == JwtTokenType.ACCESS ? 1000L*60*30 : 1000L*60*60*24;
+        long expiryTime = getExpiryTime(tokenType);
         Date exp = new Date(System.currentTimeMillis() + expiryTime);
         Key key = Keys.hmacShaKeyFor(TempSecurityConstants.jwtKey.getBytes());
 
@@ -97,6 +97,18 @@ public class JwtUtils {
             System.out.println(ex.getMessage());
             throw new IncorrectClaimException(ex.getHeader(), ex.getClaims(),
                     "Not authorised to access this resource");
+        }
+    }
+
+    private static long getExpiryTime(JwtTokenType tokenType) {
+        switch (tokenType) {
+            case ACCESS:
+                return 1000L*60*30;
+            case REFRESH:
+                return 1000L*60*60*24;
+            case RESET:
+            default:
+                return 1000L*60*60;
         }
     }
 }

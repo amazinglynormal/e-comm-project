@@ -34,7 +34,7 @@ public class User {
     @Column
     private String verificationHash;
 
-    @Column
+    @Column(length = 350)
     private String passwordResetToken;
 
     @OneToMany(mappedBy = "user")
