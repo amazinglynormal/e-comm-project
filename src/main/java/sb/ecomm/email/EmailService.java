@@ -74,4 +74,33 @@ public class EmailService {
         }
 
     }
+
+    public void sendPasswordChangedEmail(String username, String email) {
+        MimeMessage message = emailSender.createMimeMessage();
+
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setSubject("Your password was recently changed");
+            helper.setFrom("Ecomm <stephenbrady365@gmail.com>");
+            helper.setTo(email);
+            String plainText = "Hi " +  username + ",\n" +
+                    "    Your password has been successfully changed.\n" +
+                    "    Didn't change your password? Please contact support at\n" +
+                    "    stephenbrady365@gmail.com\n" +
+                    "    to rectify the situation.\n" +
+                    "    Best regards,\n" +
+                    "    E-comm Team";
+            String htmlText = "<p>Hi " + username + ",</p>\n" +
+                    "    <p>Your password has been successfully changed.</p>\n" +
+                    "    <p>Didn't change your password? Please contact support at \n" +
+                    "    stephenbrady365@gmail.com \n" +
+                    "    to rectify the situation.</p>" +
+                    "    <p>Best regards,</p>\n" +
+                    "    <p>E-comm Team</p>";
+            helper.setText(plainText, htmlText);
+            emailSender.send(message);
+        } catch (MessagingException ex) {
+            throw new RuntimeException(ex.getMessage());
+        }
+    }
 }
