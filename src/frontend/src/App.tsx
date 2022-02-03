@@ -9,6 +9,7 @@ import Checkout from "./order/Checkout";
 import Cart from "./order/Cart";
 
 const ProductDetails = React.lazy(() => import("./product/ProductDetails"));
+const ForgotPassword = React.lazy(() => import("./user/ForgotPassword"));
 const Products = React.lazy(() => import("./product/Products"));
 const Profile = React.lazy(() => import("./user/Profile"));
 const SignUp = React.lazy(() => import("./user/SignUp"));
@@ -60,6 +61,9 @@ const App = () => {
               </Route>
               <Route path="/signup">
                 <SignUp />
+              </Route>
+              <Route path="/forgotpassword">
+                <ForgotPassword />
               </Route>
               <Route exact path="/">
                 <Home />
