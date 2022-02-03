@@ -27,14 +27,14 @@ public class EmailService {
             String plainText = "Hi " + username + ",\n" +
                     "        We're happy you signed up for E-comm.\n" +
                     "        One last step. Simply copy the link below and paste it into your address bar to verify your email address.\n" +
-                    "        http://localhost:8080/api/v1/auth/verify/" + verificationHash + "\n" +
+                    "        http://localhost:8080/#/user/verify/" + verificationHash + "\n" +
                     "        If you received this email but did not sign up to Project Ideas you can safely ignore this email.\n" +
                     "        Best regards,\n" +
                     "        E-Comm Team";
             String htmlText = "<p>Hi " + username + "!</p>\n" +
                     "    <p>We're happy you signed up for E-comm.</p>\n" +
                     "    <p>One last step. Simply click the link below to verify your email address.</p>\n" +
-                    "    <a href=\"http://localhost:8080/api/v1/auth/verify/" + verificationHash + "\">\n" +
+                    "    <a href=\"http://localhost:8080/#/user/verify/" + verificationHash + "\">\n" +
                     "    Verify email address</a>\n" +
                     "    <p>If you did not request a password reset, you can ignore this email. This reset link is only valid for one hour.</p>\n" +
                     "    <p>Best regards,</p>\n" +

@@ -31,7 +31,7 @@ public class AuthenticationController {
         return authenticationService.refreshUser(refreshToken, fingerprint);
     }
 
-    @GetMapping("/verify/{verificationHash}")
+    @PatchMapping("/verify/{verificationHash}")
     ResponseEntity<HttpStatus> verifyUserEmail(@PathVariable String verificationHash) {
         return authenticationService.verifyUserEmail(verificationHash);
     }

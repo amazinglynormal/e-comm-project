@@ -37,13 +37,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/api/v1/products/**",
                         "/images/**",
                         "/api/v1/categories/**",
-                        "/api/v1/auth/verify/*",
                         "/favicon.ico").permitAll()
                 .antMatchers(HttpMethod.POST,
                         "/api/v1/users",
                         "/api/v1/auth/login",
                         "/api/v1/auth/forgotpassword",
                         "/api/v1/auth/refresh").permitAll()
+                .antMatchers(HttpMethod.PATCH,
+                        "/api/v1/auth/verify/*"
+                        ).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new AuthenticationFilter(authenticationManager()))

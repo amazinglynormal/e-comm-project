@@ -105,15 +105,18 @@ public class AuthenticationService {
     }
 
     ResponseEntity<HttpStatus> verifyUserEmail(String verificationHash) {
-        User user = userRepository.findByVerificationHash(verificationHash).orElseThrow(() -> new RuntimeException("Could not verify, please try again"));
+        Optional<User> user = userRepository.findByVerificationHash(verificationHash);
 
-        user.setEnabled(true);
-        user.setVerificationHash(null);
+        if (user.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
-        userRepository.save(user);
+        user.get().setEnabled(true);
+        user.get().setVerificationHash(null);
+
+        userRepository.save(user.get());
 
         return new ResponseEntity<>(HttpStatus.OK);
-
     }
 
     ResponseEntity<HttpStatus> requestPasswordReset(String suppliedEmail) {

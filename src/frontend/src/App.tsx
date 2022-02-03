@@ -1,6 +1,7 @@
 import React, { Suspense } from "react";
 import { HashRouter as Router, Route, Switch } from "react-router-dom";
 
+import AlertWithDismissButton from "./components/AlertWithDismissButton";
 import StoreNavigation from "./navigation/StoreNavigation";
 import OrderSummary from "./order/OrderSummary";
 import OrderHistory from "./order/OrderHistory";
@@ -10,6 +11,7 @@ import Cart from "./order/Cart";
 
 const ProductDetails = React.lazy(() => import("./product/ProductDetails"));
 const ForgotPassword = React.lazy(() => import("./user/ForgotPassword"));
+const EmailVerified = React.lazy(() => import("./user/EmailVerified"));
 const Products = React.lazy(() => import("./product/Products"));
 const Profile = React.lazy(() => import("./user/Profile"));
 const SignUp = React.lazy(() => import("./user/SignUp"));
@@ -20,7 +22,6 @@ import { CurrencyProvider } from "./state/CurrencyContext";
 import { AlertProvider } from "./state/AlertContext";
 
 import "tailwindcss/tailwind.css";
-import AlertWithDismissButton from "./components/AlertWithDismissButton";
 
 const App = () => {
   return (
@@ -43,6 +44,9 @@ const App = () => {
               </Route>
               <Route path="/cart/:orderId">
                 <Cart />
+              </Route>
+              <Route path="/user/verify/:hash">
+                <EmailVerified />
               </Route>
               <Route path="/ordersummary">
                 <OrderSummary />
