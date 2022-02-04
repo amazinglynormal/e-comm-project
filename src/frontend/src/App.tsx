@@ -12,6 +12,7 @@ import Cart from "./order/Cart";
 const ProductDetails = React.lazy(() => import("./product/ProductDetails"));
 const ForgotPassword = React.lazy(() => import("./user/ForgotPassword"));
 const EmailVerified = React.lazy(() => import("./user/EmailVerified"));
+const ResetPassword = React.lazy(() => import("./user/ResetPassword"));
 const Products = React.lazy(() => import("./product/Products"));
 const Profile = React.lazy(() => import("./user/Profile"));
 const SignUp = React.lazy(() => import("./user/SignUp"));
@@ -47,6 +48,9 @@ const App = () => {
               </Route>
               <Route path="/user/verify/:hash">
                 <EmailVerified />
+              </Route>
+              <Route path="/resetpassword/:resetToken">
+                <ResetPassword />
               </Route>
               <Route path="/ordersummary">
                 <OrderSummary />

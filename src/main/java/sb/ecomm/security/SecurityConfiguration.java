@@ -44,7 +44,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/api/v1/auth/forgotpassword",
                         "/api/v1/auth/refresh").permitAll()
                 .antMatchers(HttpMethod.PATCH,
-                        "/api/v1/auth/verify/*"
+                        "/api/v1/auth/verify/*",
+                        "/api/v1/auth/resetpassword"
                         ).permitAll()
                 .anyRequest().authenticated()
                 .and()
@@ -56,7 +57,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .contentSecurityPolicy(" default-src 'none'; " +
                         "script-src 'self'; connect-src 'self'; " +
                         "img-src 'self'; style-src 'self'; frame-ancestors " +
-                        "'self'; form-action 'self';");
+                        "'self'; form-action 'self'; style-src-elem 'self' https://rsms.me/inter/inter.css;");
     }
 
     @Override
