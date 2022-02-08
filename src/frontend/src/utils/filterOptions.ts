@@ -62,7 +62,6 @@ const clothingCategories: FilterOptions = {
     { value: "jeans", label: "Jeans" },
     { value: "shirts", label: "Shirts" },
     { value: "hoodies", label: "Hoodies" },
-    { value: "joggers", label: "Joggers" },
     { value: "jackets", label: "Jackets" },
   ],
 };
@@ -74,8 +73,6 @@ const footwearCategories: FilterOptions = {
     { value: "boots", label: "Boots" },
     { value: "shoes", label: "Shoes" },
     { value: "trainers", label: "Trainers" },
-    { value: "sandals/flipflops", label: "Sandals/ Flip-flops" },
-    { value: "slippers", label: "Slippers" },
   ],
 };
 
