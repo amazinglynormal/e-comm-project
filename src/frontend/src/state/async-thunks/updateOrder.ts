@@ -13,7 +13,7 @@ const updateOrder = createAsyncThunk<Order, ThunkArgs, { state: RootState }>(
   "order/updateOrder",
   async (updateOrder: ThunkArgs, { getState }) => {
     const userId = getState().user.user?.id;
-    const token = sessionStorage.getItem("token");
+    const token = sessionStorage.getItem("a_token");
     const orderId = getState().order.activeOrder?.id;
 
     const response = await axios.put<Order>(
