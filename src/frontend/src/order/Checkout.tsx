@@ -1,53 +1,52 @@
-import { useState } from "react";
-import { RadioGroup } from "@headlessui/react";
-import { CheckCircleIcon, TrashIcon } from "@heroicons/react/solid";
-
-import classNames from "../utils/classNames";
 import { useHistory } from "react-router";
 import OrderCostSummary from "./OrderCostSummary";
 import { useAppSelector } from "../hooks/redux-hooks";
 import { selectOrder } from "../state/orderSlice";
+import { TextInput } from "../components/TextInput";
+import { ChangeEvent, useState } from "react";
 
-const products = [
-  {
-    id: 1,
-    title: "Basic Tee",
-    href: "#",
-    price: "$32.00",
-    color: "Black",
-    size: "Large",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/checkout-page-02-product-01.jpg",
-    imageAlt: "Front of men's Basic Tee in black.",
-  },
-  // More products...
-];
-const deliveryMethods = [
-  {
-    id: 1,
-    title: "Standard",
-    turnaround: "4–10 business days",
-    price: "$5.00",
-  },
-  { id: 2, title: "Express", turnaround: "2–5 business days", price: "$16.00" },
-];
-const paymentMethods = [
-  { id: "credit-card", title: "Credit card" },
-  { id: "paypal", title: "PayPal" },
-  { id: "etransfer", title: "eTransfer" },
-];
+interface FormData {
+  email: string;
+  name: string;
+  line1: string;
+  line2: string;
+  line3: string;
+  city: string;
+  state: string;
+  country: string;
+  zipCode: string;
+  phone: string;
+}
+
+const initialFormData = {
+  email: "",
+  name: "",
+  line1: "",
+  line2: "",
+  line3: "",
+  city: "",
+  state: "",
+  country: "",
+  zipCode: "",
+  phone: "",
+};
 
 const Checkout = () => {
-  const [selectedDeliveryMethod, setSelectedDeliveryMethod] = useState(
-    deliveryMethods[0]
-  );
-
   const history = useHistory();
   const order = useAppSelector(selectOrder);
+
+  const [formData, setFormData] = useState(initialFormData);
+
+  const onFormChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    setFormData((prevState) => {
+      return { ...prevState, [event.target.id]: event.target.value };
+    });
+  };
 
   const onSubmit = () => {
     history.push("/ordersummary");
   };
+
   return (
     <div className="bg-gray-50">
       <div className="max-w-2xl mx-auto pt-16 pb-24 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
@@ -64,19 +63,14 @@ const Checkout = () => {
               </h2>
 
               <div className="mt-4">
-                <label
-                  htmlFor="email-address"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Email address
-                </label>
                 <div className="mt-1">
-                  <input
+                  <TextInput
                     type="email"
-                    id="email-address"
-                    name="email-address"
+                    id="email"
+                    name="Email"
                     autoComplete="email"
-                    className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    value={formData.email}
+                    onChangeHandler={onFormChangeHandler}
                   />
                 </div>
               </div>
@@ -88,183 +82,100 @@ const Checkout = () => {
               </h2>
 
               <div className="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
-                <div>
-                  <label
-                    htmlFor="first-name"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    First name
-                  </label>
-                  <div className="mt-1">
-                    <input
-                      type="text"
-                      id="first-name"
-                      name="first-name"
-                      autoComplete="given-name"
-                      className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    />
-                  </div>
+                <div className="sm:col-span-2">
+                  <TextInput
+                    required
+                    name="name"
+                    id="name"
+                    autoComplete="name"
+                    value={formData.name}
+                    onChangeHandler={onFormChangeHandler}
+                  />
                 </div>
-
-                <div>
-                  <label
-                    htmlFor="last-name"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Last name
-                  </label>
-                  <div className="mt-1">
-                    <input
-                      type="text"
-                      id="last-name"
-                      name="last-name"
-                      autoComplete="family-name"
-                      className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    />
-                  </div>
+                <div className="sm:col-span-2">
+                  <TextInput
+                    required
+                    name="line 1"
+                    id="line1"
+                    autoComplete="address-line1"
+                    value={formData.line1}
+                    onChangeHandler={onFormChangeHandler}
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <TextInput
+                    required
+                    name="line 2"
+                    id="line2"
+                    autoComplete="address-line2"
+                    value={formData.line2}
+                    onChangeHandler={onFormChangeHandler}
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <TextInput
+                    required
+                    name="line 3"
+                    id="line3"
+                    autoComplete="address-line3"
+                    value={formData.line3}
+                    onChangeHandler={onFormChangeHandler}
+                  />
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label
-                    htmlFor="company"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Company
-                  </label>
-                  <div className="mt-1">
-                    <input
-                      type="text"
-                      name="company"
-                      id="company"
-                      className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    />
-                  </div>
+                  <TextInput
+                    required
+                    name="city"
+                    id="city"
+                    autoComplete="address-level2"
+                    value={formData.city}
+                    onChangeHandler={onFormChangeHandler}
+                  />
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label
-                    htmlFor="address"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Address
-                  </label>
-                  <div className="mt-1">
-                    <input
-                      type="text"
-                      name="address"
-                      id="address"
-                      autoComplete="street-address"
-                      className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    />
-                  </div>
+                  <TextInput
+                    required
+                    name="Province/ State"
+                    id="state"
+                    autoComplete="address-level1"
+                    value={formData.state}
+                    onChangeHandler={onFormChangeHandler}
+                  />
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label
-                    htmlFor="apartment"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Apartment, suite, etc.
-                  </label>
-                  <div className="mt-1">
-                    <input
-                      type="text"
-                      name="apartment"
-                      id="apartment"
-                      className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="city"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    City
-                  </label>
-                  <div className="mt-1">
-                    <input
-                      type="text"
-                      name="city"
-                      id="city"
-                      className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="country"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Country
-                  </label>
-                  <div className="mt-1">
-                    <select
-                      id="country"
-                      name="country"
-                      autoComplete="country"
-                      className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    >
-                      <option>Canada</option>
-                      <option>Mexico</option>
-                      <option>United States</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="province"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Province
-                  </label>
-                  <div className="mt-1">
-                    <input
-                      type="text"
-                      name="province"
-                      id="province"
-                      className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="postal-code"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Postal code
-                  </label>
-                  <div className="mt-1">
-                    <input
-                      type="text"
-                      name="postal-code"
-                      id="postal-code"
-                      autoComplete="postal-code"
-                      className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    />
-                  </div>
+                  <TextInput
+                    required
+                    name="country"
+                    id="country"
+                    autoComplete="country-name"
+                    value={formData.country}
+                    onChangeHandler={onFormChangeHandler}
+                  />
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label
-                    htmlFor="phone"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Phone
-                  </label>
-                  <div className="mt-1">
-                    <input
-                      type="text"
-                      name="phone"
-                      id="phone"
-                      autoComplete="tel"
-                      className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    />
-                  </div>
+                  <TextInput
+                    required
+                    name="zip code"
+                    id="zipCode"
+                    autoComplete="postal-code"
+                    value={formData.zipCode}
+                    onChangeHandler={onFormChangeHandler}
+                  />
+                </div>
+
+                <div className="sm:col-span-2">
+                  <TextInput
+                    type="text"
+                    name="phone"
+                    id="phone"
+                    autoComplete="tel"
+                    value={formData.phone}
+                    onChangeHandler={onFormChangeHandler}
+                  />
                 </div>
               </div>
             </div>
