@@ -1,9 +1,10 @@
+import { FormEvent } from "react";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import { useAppSelector } from "../hooks/redux-hooks";
 import { selectOrder } from "../state/orderSlice";
 import CartItem from "./CartItem";
-import CartSummary from "./CartSummary";
+import OrderCostSummary from "./OrderCostSummary";
 
 const EmptyCart = () => {
   return (
@@ -24,7 +25,8 @@ const Cart = () => {
 
   const order = useAppSelector(selectOrder);
 
-  const onSubmit = () => {
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     history.push("/checkout");
   };
 
@@ -54,8 +56,10 @@ const Cart = () => {
             )}
           </section>
 
-          {/* Order summary */}
-          <CartSummary orderProducts={order?.products || []} />
+          <OrderCostSummary
+            orderProducts={order?.products || []}
+            buttonText="Go to checkout"
+          />
         </form>
       </div>
     </div>
