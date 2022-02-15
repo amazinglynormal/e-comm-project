@@ -18,11 +18,13 @@ const Profile = React.lazy(() => import("./user/Profile"));
 const SignUp = React.lazy(() => import("./user/SignUp"));
 const LogIn = React.lazy(() => import("./user/LogIn"));
 const Home = React.lazy(() => import("./home/Home"));
+const TestCheckout = React.lazy(() => import("./order/TestCheckout"));
 
 import { CurrencyProvider } from "./state/CurrencyContext";
 import { AlertProvider } from "./state/AlertContext";
 
 import "tailwindcss/tailwind.css";
+import Spinner from "./components/Spinner";
 
 const App = () => {
   return (
@@ -30,7 +32,7 @@ const App = () => {
       <AlertProvider>
         <CurrencyProvider>
           <StoreNavigation />
-          <Suspense fallback={<div>loading...</div>}>
+          <Suspense fallback={<Spinner />}>
             <Switch>
               <Route path="/product/details/:id">
                 <ProductDetails />
@@ -62,7 +64,7 @@ const App = () => {
                 <Profile />
               </Route>
               <Route path="/checkout">
-                <Checkout />
+                <TestCheckout />
               </Route>
               <Route path="/login">
                 <LogIn />

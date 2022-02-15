@@ -15,6 +15,7 @@ import {
 } from "../utils/filterOptions";
 import { useLocation } from "react-router";
 import ListPageSelect from "./ListPageSelect";
+import Spinner from "../components/Spinner";
 
 const devProducts: Shoe[] = [
   {
@@ -241,7 +242,7 @@ const Products = () => {
             {/* Product grid */}
             <div className="lg:mt-0 lg:col-span-2 xl:col-span-3">
               {isLoading ? (
-                <div className="text-9xl text-red-900">IS LOADING</div>
+                <Spinner />
               ) : (
                 <>
                   <ProductsList
