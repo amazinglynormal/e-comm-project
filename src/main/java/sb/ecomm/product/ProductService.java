@@ -1,5 +1,7 @@
 package sb.ecomm.product;
 
+import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -7,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import sb.ecomm.category.Category;
+import sb.ecomm.constants.TempSecurityConstants;
 import sb.ecomm.exceptions.CategoryNameNotFoundException;
 import sb.ecomm.exceptions.CategoryNotFoundException;
 import sb.ecomm.category.CategoryRepository;
@@ -16,9 +19,8 @@ import sb.ecomm.product.dto.ProductDTO;
 import sb.ecomm.product.dto.QueryResults;
 import sb.ecomm.product.dto.UpdateProductDTO;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+
+import java.util.*;
 
 @Service
 public class ProductService {
@@ -129,6 +131,9 @@ public class ProductService {
                 categoryRepository.findById(newProductDto.getCategoryId()).orElseThrow(() -> new CategoryNotFoundException(newProductDto.getCategoryId()));
         newProduct.setCategory(category);
         Product savedProduct = productRepository.save(newProduct);
+
+        addProductToStripeAccount(savedProduct);
+
         return mapper.map(savedProduct, ProductDTO.class);
     }
 
@@ -154,6 +159,69 @@ public class ProductService {
 
     void deleteProductById(Long id) {
         productRepository.deleteById(id);
+    }
+
+    private void addProductToStripeAccount(Product product) {
+        Stripe.apiKey = TempSecurityConstants.stripeTestKey;
+
+        try {
+            Map<String, Object> productParams = new HashMap<>();
+            productParams.put("name", product.getName());
+            productParams.put("description", product.getDescription());
+            productParams.put("shippable", true);
+
+            com.stripe.model.Product stripeProduct = com.stripe.model.Product.create(productParams);
+
+            String[] currencies = {"eur", "gbp", "usd"};
+
+            for (String currency: currencies) {
+                Map<String, Object> priceParams = new HashMap<>();
+                priceParams.put("product", stripeProduct.getId());
+                priceParams.put("currency", currency);
+                priceParams.put("billing_scheme", "per_unit");
+
+                double price;
+
+                switch(currency) {
+                    case "gbp":
+                        price = product.getGBP();
+                        break;
+                    case "usd":
+                        price = product.getUSD();
+                                break;
+                    case "eur":
+                    default:
+                        price = product.getEUR();
+                        break;
+                }
+
+                double priceInCents = price * 100;
+                int unitAmount = (int) priceInCents;
+                priceParams.put("unit_amount", unitAmount);
+
+                com.stripe.model.Price stripePrice = com.stripe.model.Price.create(priceParams);
+
+                switch(currency) {
+                    case "gbp":
+                        product.setStripeGbp(stripePrice.getId());
+                        break;
+                    case "usd":
+                        product.setStripeUsd(stripePrice.getId());
+                        break;
+                    case "eur":
+                    default:
+                        product.setStripeEur(stripePrice.getId());
+                        break;
+                }
+            }
+
+        } catch (StripeException ex) {
+            throw new RuntimeException("Could not add product and price to Stripe");
+        }
+
+
+        productRepository.save(product);
+
     }
 
     private void updateProductName(Product product, UpdateProductDTO updateProductDTO) {
