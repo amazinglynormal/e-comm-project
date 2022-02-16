@@ -47,6 +47,15 @@ public class Product {
     @Column(nullable = false)
     private int stockRemaining;
 
+    @Column
+    private String stripeEur;
+
+    @Column
+    private String stripeGbp;
+
+    @Column
+    private String stripeUsd;
+
     @JsonIgnoreProperties("products")
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false, referencedColumnName
@@ -176,6 +185,30 @@ public class Product {
 
     public void setStockRemaining(int stockRemaining) {
         this.stockRemaining = stockRemaining;
+    }
+
+    public String getStripeEur() {
+        return stripeEur;
+    }
+
+    public void setStripeEur(String stripeEur) {
+        this.stripeEur = stripeEur;
+    }
+
+    public String getStripeGbp() {
+        return stripeGbp;
+    }
+
+    public void setStripeGbp(String stripeGbp) {
+        this.stripeGbp = stripeGbp;
+    }
+
+    public String getStripeUsd() {
+        return stripeUsd;
+    }
+
+    public void setStripeUsd(String stripeUsd) {
+        this.stripeUsd = stripeUsd;
     }
 
     public Category getCategory() {
