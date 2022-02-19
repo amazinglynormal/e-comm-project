@@ -1,9 +1,12 @@
-import { useHistory } from "react-router";
 import OrderCostSummary from "./OrderCostSummary";
 import { useAppSelector } from "../hooks/redux-hooks";
 import { selectOrder } from "../state/orderSlice";
 import { TextInput } from "../components/TextInput";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
+import Address from "../interfaces/Address.interface";
+import { useCurrency } from "../state/CurrencyContext";
+import axios from "axios";
+import { useStripe } from "@stripe/react-stripe-js";
 
 interface FormData {
   email: string;
@@ -16,6 +19,19 @@ interface FormData {
   country: string;
   zipCode: string;
   phone: string;
+}
+
+interface CreateCheckoutSessionDTO {
+  email: string;
+  name: string;
+  shippingAddress: Address;
+  phone: string;
+  productIds: number[];
+  currency: string;
+}
+
+interface CheckoutSession {
+  sessionId: string;
 }
 
 const initialFormData = {
@@ -32,10 +48,11 @@ const initialFormData = {
 };
 
 const Checkout = () => {
-  const history = useHistory();
   const order = useAppSelector(selectOrder);
+  const { currency } = useCurrency();
+  const stripe = useStripe();
 
-  const [formData, setFormData] = useState(initialFormData);
+  const [formData, setFormData] = useState<FormData>(initialFormData);
 
   const onFormChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     setFormData((prevState) => {
@@ -43,8 +60,53 @@ const Checkout = () => {
     });
   };
 
-  const onSubmit = () => {
-    history.push("/ordersummary");
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!order) return;
+    if (!formData.email) return;
+    if (
+      !formData.line1 ||
+      !formData.name ||
+      !formData.country ||
+      !formData.state
+    )
+      return;
+    if (!formData.phone) return;
+
+    const shippingAddress = {
+      line1: formData.line1,
+      line2: formData.line2,
+      line3: formData.line3,
+      city: formData.city,
+      province: formData.state,
+      country: formData.country,
+      zipCode: formData.zipCode,
+    };
+
+    const productIds = order.products.map((product) => product.id);
+
+    const createCheckoutSessionDTO: CreateCheckoutSessionDTO = {
+      email: formData.email,
+      name: formData.name,
+      shippingAddress,
+      currency: currency.toUpperCase(),
+      phone: formData.phone,
+      productIds,
+    };
+
+    const session = await axios.post<CheckoutSession>(
+      "/api/v1/orders/create-checkout-session",
+      createCheckoutSessionDTO
+    );
+
+    const result = await stripe?.redirectToCheckout({
+      sessionId: session.data.sessionId,
+    });
+
+    if (result?.error) {
+      console.log(result.error.message);
+    }
   };
 
   return (
@@ -65,6 +127,7 @@ const Checkout = () => {
               <div className="mt-4">
                 <div className="mt-1">
                   <TextInput
+                    required
                     type="email"
                     id="email"
                     name="Email"
@@ -104,7 +167,6 @@ const Checkout = () => {
                 </div>
                 <div className="sm:col-span-2">
                   <TextInput
-                    required
                     name="line 2"
                     id="line2"
                     autoComplete="address-line2"
@@ -114,7 +176,6 @@ const Checkout = () => {
                 </div>
                 <div className="sm:col-span-2">
                   <TextInput
-                    required
                     name="line 3"
                     id="line3"
                     autoComplete="address-line3"
@@ -169,6 +230,7 @@ const Checkout = () => {
 
                 <div className="sm:col-span-2">
                   <TextInput
+                    required
                     type="text"
                     name="phone"
                     id="phone"
