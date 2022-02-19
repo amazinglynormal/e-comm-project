@@ -15,10 +15,8 @@ const navigation = {
         {
           name: "T-shirts",
           href: "/products/clothing/tshirts",
-          imageSrc:
-            "https://tailwindui.com/img/ecommerce-images/mega-menu-category-01.jpg",
-          imageAlt:
-            "Models sitting back to back, wearing Basic Tee in black and bone.",
+          imageSrc: "/images/tshirtcollection.jpg",
+          imageAlt: "Assorted folded t-shirts on a wooden table",
         },
         {
           name: "Jeans",
