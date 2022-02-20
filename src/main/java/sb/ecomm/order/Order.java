@@ -40,6 +40,12 @@ public class Order {
     @Embedded
     private Address shippingAddress;
 
+    @Column
+    private String email;
+
+    @Column
+    private String phone;
+
     public Order() {
     }
 
@@ -56,14 +62,14 @@ public class Order {
         this.products = products;
     }
 
-    public Order(OrderStatus status, PaymentStatus paymentStatus, List<Product> products, Address shippingAddress) {
+    public Order(OrderStatus status, PaymentStatus paymentStatus, List<Product> products, Address shippingAddress, String email, String phone) {
         this.status = status;
         this.paymentStatus = paymentStatus;
         this.products = products;
         this.shippingAddress = shippingAddress;
+        this.email = email;
+        this.phone = phone;
     }
-
-
 
     public Long getId() {
         return id;
@@ -111,5 +117,21 @@ public class Order {
 
     public void setShippingAddress(Address shippingAddress) {
         this.shippingAddress = shippingAddress;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }
