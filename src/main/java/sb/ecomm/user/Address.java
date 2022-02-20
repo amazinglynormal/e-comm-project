@@ -5,6 +5,7 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class Address {
 
+    private String name;
     private String line1;
     private String line2;
     private String line3;
@@ -14,6 +15,14 @@ public class Address {
     private String zipCode;
 
     public Address() {}
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getLine1() {
         return line1;
