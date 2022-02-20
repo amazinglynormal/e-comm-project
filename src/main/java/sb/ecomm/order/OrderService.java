@@ -1,20 +1,24 @@
 package sb.ecomm.order;
 
+import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
+import com.stripe.model.checkout.Session;
+import com.stripe.param.checkout.SessionCreateParams;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sb.ecomm.constants.TempSecurityConstants;
 import sb.ecomm.exceptions.OrderNotFoundException;
+import sb.ecomm.order.dto.*;
 import sb.ecomm.user.User;
 import sb.ecomm.exceptions.UserNotFoundException;
 import sb.ecomm.user.UserRepository;
-import sb.ecomm.order.dto.CreateOrderDTO;
-import sb.ecomm.order.dto.OrderDTO;
-import sb.ecomm.order.dto.UpdateOrderDTO;
 import sb.ecomm.product.Product;
 import sb.ecomm.exceptions.ProductNotFoundException;
 import sb.ecomm.product.ProductRepository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,16 +48,35 @@ public class OrderService {
         return mapper.map(order, OrderDTO.class);
     }
 
-    public OrderDTO addNewOrder(CreateOrderDTO createOrderDTO, UUID id) {
+    private Order createNewOrderObject(CreateOrderDTO createOrderDTO) {
         Order newOrder = mapper.map(createOrderDTO, Order.class);
-        System.out.println(newOrder.getStatus());
+        List<Product> products = getProductsListFromProductIds(createOrderDTO.getProductIds());
+        newOrder.setProducts(products);
+        newOrder.setPaymentStatus(PaymentStatus.UNPAID);
+
+        return newOrder;
+    }
+
+    public OrderDTO addNewUserOrder(CreateOrderDTO createOrderDTO, UUID id) {
+        Order newOrder = createNewOrderObject(createOrderDTO);
+
         User user =
                 userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         newOrder.setUser(user);
-        List<Product> initialOrderedProducts =
-                getInitialOrderProductsList(createOrderDTO.getProductIds());
-        newOrder.setProducts(initialOrderedProducts);
+
         Order savedOrder = orderRepository.save(newOrder);
+        return mapper.map(savedOrder, OrderDTO.class);
+    }
+
+    OrderDTO createNewGuestOrder(CreateOrderDTO createOrderDTO) {
+        Order newOrder = createNewOrderObject(createOrderDTO);
+
+        newOrder.setEmail(createOrderDTO.getEmail());
+        newOrder.setPhone(createOrderDTO.getPhone());
+        newOrder.setShippingAddress(createOrderDTO.getShippingAddress());
+
+        Order savedOrder = orderRepository.save(newOrder);
+
         return mapper.map(savedOrder, OrderDTO.class);
     }
 
@@ -63,17 +86,83 @@ public class OrderService {
 
         updateOrderStatus(order, updateOrderDTO);
         updateOrderProducts(order, updateOrderDTO);
+        updatePaymentStatus(order, updateOrderDTO);
+        updateOrderEmail(order, updateOrderDTO);
+        updateOrderPhone(order, updateOrderDTO);
+        updateShippingAddress(order, updateOrderDTO);
 
         Order savedOrder = orderRepository.save(order);
 
         return mapper.map(savedOrder, OrderDTO.class);
     }
 
+    CreateCheckoutSessionResponse createCheckoutSession(CreateCheckoutSessionDTO createCheckoutSessionDTO) {
+        Stripe.apiKey = TempSecurityConstants.stripeTestKey;
+
+        List<SessionCreateParams.LineItem> lineItems = getLineItems(createCheckoutSessionDTO.getProductIds(),
+                createCheckoutSessionDTO.getCurrency());
+
+        String domain = "http://localhost:8080";
+        SessionCreateParams params = SessionCreateParams.builder()
+                .setMode(SessionCreateParams.Mode.PAYMENT)
+                .setSuccessUrl(domain + "/#/ordersummary")
+                .setCancelUrl(domain + "/#/login")
+                .addAllLineItem(lineItems)
+                .build();
+        try {
+            Session session = Session.create(params);
+            return new CreateCheckoutSessionResponse(session.getId());
+        } catch (StripeException ex) {
+            throw new RuntimeException(ex.getMessage());
+        }
+    }
+
+    private List<SessionCreateParams.LineItem> getLineItems(List<Long> productIds, Currency currency) {
+        List<SessionCreateParams.LineItem> lineItems = new ArrayList<>();
+
+        HashMap<Long, Long> products = new HashMap<>();
+
+        productIds.forEach(id -> {
+            if (products.containsKey(id)) {
+                long num = products.get(id);
+                products.replace(id, num + 1);
+            } else {
+                products.put(id, 1L);
+            }
+        });
+
+        products.forEach((id, units) -> {
+            Product product = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
+
+            String lineItem;
+
+            switch (currency) {
+                case GBP:
+                    lineItem = product.getStripeGbp();
+                    break;
+                case USD:
+                    lineItem = product.getStripeUsd();
+                    break;
+                case EUR:
+                default:
+                    lineItem = product.getStripeEur();
+                    break;
+            }
+
+            lineItems.add(
+                    SessionCreateParams.LineItem.builder().setQuantity(units).setPrice(lineItem).build()
+            );
+        });
+
+        return lineItems;
+
+    }
+
     public void deleteOrderById(Long id) {
         orderRepository.deleteById(id);
     }
 
-    private List<Product> getInitialOrderProductsList(List<Long> productIds) {
+    private List<Product> getProductsListFromProductIds(List<Long> productIds) {
         List<Product> products = new ArrayList<>();
         productIds.forEach(id -> {
             Product product =
@@ -105,5 +194,29 @@ public class OrderService {
 
         order.setProducts(productsOrdered);
 
+    }
+
+    private void updatePaymentStatus(Order order, UpdateOrderDTO updateOrderDTO) {
+        if (order.getPaymentStatus() != updateOrderDTO.getPaymentStatus() && updateOrderDTO.getPaymentStatus() != null) {
+            order.setPaymentStatus(updateOrderDTO.getPaymentStatus());
+        }
+    }
+
+    private void updateOrderEmail(Order order, UpdateOrderDTO updateOrderDTO) {
+        if (order.getEmail().equals(updateOrderDTO.getEmail()) && updateOrderDTO.getEmail() != null) {
+            order.setEmail(updateOrderDTO.getEmail());
+        }
+    }
+
+    private void updateOrderPhone(Order order, UpdateOrderDTO updateOrderDTO) {
+        if (order.getPhone().equals(updateOrderDTO.getPhone()) && updateOrderDTO.getPhone() != null) {
+            order.setPhone(updateOrderDTO.getPhone());
+        }
+    }
+
+    private void updateShippingAddress(Order order, UpdateOrderDTO updateOrderDTO) {
+        if (order.getShippingAddress() != updateOrderDTO.getShippingAddress() && updateOrderDTO.getShippingAddress() != null) {
+            order.setShippingAddress(updateOrderDTO.getShippingAddress());
+        }
     }
 }
