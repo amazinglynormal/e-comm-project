@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import sb.ecomm.order.OrderStatus;
 import sb.ecomm.product.Product;
+import sb.ecomm.user.Address;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,4 +17,8 @@ public class OrderDTO {
     private OrderStatus status;
     private UUID userId;
     private List<Product> products;
+    private Address shippingAddress;
+    private String email;
+    private String phone;
+
 }
