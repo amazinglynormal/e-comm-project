@@ -42,7 +42,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/api/v1/users",
                         "/api/v1/auth/login",
                         "/api/v1/auth/forgotpassword",
-                        "/api/v1/auth/refresh").permitAll()
+                        "/api/v1/auth/refresh",
+                        "/api/v1/orders/checkout"
+                ).permitAll()
                 .antMatchers(HttpMethod.PATCH,
                         "/api/v1/auth/verify/*",
                         "/api/v1/auth/resetpassword"
@@ -55,9 +57,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         http.headers()
                 .contentSecurityPolicy(" default-src 'none'; " +
-                        "script-src 'self'; connect-src 'self'; " +
-                        "img-src 'self'; style-src 'self'; frame-ancestors " +
-                        "'self'; form-action 'self'; style-src-elem 'self' https://rsms.me/inter/inter.css;");
+                        "script-src 'self' https://checkout.stripe.com https://js.stripe.com; " +
+                        "connect-src 'self' https://api.stripe.com https://checkout.stripe.com; " +
+                        "img-src 'self' https://*.stripe.com; " +
+                        "style-src 'self'; " +
+                        "frame-src https://checkout.stripe.com https://js.stripe.com https://hooks.stripe.com; " +
+                        "frame-ancestors 'self'; " +
+                        "form-action 'self';");
     }
 
     @Override
