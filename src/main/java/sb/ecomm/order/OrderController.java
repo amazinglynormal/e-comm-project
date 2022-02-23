@@ -2,9 +2,7 @@ package sb.ecomm.order;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import sb.ecomm.order.dto.CreateOrderDTO;
-import sb.ecomm.order.dto.OrderDTO;
-import sb.ecomm.order.dto.UpdateOrderDTO;
+import sb.ecomm.order.dto.*;
 
 @RestController
 @RequestMapping("/api/v1/orders")
@@ -15,6 +13,11 @@ public class OrderController {
     @Autowired
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
+    }
+
+    @PostMapping("/checkout")
+    CreateCheckoutSessionResponse createCheckoutSession(@RequestBody CreateCheckoutSessionDTO createCheckoutSessionDTO) {
+        return orderService.createCheckoutSession(createCheckoutSessionDTO);
     }
 
     @GetMapping("/{id}")

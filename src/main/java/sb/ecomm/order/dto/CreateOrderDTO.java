@@ -6,7 +6,6 @@ import sb.ecomm.user.Address;
 
 import java.util.List;
 
-
 @Getter
 @Setter
 public class CreateOrderDTO {
