@@ -10,9 +10,7 @@ import org.springframework.stereotype.Service;
 import sb.ecomm.email.EmailService;
 import sb.ecomm.exceptions.UserNotFoundException;
 import sb.ecomm.order.OrderService;
-import sb.ecomm.order.dto.CreateOrderDTO;
-import sb.ecomm.order.dto.OrderDTO;
-import sb.ecomm.order.dto.UpdateOrderDTO;
+import sb.ecomm.order.dto.*;
 import sb.ecomm.user.dto.CreateUserDTO;
 import sb.ecomm.user.dto.UserDTO;
 import sb.ecomm.user.dto.UpdateUserDTO;
@@ -88,7 +86,7 @@ public class UserService {
     }
 
     OrderDTO addNewUserOrder(CreateOrderDTO createOrderDTO, UUID id) {
-         return orderService.addNewOrder(createOrderDTO, id);
+         return orderService.addNewUserOrder(createOrderDTO, id);
     }
 
     OrderDTO updateUserOrder(UUID userId,
@@ -96,10 +94,24 @@ public class UserService {
                              UpdateOrderDTO updateOrderDTO) {
         OrderDTO order = orderService.findOrderById(orderId);
         if (!order.getUserId().equals(userId)) {
-            throw new RuntimeException("forbidden yeah");
+            throw new RuntimeException("Not authorised to modify this order");
         }
         return orderService.updateOrder(orderId, updateOrderDTO);
     }
+
+    CreateCheckoutSessionResponse createCheckoutSession(UUID userId, long orderId, CreateCheckoutSessionDTO createCheckoutSessionDTO) {
+        OrderDTO order = orderService.findOrderById(orderId);
+        if (!order.getUserId().equals(userId)) {
+            throw new RuntimeException("Not authorised to modify this order");
+        }
+
+        createCheckoutSessionDTO.setOrderId(orderId);
+
+        return orderService.createCheckoutSession(createCheckoutSessionDTO);
+
+    }
+
+
 
     void deleteUserOrder(UUID userId, Long orderId) {
         OrderDTO order = orderService.findOrderById(orderId);
