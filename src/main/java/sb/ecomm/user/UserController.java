@@ -2,9 +2,7 @@ package sb.ecomm.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import sb.ecomm.order.dto.CreateOrderDTO;
-import sb.ecomm.order.dto.OrderDTO;
-import sb.ecomm.order.dto.UpdateOrderDTO;
+import sb.ecomm.order.dto.*;
 import sb.ecomm.user.dto.CreateUserDTO;
 import sb.ecomm.user.dto.UserDTO;
 import sb.ecomm.user.dto.UpdateUserDTO;
@@ -31,6 +29,13 @@ public class UserController {
     OrderDTO findUserOrderById(@PathVariable UUID userId,
                                @PathVariable long orderId) {
         return userService.findUserOrderById(userId, orderId);
+    }
+
+    @PostMapping("/{userId}/orders/{orderId}/checkout")
+    CreateCheckoutSessionResponse createCheckoutSession(@PathVariable UUID userId,
+                                                        @PathVariable long orderId,
+                                                        @RequestBody CreateCheckoutSessionDTO createCheckoutSessionDTO) {
+        return userService.createCheckoutSession(userId, orderId, createCheckoutSessionDTO);
     }
 
     @PostMapping("/{userId}/orders")
