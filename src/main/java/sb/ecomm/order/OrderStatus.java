@@ -1,7 +1,7 @@
 package sb.ecomm.order;
 
 public enum OrderStatus {
-    BROWSING,
+    USER_BROWSING,
     PENDING_PAYMENT,
     PROCESSING,
     DISPATCHED,
