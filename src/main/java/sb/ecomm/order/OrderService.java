@@ -51,6 +51,7 @@ public class OrderService {
     private Order createNewOrderObject(CreateOrderDTO createOrderDTO) {
         Order newOrder = mapper.map(createOrderDTO, Order.class);
         List<Product> products = getProductsListFromProductIds(createOrderDTO.getProductIds());
+        newOrder.setStatus(OrderStatus.USER_BROWSING);
         newOrder.setProducts(products);
         newOrder.setPaymentStatus(PaymentStatus.UNPAID);
 
@@ -68,16 +69,14 @@ public class OrderService {
         return mapper.map(savedOrder, OrderDTO.class);
     }
 
-    OrderDTO createNewGuestOrder(CreateOrderDTO createOrderDTO) {
+    Order createNewGuestOrder(CreateOrderDTO createOrderDTO) {
         Order newOrder = createNewOrderObject(createOrderDTO);
 
         newOrder.setEmail(createOrderDTO.getEmail());
         newOrder.setPhone(createOrderDTO.getPhone());
         newOrder.setShippingAddress(createOrderDTO.getShippingAddress());
 
-        Order savedOrder = orderRepository.save(newOrder);
-
-        return mapper.map(savedOrder, OrderDTO.class);
+        return orderRepository.save(newOrder);
     }
 
     public OrderDTO updateOrder(long id, UpdateOrderDTO updateOrderDTO) {
@@ -96,8 +95,21 @@ public class OrderService {
         return mapper.map(savedOrder, OrderDTO.class);
     }
 
-    CreateCheckoutSessionResponse createCheckoutSession(CreateCheckoutSessionDTO createCheckoutSessionDTO) {
+    public CreateCheckoutSessionResponse createCheckoutSession(CreateCheckoutSessionDTO createCheckoutSessionDTO) {
         Stripe.apiKey = TempSecurityConstants.stripeTestKey;
+
+        Order order;
+
+        if (createCheckoutSessionDTO.getOrderId() != null) {
+            order = orderRepository.findById(createCheckoutSessionDTO.getOrderId()).orElseThrow(() -> new OrderNotFoundException(createCheckoutSessionDTO.getOrderId()));
+        } else {
+            CreateOrderDTO newOrder = new CreateOrderDTO();
+            newOrder.setProductIds(createCheckoutSessionDTO.getProductIds());
+            newOrder.setEmail(createCheckoutSessionDTO.getEmail());
+            newOrder.setPhone(createCheckoutSessionDTO.getPhone());
+            newOrder.setShippingAddress(createCheckoutSessionDTO.getShippingAddress());
+            order = createNewGuestOrder(newOrder);
+        }
 
         List<SessionCreateParams.LineItem> lineItems = getLineItems(createCheckoutSessionDTO.getProductIds(),
                 createCheckoutSessionDTO.getCurrency());
@@ -109,8 +121,16 @@ public class OrderService {
                 .setCancelUrl(domain + "/#/login")
                 .addAllLineItem(lineItems)
                 .build();
+
         try {
             Session session = Session.create(params);
+
+            order.setStripeSessionId(session.getId());
+            order.setPaymentStatus(PaymentStatus.PENDING);
+            order.setStatus(OrderStatus.PENDING_PAYMENT);
+
+            orderRepository.save(order);
+
             return new CreateCheckoutSessionResponse(session.getId());
         } catch (StripeException ex) {
             throw new RuntimeException(ex.getMessage());
