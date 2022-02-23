@@ -46,6 +46,9 @@ public class Order {
     @Column
     private String phone;
 
+    @Column
+    private String stripeSessionId;
+
     public Order() {
     }
 
@@ -133,5 +136,13 @@ public class Order {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getStripeSessionId() {
+        return stripeSessionId;
+    }
+
+    public void setStripeSessionId(String stripeSessionId) {
+        this.stripeSessionId = stripeSessionId;
     }
 }
