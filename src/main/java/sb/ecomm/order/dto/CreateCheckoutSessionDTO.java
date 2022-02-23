@@ -12,10 +12,10 @@ import java.util.List;
 public class CreateCheckoutSessionDTO {
 
     private String email;
-    private String name;
     private List<Long> productIds;
     private Currency currency;
     private Address shippingAddress;
     private String phone;
+    private Long orderId;
 
 }
