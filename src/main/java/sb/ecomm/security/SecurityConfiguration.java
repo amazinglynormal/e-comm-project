@@ -43,7 +43,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/api/v1/auth/login",
                         "/api/v1/auth/forgotpassword",
                         "/api/v1/auth/refresh",
-                        "/api/v1/orders/checkout"
+                        "/api/v1/orders/checkout",
+                        "/api/v1/orders/webhook"
                 ).permitAll()
                 .antMatchers(HttpMethod.PATCH,
                         "/api/v1/auth/verify/*",
