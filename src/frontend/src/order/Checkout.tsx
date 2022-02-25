@@ -23,11 +23,11 @@ interface FormData {
 
 interface CreateCheckoutSessionDTO {
   email: string;
-  name: string;
   shippingAddress: Address;
   phone: string;
   productIds: number[];
   currency: string;
+  orderId?: number;
 }
 
 interface CheckoutSession {
@@ -75,6 +75,7 @@ const Checkout = () => {
     if (!formData.phone) return;
 
     const shippingAddress = {
+      name: formData.name,
       line1: formData.line1,
       line2: formData.line2,
       line3: formData.line3,
@@ -88,7 +89,6 @@ const Checkout = () => {
 
     const createCheckoutSessionDTO: CreateCheckoutSessionDTO = {
       email: formData.email,
-      name: formData.name,
       shippingAddress,
       currency: currency.toUpperCase(),
       phone: formData.phone,
