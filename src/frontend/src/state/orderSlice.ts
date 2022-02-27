@@ -5,6 +5,7 @@ import createOrder from "./async-thunks/createOrder";
 import deleteOrder from "./async-thunks/deleteOrder";
 import updateOrder from "./async-thunks/updateOrder";
 import Order from "../interfaces/order.interface";
+import Product from "../types/Product.type";
 
 interface OrderState {
   activeOrder: Order | undefined;
@@ -24,6 +25,26 @@ export const orderSlice = createSlice({
   reducers: {
     setAsActiveOrder: (state, action: PayloadAction<Order>) => {
       state.activeOrder = action.payload;
+    },
+    addProductToOrder: (state, action: PayloadAction<Product>) => {
+      if (state.activeOrder) {
+        state.activeOrder.products.push(action.payload);
+      }
+    },
+    removeProductFromOrder: (state, action: PayloadAction<Product>) => {
+      if (state.activeOrder) {
+        const index = state.activeOrder.products.findIndex(
+          (p) => p.id === action.payload.id
+        );
+        if (index !== -1) {
+          state.activeOrder?.products.splice(index, 1);
+        }
+      }
+    },
+    clearAllProductsFromOrder: (state) => {
+      if (state.activeOrder) {
+        state.activeOrder.products = [];
+      }
     },
   },
   extraReducers: (builder) => {
@@ -76,7 +97,12 @@ export const orderSlice = createSlice({
   },
 });
 
-export const { setAsActiveOrder } = orderSlice.actions;
+export const {
+  setAsActiveOrder,
+  addProductToOrder,
+  removeProductFromOrder,
+  clearAllProductsFromOrder,
+} = orderSlice.actions;
 
 export const selectOrder = (state: RootState) => state.order.activeOrder;
 
