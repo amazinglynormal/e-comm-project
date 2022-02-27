@@ -55,7 +55,7 @@ const CartItem = ({ product }: Props) => {
 
           <div className="mt-4 sm:mt-0 sm:pr-9">
             <div className="absolute top-0 right-0">
-              <RemoveFromCartButton productId={product.id} />
+              <RemoveFromCartButton product={product} />
             </div>
           </div>
         </div>

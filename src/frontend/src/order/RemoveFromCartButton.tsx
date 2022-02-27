@@ -1,17 +1,27 @@
-import { useAppDispatch } from "../hooks/redux-hooks";
-
-import { XIcon } from "@heroicons/react/solid";
+import { removeProductFromLocalStorageOrder } from "../utils/localStorageOrderUtils";
+import { removeProductFromOrder, selectOrder } from "../state/orderSlice";
+import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
 import updateOrder from "../state/async-thunks/updateOrder";
+import { selectUser } from "../state/userSlice";
+import { XIcon } from "@heroicons/react/solid";
+import Product from "../types/Product.type";
 
 interface Props {
-  productId: number;
+  product: Product;
 }
 
-const RemoveFromCartButton = ({ productId }: Props) => {
+const RemoveFromCartButton = ({ product }: Props) => {
   const dispatch = useAppDispatch();
 
+  const user = useAppSelector(selectUser);
+
   const onClickHandler = () => {
-    dispatch(updateOrder({ removeProduct: productId }));
+    if (!user) {
+      removeProductFromLocalStorageOrder(product);
+      dispatch(removeProductFromOrder(product));
+    } else {
+      dispatch(updateOrder({ removeProduct: product.id }));
+    }
   };
 
   return (
