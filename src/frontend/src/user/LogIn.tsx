@@ -5,6 +5,12 @@ import userLogin from "../state/async-thunks/userLogin";
 import { useHistory } from "react-router";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { setAsActiveOrder } from "../state/orderSlice";
+import {
+  checkLocalStorageForExistingOrder,
+  deleteOrderFromLocalStorage,
+} from "../utils/localStorageOrderUtils";
+import deleteOrder from "../state/async-thunks/deleteOrder";
+import createOrder from "../state/async-thunks/createOrder";
 
 const defaultFormData = { email: "", password: "" };
 
@@ -44,11 +50,21 @@ const LogIn = () => {
         const actionResult = await dispatch(userLogin({ email, password }));
         const userState = unwrapResult(actionResult);
         const activeOrder = userState.user.orders.find(
-          (order) => order.status === "ACTIVE"
+          (order) => order.status === "USER_BROWSING"
         );
-        if (activeOrder) {
+        const locallyStoredOrder = checkLocalStorageForExistingOrder();
+
+        if (activeOrder && !locallyStoredOrder) {
           dispatch(setAsActiveOrder(activeOrder));
+        } else if (activeOrder && locallyStoredOrder) {
+          if (activeOrder.id) {
+            await dispatch(deleteOrder(activeOrder.id));
+          }
+          const productIds = locallyStoredOrder.products.map((p) => p.id);
+          await dispatch(createOrder(productIds));
+          deleteOrderFromLocalStorage();
         }
+
         setFormData(defaultFormData);
         history.push("/");
       } catch (error) {
