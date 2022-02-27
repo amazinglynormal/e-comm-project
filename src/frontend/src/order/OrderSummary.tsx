@@ -1,3 +1,8 @@
+import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
+import { clearAllProductsFromOrder } from "../state/orderSlice";
+import { selectUser } from "../state/userSlice";
+import { deleteOrderFromLocalStorage } from "../utils/localStorageOrderUtils";
+
 const products = [
   {
     id: 1,
@@ -14,6 +19,15 @@ const products = [
 ];
 
 const OrderSummary = () => {
+  const dispatch = useAppDispatch();
+  const user = useAppSelector(selectUser);
+
+  if (user) {
+    dispatch(clearAllProductsFromOrder);
+  }
+
+  deleteOrderFromLocalStorage();
+
   return (
     <div className="bg-white">
       <div className="max-w-3xl mx-auto px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
