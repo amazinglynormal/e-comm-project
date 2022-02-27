@@ -42,7 +42,7 @@ const AddToCartButton = ({ productId, product }: Props) => {
       }
     } else {
       if (!activeOrder) {
-        dispatch(createOrder(productId));
+        dispatch(createOrder([productId]));
       } else {
         dispatch(updateOrder({ addProduct: productId }));
       }
