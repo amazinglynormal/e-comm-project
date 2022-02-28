@@ -20,6 +20,11 @@ public class OrderController {
         return orderService.createCheckoutSession(createCheckoutSessionDTO);
     }
 
+    @PostMapping("/webhook")
+    void stripeWebhookEndpoint(@RequestBody String jsonEvent, @RequestHeader(name = "stripe-signature") String stripeSignature) {
+        orderService.processWebhookEvent(jsonEvent, stripeSignature);
+    }
+
     @GetMapping("/{id}")
     OrderDTO getOrderById(@PathVariable long id) {
         return orderService.findOrderById(id);
