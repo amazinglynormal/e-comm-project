@@ -119,6 +119,7 @@ public class OrderService {
 
         String domain = "http://localhost:8080";
         SessionCreateParams params = SessionCreateParams.builder()
+                .setCustomerEmail(order.getEmail())
                 .setMode(SessionCreateParams.Mode.PAYMENT)
                 .setSuccessUrl(domain + "/#/ordersummary")
                 .setCancelUrl(domain + "/#/checkout")
