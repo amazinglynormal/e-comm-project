@@ -5,6 +5,7 @@ import com.stripe.exception.SignatureVerificationException;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Event;
 import com.stripe.model.EventDataObjectDeserializer;
+import com.stripe.model.PaymentIntent;
 import com.stripe.model.StripeObject;
 import com.stripe.model.checkout.Session;
 import com.stripe.net.Webhook;
@@ -159,16 +160,36 @@ public class OrderService {
         }
 
         switch (event.getType()) {
-            case "checkout.session.completed":
-                System.out.println("checkout.session.completed");
+            case "payment_intent.succeeded":
+                PaymentIntent paymentIntent = (PaymentIntent) stripeObject;
+                String paymentIntentId = paymentIntent.getId();
+                Order order = orderRepository.findOrderByStripePaymentIntentId(paymentIntentId).orElseThrow(OrderNotFoundException::new);
+
+                order.setPaymentStatus(PaymentStatus.PAID);
+                order.setStatus(OrderStatus.PROCESSING);
+
+                PaymentMethodDetails paymentMethodDetails = getPaymentMethodDetailsFromPaymentIntent(paymentIntent);
+                order.setPaymentMethodDetails(paymentMethodDetails);
+
+                orderRepository.save(order);
                 break;
             case "checkout.session.expired":
                 System.out.println("checkout.session.expired");
                 break;
             default:
-                System.out.println("Hit default case in event.getType()" + event.getType());
+                System.out.println("Hit default case in event.getType() --->" + event.getType());
         }
 
+    }
+
+    private PaymentMethodDetails getPaymentMethodDetailsFromPaymentIntent(PaymentIntent paymentIntent) {
+        PaymentMethodDetails paymentMethodDetails = new PaymentMethodDetails();
+        paymentMethodDetails.setType(paymentIntent.getPaymentMethodObject().getType());
+        paymentMethodDetails.setBrand(paymentIntent.getPaymentMethodObject().getCard().getBrand());
+        paymentMethodDetails.setCountry(paymentIntent.getPaymentMethodObject().getCard().getCountry());
+        paymentMethodDetails.setLastFour(paymentIntent.getPaymentMethodObject().getCard().getLast4());
+
+        return paymentMethodDetails;
     }
 
     private List<SessionCreateParams.LineItem> getLineItems(List<Long> productIds, Currency currency) {
