@@ -1,8 +1,13 @@
 package sb.ecomm.order;
 
 import com.stripe.Stripe;
+import com.stripe.exception.SignatureVerificationException;
 import com.stripe.exception.StripeException;
+import com.stripe.model.Event;
+import com.stripe.model.EventDataObjectDeserializer;
+import com.stripe.model.StripeObject;
 import com.stripe.model.checkout.Session;
+import com.stripe.net.Webhook;
 import com.stripe.param.checkout.SessionCreateParams;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +22,7 @@ import sb.ecomm.product.Product;
 import sb.ecomm.exceptions.ProductNotFoundException;
 import sb.ecomm.product.ProductRepository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class OrderService {
@@ -86,8 +88,8 @@ public class OrderService {
         updateOrderStatus(order, updateOrderDTO);
         updateOrderProducts(order, updateOrderDTO);
         updatePaymentStatus(order, updateOrderDTO);
-        updateOrderEmail(order, updateOrderDTO);
-        updateOrderPhone(order, updateOrderDTO);
+//        updateOrderEmail(order, updateOrderDTO);
+//        updateOrderPhone(order, updateOrderDTO);
         updateShippingAddress(order, updateOrderDTO);
 
         Order savedOrder = orderRepository.save(order);
@@ -118,14 +120,14 @@ public class OrderService {
         SessionCreateParams params = SessionCreateParams.builder()
                 .setMode(SessionCreateParams.Mode.PAYMENT)
                 .setSuccessUrl(domain + "/#/ordersummary")
-                .setCancelUrl(domain + "/#/login")
+                .setCancelUrl(domain + "/#/checkout")
                 .addAllLineItem(lineItems)
                 .build();
 
         try {
             Session session = Session.create(params);
 
-            order.setStripeSessionId(session.getId());
+            order.setStripePaymentIntentId(session.getPaymentIntent());
             order.setPaymentStatus(PaymentStatus.PENDING);
             order.setStatus(OrderStatus.PENDING_PAYMENT);
 
@@ -135,6 +137,38 @@ public class OrderService {
         } catch (StripeException ex) {
             throw new RuntimeException(ex.getMessage());
         }
+    }
+
+    void processWebhookEvent(String eventPayload, String stripeSignature) {
+        Stripe.apiKey = TempSecurityConstants.stripeTestKey;
+
+        Event event;
+
+        try {
+            event = Webhook.constructEvent(eventPayload, stripeSignature, TempSecurityConstants.stripeEndpointSecret);
+        } catch (SignatureVerificationException ex) {
+            throw new RuntimeException(ex.getMessage());
+        }
+
+        EventDataObjectDeserializer dataObjectDeserializer = event.getDataObjectDeserializer();
+        StripeObject stripeObject;
+        if (dataObjectDeserializer.getObject().isPresent()) {
+            stripeObject = dataObjectDeserializer.getObject().get();
+        } else {
+            throw new RuntimeException("Unable to deserialize event data object");
+        }
+
+        switch (event.getType()) {
+            case "checkout.session.completed":
+                System.out.println("checkout.session.completed");
+                break;
+            case "checkout.session.expired":
+                System.out.println("checkout.session.expired");
+                break;
+            default:
+                System.out.println("Hit default case in event.getType()" + event.getType());
+        }
+
     }
 
     private List<SessionCreateParams.LineItem> getLineItems(List<Long> productIds, Currency currency) {
@@ -194,7 +228,7 @@ public class OrderService {
     }
 
     private void updateOrderStatus(Order order, UpdateOrderDTO updateOrderDTO) {
-        if (order.getStatus() != updateOrderDTO.getStatus() && updateOrderDTO.getStatus() != null) {
+        if (updateOrderDTO.getStatus() != null && order.getStatus() != updateOrderDTO.getStatus()) {
             order.setStatus(updateOrderDTO.getStatus());
         }
     }
@@ -209,7 +243,16 @@ public class OrderService {
         }
 
         if (updateOrderDTO.getRemoveProduct() != null) {
-            productsOrdered.removeIf(product -> product.getId().equals(updateOrderDTO.getRemoveProduct()));
+            int[] index = {-1};
+            for (int i = 0; i < productsOrdered.size(); i++) {
+                if (productsOrdered.get(i).getId().equals(updateOrderDTO.getRemoveProduct())) {
+                    index[0] = i;
+                    break;
+                }
+            }
+            if (index[0] != -1) {
+                productsOrdered.remove(index[0]);
+            }
         }
 
         order.setProducts(productsOrdered);
@@ -223,13 +266,13 @@ public class OrderService {
     }
 
     private void updateOrderEmail(Order order, UpdateOrderDTO updateOrderDTO) {
-        if (order.getEmail().equals(updateOrderDTO.getEmail()) && updateOrderDTO.getEmail() != null) {
+        if (updateOrderDTO.getEmail() != null && !order.getEmail().equals(updateOrderDTO.getEmail())) {
             order.setEmail(updateOrderDTO.getEmail());
         }
     }
 
     private void updateOrderPhone(Order order, UpdateOrderDTO updateOrderDTO) {
-        if (order.getPhone().equals(updateOrderDTO.getPhone()) && updateOrderDTO.getPhone() != null) {
+        if (updateOrderDTO.getPhone() != null && !order.getPhone().equals(updateOrderDTO.getPhone())) {
             order.setPhone(updateOrderDTO.getPhone());
         }
     }
