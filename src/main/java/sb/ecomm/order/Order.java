@@ -47,7 +47,7 @@ public class Order {
     private String phone;
 
     @Column
-    private String stripeSessionId;
+    private String stripePaymentIntentId;
 
     public Order() {
     }
@@ -138,11 +138,11 @@ public class Order {
         this.phone = phone;
     }
 
-    public String getStripeSessionId() {
-        return stripeSessionId;
+    public String getStripePaymentIntentId() {
+        return stripePaymentIntentId;
     }
 
-    public void setStripeSessionId(String stripeSessionId) {
-        this.stripeSessionId = stripeSessionId;
+    public void setStripePaymentIntentId(String stripePaymentIntentId) {
+        this.stripePaymentIntentId = stripePaymentIntentId;
     }
 }
