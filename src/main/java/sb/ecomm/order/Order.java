@@ -49,6 +49,9 @@ public class Order {
     @Column
     private String stripePaymentIntentId;
 
+    @Embedded
+    private PaymentMethodDetails paymentMethodDetails;
+
     public Order() {
     }
 
@@ -144,5 +147,13 @@ public class Order {
 
     public void setStripePaymentIntentId(String stripePaymentIntentId) {
         this.stripePaymentIntentId = stripePaymentIntentId;
+    }
+
+    public PaymentMethodDetails getPaymentMethodDetails() {
+        return paymentMethodDetails;
+    }
+
+    public void setPaymentMethodDetails(PaymentMethodDetails paymentMethodDetails) {
+        this.paymentMethodDetails = paymentMethodDetails;
     }
 }
