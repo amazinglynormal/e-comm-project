@@ -1,12 +1,14 @@
-import OrderCostSummary from "./OrderCostSummary";
-import { useAppSelector } from "../hooks/redux-hooks";
-import { selectOrder } from "../state/orderSlice";
-import { TextInput } from "../components/TextInput";
 import { ChangeEvent, FormEvent, useState } from "react";
-import Address from "../interfaces/Address.interface";
 import { useCurrency } from "../state/CurrencyContext";
-import axios from "axios";
+import { useAppSelector } from "../hooks/redux-hooks";
+import Address from "../interfaces/Address.interface";
+import { TextInput } from "../components/TextInput";
 import { useStripe } from "@stripe/react-stripe-js";
+import OrderCostSummary from "./OrderCostSummary";
+import { selectOrder } from "../state/orderSlice";
+import { selectUser } from "../state/userSlice";
+import axios from "axios";
+import { useAlert } from "../state/AlertContext";
 
 interface FormData {
   email: string;
@@ -49,7 +51,9 @@ const initialFormData = {
 
 const Checkout = () => {
   const order = useAppSelector(selectOrder);
+  const user = useAppSelector(selectUser);
   const { currency } = useCurrency();
+  const { triggerAlert } = useAlert();
   const stripe = useStripe();
 
   const [formData, setFormData] = useState<FormData>(initialFormData);
@@ -95,17 +99,45 @@ const Checkout = () => {
       productIds,
     };
 
-    const session = await axios.post<CheckoutSession>(
-      "/api/v1/orders/create-checkout-session",
-      createCheckoutSessionDTO
-    );
+    if (!user) {
+      const session = await axios.post<CheckoutSession>(
+        "/api/v1/orders/checkout",
+        createCheckoutSessionDTO
+      );
 
-    const result = await stripe?.redirectToCheckout({
-      sessionId: session.data.sessionId,
-    });
+      const result = await stripe?.redirectToCheckout({
+        sessionId: session.data.sessionId,
+      });
 
-    if (result?.error) {
-      console.log(result.error.message);
+      if (result?.error) {
+        triggerAlert(
+          "error",
+          "Cannot complete order at this time. Please try again later."
+        );
+      }
+    } else {
+      const token = sessionStorage.getItem("a_token");
+
+      const session = await axios.post<CheckoutSession>(
+        `/api/v1/users/${user.id}/orders/${order.id}/checkout`,
+        createCheckoutSessionDTO,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const result = await stripe?.redirectToCheckout({
+        sessionId: session.data.sessionId,
+      });
+
+      if (result?.error) {
+        triggerAlert(
+          "error",
+          "Cannot complete order at this time. Please try again later."
+        );
+      }
     }
   };
 
@@ -186,7 +218,6 @@ const Checkout = () => {
 
                 <div className="sm:col-span-2">
                   <TextInput
-                    required
                     name="city"
                     id="city"
                     autoComplete="address-level2"
