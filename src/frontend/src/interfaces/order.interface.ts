@@ -1,4 +1,5 @@
 import Product from "../types/Product.type";
+import Address from "./Address.interface";
 
 interface Order {
   id?: number;
@@ -10,6 +11,9 @@ interface Order {
     | "DELIVERED";
   userId?: string;
   products: Product[];
+  email?: string;
+  phone?: string;
+  shippingAddress?: Address;
 }
 
 export default Order;
