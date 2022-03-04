@@ -1,4 +1,5 @@
 import { useAppSelector, useAppDispatch } from "../hooks/redux-hooks";
+import useProductDetailsSWR from "../hooks/useProductDetailsSWR";
 import createOrder from "../state/async-thunks/createOrder";
 import updateOrder from "../state/async-thunks/updateOrder";
 import {
@@ -7,7 +8,6 @@ import {
   setAsActiveOrder,
 } from "../state/orderSlice";
 import { selectUser } from "../state/userSlice";
-import Product from "../types/Product.type";
 import {
   addProductToLocalStorageOrder,
   checkLocalStorageForExistingOrder,
@@ -15,12 +15,12 @@ import {
 
 interface Props {
   productId: number;
-  product: Product;
 }
 
-const AddToCartButton = ({ productId, product }: Props) => {
+const AddToCartButton = ({ productId }: Props) => {
   const activeOrder = useAppSelector(selectOrder);
   const dispatch = useAppDispatch();
+  const { data } = useProductDetailsSWR(productId.toString());
 
   const user = useAppSelector(selectUser);
 
@@ -30,15 +30,15 @@ const AddToCartButton = ({ productId, product }: Props) => {
         const existingOrder = checkLocalStorageForExistingOrder();
 
         if (!existingOrder) {
-          addProductToLocalStorageOrder(product);
-          dispatch(setAsActiveOrder({ products: [product] }));
+          addProductToLocalStorageOrder(data);
+          dispatch(setAsActiveOrder({ products: [data] }));
         } else {
-          const updatedOrder = addProductToLocalStorageOrder(product);
+          const updatedOrder = addProductToLocalStorageOrder(data);
           dispatch(setAsActiveOrder(updatedOrder));
         }
       } else {
-        addProductToLocalStorageOrder(product);
-        dispatch(addProductToOrder(product));
+        addProductToLocalStorageOrder(data);
+        dispatch(addProductToOrder(data));
       }
     } else {
       if (!activeOrder) {
