@@ -9,4 +9,5 @@ import lombok.Setter;
 @Setter
 public class CreateCheckoutSessionResponse {
     private String sessionId;
+    private OrderDTO order;
 }

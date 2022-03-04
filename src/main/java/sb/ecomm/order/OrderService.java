@@ -135,7 +135,9 @@ public class OrderService {
 
             orderRepository.save(order);
 
-            return new CreateCheckoutSessionResponse(session.getId());
+            OrderDTO orderDTO = mapper.map(order, OrderDTO.class);
+
+            return new CreateCheckoutSessionResponse(session.getId(), orderDTO);
         } catch (StripeException ex) {
             throw new RuntimeException(ex.getMessage());
         }
