@@ -4,7 +4,6 @@ import Order from "../../interfaces/order.interface";
 import { RootState } from "../store";
 
 interface ThunkArgs {
-  status?: string;
   addProduct?: number;
   removeProduct?: number;
 }
