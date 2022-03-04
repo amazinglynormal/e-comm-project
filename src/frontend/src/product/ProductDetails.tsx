@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import useProductDetailsSWR from "../hooks/useProductDetailsSWR";
 import AddToCartButton from "../order/AddToCartButton";
@@ -24,8 +24,6 @@ export default function ProductDetails() {
 
   const { data, isLoading, isError, products } = useProductDetailsSWR(id);
 
-  let product = data;
-
   if (isError) return <div>{isError.message}</div>;
 
   if (isLoading) return <div>LOADING</div>;
@@ -33,14 +31,6 @@ export default function ProductDetails() {
   const onSelectedSizeChange = (id: number) => {
     setSelectedSize(id);
   };
-
-  useEffect(() => {
-    const selectedProduct = products.find((p) => p.id === selectedSize);
-
-    if (!selectedProduct) return;
-
-    product = selectedProduct;
-  }, [selectedSize]);
 
   return (
     <div className="bg-white">
@@ -82,7 +72,7 @@ export default function ProductDetails() {
               </div>
 
               <div className="mt-10">
-                <AddToCartButton productId={selectedSize} product={product} />
+                <AddToCartButton productId={selectedSize} />
               </div>
             </form>
           </div>
