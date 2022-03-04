@@ -49,8 +49,8 @@ const Cart = () => {
               <EmptyCart />
             ) : (
               <ul className="border-t border-b border-gray-200 divide-y divide-gray-200">
-                {order.products.map((product) => (
-                  <CartItem key={product.id} product={product} />
+                {order.products.map((product, index) => (
+                  <CartItem key={`${product.id}${index}`} product={product} />
                 ))}
               </ul>
             )}
