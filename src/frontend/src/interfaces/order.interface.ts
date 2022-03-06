@@ -1,5 +1,6 @@
 import Product from "../types/Product.type";
 import Address from "./Address.interface";
+import PaymentMethodDetails from "./PaymentMethodDetails.interface";
 
 interface Order {
   id?: number;
@@ -14,6 +15,7 @@ interface Order {
   email?: string;
   phone?: string;
   shippingAddress?: Address;
+  paymentMethodDetails?: PaymentMethodDetails;
   subtotal?: number;
   shippingCost?: number;
   totalCost?: number;
