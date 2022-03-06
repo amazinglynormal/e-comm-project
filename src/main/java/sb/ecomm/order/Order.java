@@ -52,6 +52,16 @@ public class Order {
     @Embedded
     private PaymentMethodDetails paymentMethodDetails;
 
+    @Column
+    private double subtotal;
+
+    @Column
+    private double shippingCost;
+
+    @Column
+    private double totalCost;
+
+
     public Order() {
     }
 
@@ -155,5 +165,29 @@ public class Order {
 
     public void setPaymentMethodDetails(PaymentMethodDetails paymentMethodDetails) {
         this.paymentMethodDetails = paymentMethodDetails;
+    }
+
+    public double getSubtotal() {
+        return subtotal;
+    }
+
+    public void setSubtotal(double subtotal) {
+        this.subtotal = subtotal;
+    }
+
+    public double getShippingCost() {
+        return shippingCost;
+    }
+
+    public void setShippingCost(double shippingCost) {
+        this.shippingCost = shippingCost;
+    }
+
+    public double getTotalCost() {
+        return totalCost;
+    }
+
+    public void setTotalCost(double totalCost) {
+        this.totalCost = totalCost;
     }
 }
