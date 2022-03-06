@@ -3,6 +3,7 @@ package sb.ecomm.order.dto;
 import lombok.Getter;
 import lombok.Setter;
 import sb.ecomm.order.OrderStatus;
+import sb.ecomm.order.PaymentMethodDetails;
 import sb.ecomm.product.Product;
 import sb.ecomm.user.Address;
 
@@ -20,6 +21,7 @@ public class OrderDTO {
     private Address shippingAddress;
     private String email;
     private String phone;
+    private PaymentMethodDetails paymentMethodDetails;
     private double subtotal;
     private double shippingCost;
     private double totalCost;
