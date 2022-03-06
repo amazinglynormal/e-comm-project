@@ -20,5 +20,8 @@ public class OrderDTO {
     private Address shippingAddress;
     private String email;
     private String phone;
+    private double subtotal;
+    private double shippingCost;
+    private double totalCost;
 
 }
