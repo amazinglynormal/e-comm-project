@@ -14,6 +14,9 @@ interface Order {
   email?: string;
   phone?: string;
   shippingAddress?: Address;
+  subtotal?: number;
+  shippingCost?: number;
+  totalCost?: number;
 }
 
 export default Order;
