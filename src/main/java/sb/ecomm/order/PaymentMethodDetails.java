@@ -7,7 +7,7 @@ public class PaymentMethodDetails {
 
     private String type;
     private String brand;
-    private String country;
+    private String cardCountry;
     private String lastFour;
 
     public PaymentMethodDetails() {
@@ -29,12 +29,12 @@ public class PaymentMethodDetails {
         this.brand = brand;
     }
 
-    public String getCountry() {
-        return country;
+    public String getCardCountry() {
+        return cardCountry;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
+    public void setCardCountry(String cardCountry) {
+        this.cardCountry = cardCountry;
     }
 
     public String getLastFour() {
