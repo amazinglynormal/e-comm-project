@@ -189,7 +189,7 @@ public class OrderService {
         PaymentMethodDetails paymentMethodDetails = new PaymentMethodDetails();
         paymentMethodDetails.setType(paymentIntent.getPaymentMethodObject().getType());
         paymentMethodDetails.setBrand(paymentIntent.getPaymentMethodObject().getCard().getBrand());
-        paymentMethodDetails.setCountry(paymentIntent.getPaymentMethodObject().getCard().getCountry());
+        paymentMethodDetails.setCardCountry(paymentIntent.getPaymentMethodObject().getCard().getCountry());
         paymentMethodDetails.setLastFour(paymentIntent.getPaymentMethodObject().getCard().getLast4());
 
         return paymentMethodDetails;
