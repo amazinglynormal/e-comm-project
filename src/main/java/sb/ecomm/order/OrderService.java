@@ -58,6 +58,8 @@ public class OrderService {
         newOrder.setProducts(products);
         newOrder.setPaymentStatus(PaymentStatus.UNPAID);
 
+        updateOrderCosts(newOrder);
+
         return newOrder;
     }
 
@@ -86,11 +88,9 @@ public class OrderService {
         Order order =
                 orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException(id));
 
-        updateOrderStatus(order, updateOrderDTO);
         updateOrderProducts(order, updateOrderDTO);
-        updatePaymentStatus(order, updateOrderDTO);
-//        updateOrderEmail(order, updateOrderDTO);
-//        updateOrderPhone(order, updateOrderDTO);
+        updateOrderEmail(order, updateOrderDTO);
+        updateOrderPhone(order, updateOrderDTO);
         updateShippingAddress(order, updateOrderDTO);
 
         Order savedOrder = orderRepository.save(order);
@@ -251,12 +251,6 @@ public class OrderService {
         return products;
     }
 
-    private void updateOrderStatus(Order order, UpdateOrderDTO updateOrderDTO) {
-        if (updateOrderDTO.getStatus() != null && order.getStatus() != updateOrderDTO.getStatus()) {
-            order.setStatus(updateOrderDTO.getStatus());
-        }
-    }
-
     private void updateOrderProducts(Order order, UpdateOrderDTO updateOrderDTO) {
         List<Product> productsOrdered = order.getProducts();
 
@@ -281,12 +275,27 @@ public class OrderService {
 
         order.setProducts(productsOrdered);
 
+        updateOrderCosts(order);
+
     }
 
-    private void updatePaymentStatus(Order order, UpdateOrderDTO updateOrderDTO) {
-        if (order.getPaymentStatus() != updateOrderDTO.getPaymentStatus() && updateOrderDTO.getPaymentStatus() != null) {
-            order.setPaymentStatus(updateOrderDTO.getPaymentStatus());
+    private void updateOrderCosts(Order order) {
+        List<Product> productsOrdered = order.getProducts();
+
+        double subtotal = 0.0;
+        double shippingCost = 0.0;
+
+        for (Product product : productsOrdered) {
+            subtotal = subtotal + product.getEUR();
         }
+
+        if (subtotal < 50.0) shippingCost = 9.99;
+
+        double totalCost = subtotal + shippingCost;
+
+        order.setSubtotal(subtotal);
+        order.setShippingCost(shippingCost);
+        order.setTotalCost(totalCost);
     }
 
     private void updateOrderEmail(Order order, UpdateOrderDTO updateOrderDTO) {
