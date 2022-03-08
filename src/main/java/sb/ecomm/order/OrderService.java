@@ -105,6 +105,10 @@ public class OrderService {
 
         if (createCheckoutSessionDTO.getOrderId() != null) {
             order = orderRepository.findById(createCheckoutSessionDTO.getOrderId()).orElseThrow(() -> new OrderNotFoundException(createCheckoutSessionDTO.getOrderId()));
+            order.setShippingAddress(createCheckoutSessionDTO.getShippingAddress());
+            order.setPhone(createCheckoutSessionDTO.getPhone());
+            order.setEmail(createCheckoutSessionDTO.getEmail());
+            orderRepository.save(order);
         } else {
             CreateOrderDTO newOrder = new CreateOrderDTO();
             newOrder.setProductIds(createCheckoutSessionDTO.getProductIds());
