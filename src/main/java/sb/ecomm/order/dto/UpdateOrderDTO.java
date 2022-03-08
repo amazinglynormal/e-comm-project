@@ -13,12 +13,10 @@ import java.util.UUID;
 public class UpdateOrderDTO {
 
     private UUID userId;
-    private OrderStatus status;
     private Long addProduct;
     private Long removeProduct;
     private Address shippingAddress;
     private String email;
     private String phone;
-    private PaymentStatus paymentStatus;
 
 }
