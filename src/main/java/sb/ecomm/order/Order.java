@@ -5,6 +5,7 @@ import sb.ecomm.user.User;
 import sb.ecomm.product.Product;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Entity(name = "Order")
@@ -60,6 +61,18 @@ public class Order {
 
     @Column
     private double totalCost;
+
+    @Column
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dateCreated;
+
+    @Column
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date datePlaced;
+
+    @Column
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastUpdated;
 
 
     public Order() {
@@ -189,5 +202,29 @@ public class Order {
 
     public void setTotalCost(double totalCost) {
         this.totalCost = totalCost;
+    }
+
+    public Date getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public Date getDatePlaced() {
+        return datePlaced;
+    }
+
+    public void setDatePlaced(Date datePlaced) {
+        this.datePlaced = datePlaced;
+    }
+
+    public Date getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Date lastUpdated) {
+        this.lastUpdated = lastUpdated;
     }
 }
