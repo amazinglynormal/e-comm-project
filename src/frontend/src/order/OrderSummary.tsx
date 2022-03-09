@@ -1,31 +1,41 @@
 import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
-import { clearAllProductsFromOrder } from "../state/orderSlice";
-import { selectUser } from "../state/userSlice";
-import { deleteOrderFromLocalStorage } from "../utils/localStorageOrderUtils";
+import {
+  resetActiveOrder,
+  selectCompletedOrder,
+  selectOrder,
+  setCompletedOrder,
+} from "../state/orderSlice";
+import {
+  checkLocalStorageForExistingOrder,
+  deleteOrderFromLocalStorage,
+} from "../utils/localStorageOrderUtils";
+import Spinner from "../components/Spinner";
+import { useCurrency } from "../state/CurrencyContext";
+import { Link } from "react-router-dom";
 
-const products = [
-  {
-    id: 1,
-    name: "Cold Brew Bottle",
-    description:
-      "This glass bottle comes with a mesh insert for steeping tea or cold-brewing coffee. Pour from any angle and remove the top for easy cleaning.",
-    href: "#",
-    quantity: 1,
-    price: "$32.00",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/confirmation-page-05-product-01.jpg",
-    imageAlt: "Glass bottle with black plastic pour top and mesh insert.",
-  },
-];
+const currencySymbol: { [index: string]: string } = {
+  eur: "€",
+  gbp: "£",
+  usd: "$",
+};
 
 const OrderSummary = () => {
   const dispatch = useAppDispatch();
-  const user = useAppSelector(selectUser);
+  const completedOrder = useAppSelector(selectOrder);
+  const { currency } = useCurrency();
 
-  if (user) {
-    dispatch(clearAllProductsFromOrder);
+  if (!completedOrder) {
+    const locallyStoredOrder = checkLocalStorageForExistingOrder();
+    if (locallyStoredOrder) dispatch(setCompletedOrder(locallyStoredOrder));
   }
 
+  if (completedOrder) {
+    dispatch(setCompletedOrder(completedOrder));
+  }
+
+  const order = useAppSelector(selectCompletedOrder);
+
+  dispatch(resetActiveOrder);
   deleteOrderFromLocalStorage();
 
   return (
@@ -38,54 +48,52 @@ const OrderSummary = () => {
           <p className="mt-2 text-4xl font-extrabold tracking-tight sm:text-5xl">
             It&apos;s on the way!
           </p>
-          <p className="mt-2 text-base text-gray-500">
-            Your order #14034056 has shipped and will be with you soon.
-          </p>
-
-          <dl className="mt-12 text-sm font-medium">
-            <dt className="text-gray-900">Tracking number</dt>
-            <dd className="text-indigo-600 mt-2">51547878755545848512</dd>
-          </dl>
+          {order?.id && (
+            <p className="mt-2 text-base text-gray-500">
+              {`Your order #${order.id} has shipped and will be with you soon.`}
+            </p>
+          )}
         </div>
 
         <div className="mt-10 border-t border-gray-200">
           <h2 className="sr-only">Your order</h2>
 
           <h3 className="sr-only">Items</h3>
-          {products.map((product) => (
-            <div
-              key={product.id}
-              className="py-10 border-b border-gray-200 flex space-x-6"
-            >
-              <img
-                src={product.imageSrc}
-                alt={product.imageAlt}
-                className="flex-none w-20 h-20 object-center object-cover bg-gray-100 rounded-lg sm:w-40 sm:h-40"
-              />
-              <div className="flex-auto flex flex-col">
-                <div>
-                  <h4 className="font-medium text-gray-900">
-                    <a href={product.href}>{product.name}</a>
-                  </h4>
-                  <p className="mt-2 text-sm text-gray-600">
-                    {product.description}
-                  </p>
-                </div>
-                <div className="mt-6 flex-1 flex items-end">
-                  <dl className="flex text-sm divide-x divide-gray-200 space-x-4 sm:space-x-6">
-                    <div className="flex">
-                      <dt className="font-medium text-gray-900">Quantity</dt>
-                      <dd className="ml-2 text-gray-700">{product.quantity}</dd>
-                    </div>
-                    <div className="pl-4 flex sm:pl-6">
-                      <dt className="font-medium text-gray-900">Price</dt>
-                      <dd className="ml-2 text-gray-700">{product.price}</dd>
-                    </div>
-                  </dl>
+          {order &&
+            order.products.map((product) => (
+              <div
+                key={product.id}
+                className="py-10 border-b border-gray-200 flex space-x-6"
+              >
+                <img
+                  src={product.imageSrc}
+                  alt={product.imageAlt}
+                  className="flex-none w-20 h-20 object-center object-cover bg-gray-100 rounded-lg sm:w-40 sm:h-40"
+                />
+                <div className="flex-auto flex flex-col">
+                  <div>
+                    <h4 className="font-medium text-gray-900">
+                      <Link to={`/product/details/${product.id}`}>
+                        {product.name}
+                      </Link>
+                    </h4>
+                    <p className="mt-2 text-sm text-gray-600">
+                      {product.description}
+                    </p>
+                  </div>
+                  <div className="mt-6 flex-1 flex items-end">
+                    <dl className="flex text-sm divide-x divide-gray-200 space-x-4 sm:space-x-6">
+                      <div className="flex">
+                        <dt className="font-medium text-gray-900">Price</dt>
+                        <dd className="ml-2 text-gray-700">
+                          {`${currencySymbol[currency]} ${product[currency]}`}
+                        </dd>
+                      </div>
+                    </dl>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
 
           <div className="sm:ml-40 sm:pl-6">
             <h3 className="sr-only">Your information</h3>
@@ -96,19 +104,46 @@ const OrderSummary = () => {
                 <dt className="font-medium text-gray-900">Shipping address</dt>
                 <dd className="mt-2 text-gray-700">
                   <address className="not-italic">
-                    <span className="block">Kristin Watson</span>
-                    <span className="block">7363 Cynthia Pass</span>
-                    <span className="block">Toronto, ON N3Y 4H8</span>
-                  </address>
-                </dd>
-              </div>
-              <div>
-                <dt className="font-medium text-gray-900">Billing address</dt>
-                <dd className="mt-2 text-gray-700">
-                  <address className="not-italic">
-                    <span className="block">Kristin Watson</span>
-                    <span className="block">7363 Cynthia Pass</span>
-                    <span className="block">Toronto, ON N3Y 4H8</span>
+                    {order?.shippingAddress?.name && (
+                      <span className="block">
+                        {order.shippingAddress.name}
+                      </span>
+                    )}
+                    {order?.shippingAddress?.line1 && (
+                      <span className="block">
+                        {order.shippingAddress.line1}
+                      </span>
+                    )}
+                    {order?.shippingAddress?.line2 && (
+                      <span className="block">
+                        {order.shippingAddress.line2}
+                      </span>
+                    )}
+                    {order?.shippingAddress?.line3 && (
+                      <span className="block">
+                        {order.shippingAddress.line3}
+                      </span>
+                    )}
+                    {order?.shippingAddress?.city && (
+                      <span className="block">
+                        {order.shippingAddress.city}
+                      </span>
+                    )}
+                    {order?.shippingAddress?.province && (
+                      <span className="block">
+                        {order.shippingAddress.province}
+                      </span>
+                    )}
+                    {order?.shippingAddress?.country && (
+                      <span className="block">
+                        {order.shippingAddress.country}
+                      </span>
+                    )}
+                    {order?.shippingAddress?.zipCode && (
+                      <span className="block">
+                        {order.shippingAddress.zipCode}
+                      </span>
+                    )}
                   </address>
                 </dd>
               </div>
@@ -117,21 +152,9 @@ const OrderSummary = () => {
             <h4 className="sr-only">Payment</h4>
             <dl className="grid grid-cols-2 gap-x-6 border-t border-gray-200 text-sm py-10">
               <div>
-                <dt className="font-medium text-gray-900">Payment method</dt>
+                <dt className="font-medium text-gray-900">Expected delivery</dt>
                 <dd className="mt-2 text-gray-700">
-                  <p>Apple Pay</p>
-                  <p>Mastercard</p>
-                  <p>
-                    <span aria-hidden="true">•••• </span>
-                    <span className="sr-only">Ending in </span>1545
-                  </p>
-                </dd>
-              </div>
-              <div>
-                <dt className="font-medium text-gray-900">Shipping method</dt>
-                <dd className="mt-2 text-gray-700">
-                  <p>DHL</p>
-                  <p>Takes up to 3 working days</p>
+                  <p>Takes up to 7 working days</p>
                 </dd>
               </div>
             </dl>
@@ -139,27 +162,25 @@ const OrderSummary = () => {
             <h3 className="sr-only">Summary</h3>
 
             <dl className="space-y-6 border-t border-gray-200 text-sm pt-10">
-              <div className="flex justify-between">
-                <dt className="font-medium text-gray-900">Subtotal</dt>
-                <dd className="text-gray-700">$36.00</dd>
-              </div>
-              <div className="flex justify-between">
-                <dt className="flex font-medium text-gray-900">
-                  Discount
-                  <span className="rounded-full bg-gray-200 text-xs text-gray-600 py-0.5 px-2 ml-2">
-                    STUDENT50
-                  </span>
-                </dt>
-                <dd className="text-gray-700">-$18.00 (50%)</dd>
-              </div>
-              <div className="flex justify-between">
-                <dt className="font-medium text-gray-900">Shipping</dt>
-                <dd className="text-gray-700">$5.00</dd>
-              </div>
-              <div className="flex justify-between">
-                <dt className="font-medium text-gray-900">Total</dt>
-                <dd className="text-gray-900">$23.00</dd>
-              </div>
+              {order?.subtotal && order.shippingCost && order.totalCost ? (
+                <>
+                  <div className="flex justify-between">
+                    <dt className="font-medium text-gray-900">Subtotal</dt>
+                    <dd className="text-gray-700">{`${currencySymbol[currency]}${order?.subtotal}`}</dd>
+                  </div>
+
+                  <div className="flex justify-between">
+                    <dt className="font-medium text-gray-900">Shipping</dt>
+                    <dd className="text-gray-700">{`${currencySymbol[currency]}${order?.shippingCost}`}</dd>
+                  </div>
+                  <div className="flex justify-between">
+                    <dt className="font-medium text-gray-900">Total</dt>
+                    <dd className="text-gray-900">{`${currencySymbol[currency]}${order?.totalCost}`}</dd>
+                  </div>
+                </>
+              ) : (
+                <Spinner />
+              )}
             </dl>
           </div>
         </div>
