@@ -8,13 +8,15 @@ import Order from "../interfaces/order.interface";
 import Product from "../types/Product.type";
 
 interface OrderState {
-  activeOrder: Order | undefined;
+  activeOrder: Order | undefined | null;
+  completedOrder: Order | undefined | null;
   status: "idle" | "pending" | "succeeded" | "failed";
   error: string | null;
 }
 
 const initialState: OrderState = {
   activeOrder: undefined,
+  completedOrder: undefined,
   status: "idle",
   error: null,
 };
@@ -45,6 +47,12 @@ export const orderSlice = createSlice({
       if (state.activeOrder) {
         state.activeOrder.products = [];
       }
+    },
+    resetActiveOrder: (state) => {
+      state.activeOrder = null;
+    },
+    setCompletedOrder: (state, action: PayloadAction<Order>) => {
+      state.completedOrder = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -102,6 +110,8 @@ export const {
   addProductToOrder,
   removeProductFromOrder,
   clearAllProductsFromOrder,
+  resetActiveOrder,
+  setCompletedOrder,
 } = orderSlice.actions;
 
 export const selectOrder = (state: RootState) => state.order.activeOrder;
@@ -111,5 +121,8 @@ export const selectOrderProducts = (state: RootState) =>
 
 export const selectOrderStatus = (state: RootState) =>
   state.order.activeOrder?.status;
+
+export const selectCompletedOrder = (state: RootState) =>
+  state.order.completedOrder;
 
 export default orderSlice.reducer;
