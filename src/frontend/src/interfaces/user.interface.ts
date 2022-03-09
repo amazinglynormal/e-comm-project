@@ -5,7 +5,7 @@ interface User {
   id: string;
   username: string;
   email: string;
-  role: "GUEST" | "CUSTOMER";
+  role: "CUSTOMER";
   orders: Order[];
   address?: Address;
 }
