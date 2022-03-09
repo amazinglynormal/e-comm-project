@@ -1,14 +1,16 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import { useCurrency } from "../state/CurrencyContext";
-import { useAppSelector } from "../hooks/redux-hooks";
+import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
 import Address from "../interfaces/Address.interface";
 import { TextInput } from "../components/TextInput";
 import { useStripe } from "@stripe/react-stripe-js";
 import OrderCostSummary from "./OrderCostSummary";
-import { selectOrder } from "../state/orderSlice";
+import { selectOrder, setAsActiveOrder } from "../state/orderSlice";
 import { selectUser } from "../state/userSlice";
 import axios from "axios";
 import { useAlert } from "../state/AlertContext";
+import Order from "../interfaces/order.interface";
+import { storeOrderInLocalStorage } from "../utils/localStorageOrderUtils";
 
 interface FormData {
   email: string;
@@ -34,6 +36,7 @@ interface CreateCheckoutSessionDTO {
 
 interface CheckoutSession {
   sessionId: string;
+  order: Order;
 }
 
 const initialFormData = {
@@ -50,6 +53,7 @@ const initialFormData = {
 };
 
 const Checkout = () => {
+  const dispatch = useAppDispatch();
   const order = useAppSelector(selectOrder);
   const user = useAppSelector(selectUser);
   const { currency } = useCurrency();
@@ -105,6 +109,9 @@ const Checkout = () => {
         createCheckoutSessionDTO
       );
 
+      dispatch(setAsActiveOrder(session.data.order));
+      storeOrderInLocalStorage(session.data.order);
+
       const result = await stripe?.redirectToCheckout({
         sessionId: session.data.sessionId,
       });
@@ -127,6 +134,9 @@ const Checkout = () => {
           },
         }
       );
+
+      dispatch(setAsActiveOrder(session.data.order));
+      storeOrderInLocalStorage(session.data.order);
 
       const result = await stripe?.redirectToCheckout({
         sessionId: session.data.sessionId,
