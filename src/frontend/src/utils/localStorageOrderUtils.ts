@@ -14,6 +14,11 @@ function checkLocalStorageForExistingOrder(): Order | null {
   return null;
 }
 
+function storeOrderInLocalStorage(order: Order): void {
+  const stringifiedOrder = JSON.stringify(order);
+  localStorage.setItem(KEY, stringifiedOrder);
+}
+
 function addProductToLocalStorageOrder(product: Product): Order {
   const storedOrder = localStorage.getItem(KEY);
   let order: Order;
@@ -58,6 +63,7 @@ function deleteOrderFromLocalStorage(): void {
 
 export {
   checkLocalStorageForExistingOrder,
+  storeOrderInLocalStorage,
   addProductToLocalStorageOrder,
   removeProductFromLocalStorageOrder,
   deleteOrderFromLocalStorage,
