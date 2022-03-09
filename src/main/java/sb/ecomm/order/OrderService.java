@@ -23,6 +23,8 @@ import sb.ecomm.product.Product;
 import sb.ecomm.exceptions.ProductNotFoundException;
 import sb.ecomm.product.ProductRepository;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -53,12 +55,18 @@ public class OrderService {
 
     private Order createNewOrderObject(CreateOrderDTO createOrderDTO) {
         Order newOrder = mapper.map(createOrderDTO, Order.class);
+
         List<Product> products = getProductsListFromProductIds(createOrderDTO.getProductIds());
-        newOrder.setStatus(OrderStatus.USER_BROWSING);
         newOrder.setProducts(products);
+
+        newOrder.setStatus(OrderStatus.USER_BROWSING);
         newOrder.setPaymentStatus(PaymentStatus.UNPAID);
 
         updateOrderCosts(newOrder);
+
+        Date date = new Date();
+        newOrder.setDateCreated(date);
+        updateLastUpdatedColumn(newOrder);
 
         return newOrder;
     }
@@ -69,6 +77,8 @@ public class OrderService {
         User user =
                 userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         newOrder.setUser(user);
+
+        updateLastUpdatedColumn(newOrder);
 
         Order savedOrder = orderRepository.save(newOrder);
         return mapper.map(savedOrder, OrderDTO.class);
@@ -81,6 +91,8 @@ public class OrderService {
         newOrder.setPhone(createOrderDTO.getPhone());
         newOrder.setShippingAddress(createOrderDTO.getShippingAddress());
 
+        updateLastUpdatedColumn(newOrder);
+
         return orderRepository.save(newOrder);
     }
 
@@ -92,6 +104,8 @@ public class OrderService {
         updateOrderEmail(order, updateOrderDTO);
         updateOrderPhone(order, updateOrderDTO);
         updateShippingAddress(order, updateOrderDTO);
+
+        updateLastUpdatedColumn(order);
 
         Order savedOrder = orderRepository.save(order);
 
@@ -108,6 +122,7 @@ public class OrderService {
             order.setShippingAddress(createCheckoutSessionDTO.getShippingAddress());
             order.setPhone(createCheckoutSessionDTO.getPhone());
             order.setEmail(createCheckoutSessionDTO.getEmail());
+            updateLastUpdatedColumn(order);
             orderRepository.save(order);
         } else {
             CreateOrderDTO newOrder = new CreateOrderDTO();
@@ -136,6 +151,11 @@ public class OrderService {
             order.setStripePaymentIntentId(session.getPaymentIntent());
             order.setPaymentStatus(PaymentStatus.PENDING);
             order.setStatus(OrderStatus.PENDING_PAYMENT);
+
+            Date date = new Date();
+            order.setDatePlaced(date);
+
+            updateLastUpdatedColumn(order);
 
             orderRepository.save(order);
 
@@ -175,6 +195,8 @@ public class OrderService {
                 order.setPaymentStatus(PaymentStatus.PAID);
                 order.setStatus(OrderStatus.PROCESSING);
 
+                updateLastUpdatedColumn(order);
+
                 PaymentMethodDetails paymentMethodDetails = getPaymentMethodDetailsFromPaymentIntent(paymentIntent);
                 order.setPaymentMethodDetails(paymentMethodDetails);
 
@@ -187,6 +209,11 @@ public class OrderService {
                 System.out.println("Hit default case in event.getType() --->" + event.getType());
         }
 
+    }
+
+    private void updateLastUpdatedColumn(Order order) {
+        Date date = new Date();
+        order.setLastUpdated(date);
     }
 
     private PaymentMethodDetails getPaymentMethodDetailsFromPaymentIntent(PaymentIntent paymentIntent) {
