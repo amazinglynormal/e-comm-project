@@ -54,13 +54,13 @@ public class Order {
     private PaymentMethodDetails paymentMethodDetails;
 
     @Column
-    private double subtotal;
+    private Double subtotal;
 
     @Column
-    private double shippingCost;
+    private Double shippingCost;
 
     @Column
-    private double totalCost;
+    private Double totalCost;
 
     @Column
     @Temporal(TemporalType.TIMESTAMP)
