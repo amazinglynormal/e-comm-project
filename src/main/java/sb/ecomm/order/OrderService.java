@@ -23,8 +23,6 @@ import sb.ecomm.product.Product;
 import sb.ecomm.exceptions.ProductNotFoundException;
 import sb.ecomm.product.ProductRepository;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -51,6 +49,14 @@ public class OrderService {
                 orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException(id));
 
         return mapper.map(order, OrderDTO.class);
+    }
+
+    public List<OrderDTO> findAllOrdersPlacedByUser(UUID userId) {
+        List<OrderStatus> statuses = Arrays.asList(OrderStatus.USER_BROWSING);
+        List<Order> orders = orderRepository.findUserOrders(userId, statuses);
+        List<OrderDTO> orderDTOs = new ArrayList<>();
+        orders.forEach(order -> orderDTOs.add(mapper.map(order, OrderDTO.class)));
+        return orderDTOs;
     }
 
     private Order createNewOrderObject(CreateOrderDTO createOrderDTO) {

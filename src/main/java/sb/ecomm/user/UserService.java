@@ -15,6 +15,7 @@ import sb.ecomm.user.dto.CreateUserDTO;
 import sb.ecomm.user.dto.UserDTO;
 import sb.ecomm.user.dto.UpdateUserDTO;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -83,6 +84,10 @@ public class UserService {
             throw new RuntimeException("forbidden yeah");
         }
         return order;
+    }
+
+    List<OrderDTO> getAllOrdersPlacedByUser(UUID userId) {
+        return orderService.findAllOrdersPlacedByUser(userId);
     }
 
     OrderDTO addNewUserOrder(CreateOrderDTO createOrderDTO, UUID id) {

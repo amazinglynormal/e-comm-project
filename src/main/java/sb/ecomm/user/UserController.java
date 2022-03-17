@@ -7,6 +7,7 @@ import sb.ecomm.user.dto.CreateUserDTO;
 import sb.ecomm.user.dto.UserDTO;
 import sb.ecomm.user.dto.UpdateUserDTO;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -29,6 +30,11 @@ public class UserController {
     OrderDTO findUserOrderById(@PathVariable UUID userId,
                                @PathVariable long orderId) {
         return userService.findUserOrderById(userId, orderId);
+    }
+
+    @GetMapping("/{userId}/orders")
+    List<OrderDTO> getAllOrdersPlacedByUser(@PathVariable UUID userId) {
+        return userService.getAllOrdersPlacedByUser(userId);
     }
 
     @PostMapping("/{userId}/orders/{orderId}/checkout")
