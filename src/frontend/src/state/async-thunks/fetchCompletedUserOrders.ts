@@ -1,4 +1,3 @@
-import { __ } from "@headlessui/react/dist/types";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import Order from "../../interfaces/order.interface";
