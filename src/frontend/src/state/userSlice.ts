@@ -3,6 +3,7 @@ import { RootState } from "./store";
 
 import User from "../interfaces/user.interface";
 
+import fetchCompletedUserOrders from "./async-thunks/fetchCompletedUserOrders";
 import deleteUserAccount from "./async-thunks/deleteUserAccount";
 import updateUserInfo from "./async-thunks/updateUserInfo";
 import userSignUp from "./async-thunks/userSignUp";
@@ -107,6 +108,20 @@ export const userSlice = createSlice({
     });
 
     builder.addCase(userLogout.rejected, (state, action) => {
+      state.status = "failed";
+      if (action.error.message) {
+        state.error = action.error.message;
+      }
+    });
+
+    builder.addCase(fetchCompletedUserOrders.fulfilled, (state, action) => {
+      state.status = "succeeded";
+      state.user!.orders = action.payload;
+      state.error = null;
+      state.status = "idle";
+    });
+
+    builder.addCase(fetchCompletedUserOrders.rejected, (state, action) => {
       state.status = "failed";
       if (action.error.message) {
         state.error = action.error.message;
