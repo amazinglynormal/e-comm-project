@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { useAppDispatch } from "../hooks/redux-hooks";
 import { unwrapResult } from "@reduxjs/toolkit";
 import verifyEmail from "../state/async-thunks/verifyEmail";
+import Spinner from "../components/Spinner";
 
 interface Params {
   hash: string;
@@ -32,7 +33,7 @@ const EmailVerified = () => {
           <Link to="/login">Go to login --&gt;</Link>
         </div>
       ) : (
-        <div>verifying...</div>
+        <Spinner />
       )}
     </div>
   );
