@@ -14,6 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sb.ecomm.constants.TempSecurityConstants;
+import sb.ecomm.email.EmailService;
 import sb.ecomm.exceptions.OrderNotFoundException;
 import sb.ecomm.order.dto.*;
 import sb.ecomm.user.User;
@@ -31,16 +32,18 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final EmailService emailService;
     private final ModelMapper mapper;
 
     @Autowired
     public OrderService(OrderRepository orderRepository,
                         ProductRepository productRepository,
                         UserRepository userRepository,
-                        ModelMapper mapper) {
+                        EmailService emailService, ModelMapper mapper) {
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
+        this.emailService = emailService;
         this.mapper = mapper;
     }
 
@@ -207,6 +210,16 @@ public class OrderService {
                 order.setPaymentMethodDetails(paymentMethodDetails);
 
                 orderRepository.save(order);
+
+                emailService.sendOrderConfirmationEmail(order.getUser().getUsername(),
+                        order.getEmail(),
+                        order.getId(),
+                        order.getDatePlaced(),
+                        order.getShippingAddress(),
+                        order.getProducts(),
+                        order.getTotalCost(),
+                        paymentIntent.getCurrency()
+                        );
                 break;
             case "checkout.session.expired":
                 System.out.println("checkout.session.expired");
