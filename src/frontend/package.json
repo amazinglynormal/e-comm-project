@@ -6,7 +6,8 @@
   "proxy": "http://localhost:8080",
   "scripts": {
     "start": "webpack serve --config webpack.config.js --node-env development",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
+    "test:watch": "jest --watch  --verbose",
     "lint": "eslint --fix \"./src/**/*.{js,jsx,ts,tsx,json}\"",
     "format": "prettier --write \"./src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
     "build": "webpack --config webpack.config.js --node-env production"
