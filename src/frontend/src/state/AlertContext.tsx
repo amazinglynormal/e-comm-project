@@ -8,11 +8,11 @@ export type AlertType = "success" | "warning" | "error";
 
 const AlertContext = createContext({
   showAlert: false,
-  handleAlert: (bool: boolean) => console.log(bool),
+  handleAlert: (bool: boolean) => {},
   type: "success",
-  setType: (type: AlertType) => console.log(type),
+  setType: (type: AlertType) => {},
   message: "",
-  setMessage: (message: string) => console.log(message),
+  setMessage: (message: string) => {},
 });
 
 const useAlert = () => {
