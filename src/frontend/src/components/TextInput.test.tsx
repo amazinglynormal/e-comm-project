@@ -1,4 +1,4 @@
-import { render } from "../test-utils";
+import { render } from "../test-utils/test-utils";
 import { TextInput } from "../components/TextInput";
 import userEvent from "@testing-library/user-event";
 

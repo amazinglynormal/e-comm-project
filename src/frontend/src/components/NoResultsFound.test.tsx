@@ -1,4 +1,4 @@
-import { render } from "../test-utils";
+import { render } from "../test-utils/test-utils";
 import NoResultsFound from "../components/NoResultsFound";
 
 describe("<NoResultsFound>", () => {

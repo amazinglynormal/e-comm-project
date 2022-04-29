@@ -1,5 +1,5 @@
 import userEvent from "@testing-library/user-event";
-import { render } from "../test-utils";
+import { render } from "../test-utils/test-utils";
 import ListPageSelect from "./ListPageSelect";
 
 const pageChangeHandler = jest.fn();

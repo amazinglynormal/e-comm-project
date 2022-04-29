@@ -1,4 +1,4 @@
-import { render } from "../test-utils";
+import { render } from "../test-utils/test-utils";
 import AccessDeniedError from "../components/AccessDeniedError";
 
 describe("<AccessDeniedError>", () => {

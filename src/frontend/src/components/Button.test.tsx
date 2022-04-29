@@ -1,4 +1,4 @@
-import { render } from "../test-utils";
+import { render } from "../test-utils/test-utils";
 import { Button } from "../components/Button";
 import { XIcon } from "@heroicons/react/outline";
 import userEvent from "@testing-library/user-event";

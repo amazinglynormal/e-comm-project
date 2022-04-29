@@ -1,6 +1,6 @@
 import userEvent from "@testing-library/user-event";
 import FilterForm from "../interfaces/filterForm.interface";
-import { render } from "../test-utils";
+import { render } from "../test-utils/test-utils";
 import FilterCheckbox from "./FilterCheckbox";
 
 const filterForm: FilterForm = {

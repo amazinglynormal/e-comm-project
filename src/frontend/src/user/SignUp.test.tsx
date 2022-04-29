@@ -1,4 +1,4 @@
-import { render } from "../test-utils";
+import { render } from "../test-utils/test-utils";
 import SignUp from "./SignUp";
 
 describe("<SignUp>", () => {
