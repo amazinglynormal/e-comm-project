@@ -34,7 +34,10 @@ const FilterCheckbox = ({
         onChange={onChange}
         checked={checked}
       />
-      <label htmlFor={`${category.id}`} className="ml-3 text-sm text-gray-600">
+      <label
+        htmlFor={`${category.id}-${option.value}`}
+        className="ml-3 text-sm text-gray-600"
+      >
         {option.label}
       </label>
     </div>
