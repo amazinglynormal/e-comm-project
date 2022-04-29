@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const callouts = [
   {
     name: "Desk and Office",
@@ -6,7 +8,7 @@ const callouts = [
       "https://tailwindui.com/img/ecommerce-images/home-page-02-edition-01.jpg",
     imageAlt:
       "Desk with leather desk pad, walnut desk organizer, wireless keyboard and mouse, and porcelain mug.",
-    href: "#",
+    href: "/orderhistory",
   },
   {
     name: "Self-Improvement",
@@ -45,10 +47,10 @@ export const CollectionSelection = () => {
                   />
                 </div>
                 <h3 className="mt-6 text-sm text-gray-500">
-                  <a href={callout.href}>
+                  <Link to={callout.href}>
                     <span className="absolute inset-0" />
                     {callout.name}
-                  </a>
+                  </Link>
                 </h3>
                 <p className="text-base font-semibold text-gray-900">
                   {callout.description}
