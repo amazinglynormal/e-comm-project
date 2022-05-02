@@ -4,12 +4,15 @@ import { Provider } from "react-redux";
 import { store } from "../state/store";
 import { BrowserRouter as Router } from "react-router-dom";
 import { AlertProvider } from "../state/AlertContext";
+import { CurrencyProvider } from "../state/CurrencyContext";
 
 const AllTheProviders: FC = ({ children }) => {
   return (
     <Provider store={store}>
       <AlertProvider>
-        <Router>{children}</Router>
+        <CurrencyProvider>
+          <Router>{children}</Router>
+        </CurrencyProvider>
       </AlertProvider>
     </Provider>
   );
