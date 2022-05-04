@@ -1,5 +1,5 @@
 import { removeProductFromLocalStorageOrder } from "../utils/localStorageOrderUtils";
-import { removeProductFromOrder, selectOrder } from "../state/orderSlice";
+import { removeProductFromOrder } from "../state/orderSlice";
 import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
 import updateOrder from "../state/async-thunks/updateOrder";
 import { selectUser } from "../state/userSlice";
