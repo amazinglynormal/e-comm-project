@@ -1,5 +1,6 @@
 import { QuestionMarkCircleIcon } from "@heroicons/react/solid";
 import axios from "axios";
+import { Link } from "react-router-dom";
 import { useAppDispatch } from "../hooks/redux-hooks";
 import { useCurrency } from "../state/CurrencyContext";
 import Product from "../types/Product.type";
@@ -15,7 +16,7 @@ interface Props {
   buttonText: string;
 }
 
-const CartSummary = ({ orderProducts, buttonText }: Props) => {
+const OrderCostSummary = ({ orderProducts, buttonText }: Props) => {
   const { currency } = useCurrency();
 
   let subtotal = 0.0;
@@ -40,15 +41,15 @@ const CartSummary = ({ orderProducts, buttonText }: Props) => {
         <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
           <dt className="flex items-center text-sm text-gray-600">
             <span>Shipping estimate</span>
-            <a
-              href="/"
+            <Link
+              to="/bluff"
               className="ml-2 flex-shrink-0 text-gray-400 hover:text-gray-500"
             >
               <span className="sr-only">
                 Learn more about how shipping is calculated
               </span>
               <QuestionMarkCircleIcon className="h-5 w-5" aria-hidden="true" />
-            </a>
+            </Link>
           </dt>
           <dd className="text-sm font-medium text-gray-900">{`${currencySymbol[currency]}${shippingEstimate}`}</dd>
         </div>
@@ -73,4 +74,4 @@ const CartSummary = ({ orderProducts, buttonText }: Props) => {
   );
 };
 
-export default CartSummary;
+export default OrderCostSummary;
