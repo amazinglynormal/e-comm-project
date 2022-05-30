@@ -45,7 +45,9 @@ const Cart = () => {
               Items in your shopping bag
             </h2>
 
-            {order === undefined || order.products.length === 0 ? (
+            {order === undefined ||
+            order === null ||
+            order.products.length === 0 ? (
               <EmptyCart />
             ) : (
               <ul className="border-t border-b border-gray-200 divide-y divide-gray-200">
