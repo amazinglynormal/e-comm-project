@@ -12,7 +12,7 @@ interface Order {
     | "DELIVERED";
   userId?: string;
   products: Product[];
-  datePlaced: string;
+  datePlaced?: string;
   email?: string;
   phone?: string;
   shippingAddress?: Address;
