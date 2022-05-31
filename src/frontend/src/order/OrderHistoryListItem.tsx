@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import Currency from "../enums/Currency.enum";
 import Order from "../interfaces/order.interface";
+import formatDate from "../utils/formatDate";
 
 interface Props {
   order: Order;
@@ -14,11 +15,12 @@ const currencySymbol: { [index: string]: string } = {
 };
 
 const OrderHistoryListItem = ({ order, currency }: Props) => {
+  const formattedDate = formatDate(order.datePlaced!);
+
   return (
     <div>
       <h3 className="sr-only">
-        Order placed on{" "}
-        <time dateTime={order.datePlaced}>{order.datePlaced}</time>
+        Order placed on <time dateTime={formattedDate}>{formattedDate}</time>
       </h3>
 
       <div className="bg-gray-50 rounded-lg py-6 px-4 sm:px-6 sm:flex sm:items-center sm:justify-between sm:space-x-6 lg:space-x-8">
@@ -26,7 +28,7 @@ const OrderHistoryListItem = ({ order, currency }: Props) => {
           <div className="flex justify-between sm:block">
             <dt className="font-medium text-gray-900">Date placed</dt>
             <dd className="sm:mt-1">
-              <time dateTime={order.datePlaced}>{order.datePlaced}</time>
+              <time dateTime={formattedDate}>{formattedDate}</time>
             </dd>
           </div>
           <div className="flex justify-between pt-6 sm:block sm:pt-0">
