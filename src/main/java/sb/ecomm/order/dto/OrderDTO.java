@@ -7,6 +7,7 @@ import sb.ecomm.order.PaymentMethodDetails;
 import sb.ecomm.product.Product;
 import sb.ecomm.user.Address;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,6 +22,7 @@ public class OrderDTO {
     private Address shippingAddress;
     private String email;
     private String phone;
+    private Date datePlaced;
     private PaymentMethodDetails paymentMethodDetails;
     private double subtotal;
     private double shippingCost;
