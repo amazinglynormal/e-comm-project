@@ -18,8 +18,12 @@ const OrderHistory = () => {
     );
   }
 
-  const sortedOrders = user.orders.sort(function (a, b) {
-    return Date.parse(b.datePlaced) - Date.parse(a.datePlaced);
+  const completedOrders = user.orders.filter(
+    (order) => order.datePlaced !== undefined
+  );
+
+  const sortedOrders = completedOrders.sort(function (a, b) {
+    return Date.parse(b.datePlaced!) - Date.parse(a.datePlaced!);
   });
 
   return (
