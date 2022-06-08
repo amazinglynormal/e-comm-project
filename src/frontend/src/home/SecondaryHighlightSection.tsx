@@ -7,8 +7,8 @@ export const SecondaryHighlightSection = () => {
         <div className="relative rounded-lg overflow-hidden">
           <div className="absolute inset-0">
             <img
-              src="https://tailwindui.com/img/ecommerce-images/home-page-01-feature-section-01.jpg"
-              alt=""
+              src="/images/belts.jpg"
+              alt="A wall of belts of varying colours"
               className="w-full h-full object-center object-cover"
             />
           </div>
@@ -16,19 +16,18 @@ export const SecondaryHighlightSection = () => {
             <div className="relative max-w-3xl mx-auto flex flex-col items-center text-center">
               <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
                 <span className="block sm:inline">Level up</span>
-                <span className="block sm:inline"> your desk</span>
+                <span className="block sm:inline"> your waist</span>
               </h2>
               <p className="mt-3 text-xl text-white">
-                Make your desk beautiful and organized. Post a picture to social
-                media and watch it get more likes than life-changing
-                announcements. Reflect on the shallow nature of existence. At
-                least you have a really nice desk setup.
+                &quot;My belt holds my pants up, but the belt loops hold my belt
+                up. I don't really know what's happening down there. Who is the
+                real hero?&quot; - Mitch Hedberg
               </p>
               <Link
                 to="/profile"
                 className="mt-8 w-full block bg-white border border-transparent rounded-md py-3 px-8 text-base font-medium text-gray-900 hover:bg-gray-100 sm:w-auto"
               >
-                Shop Workspace
+                Shop Belts
               </Link>
             </div>
           </div>
