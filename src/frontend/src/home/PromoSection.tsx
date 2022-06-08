@@ -7,8 +7,8 @@ export const PromoSection = () => {
         {/* Decorative image and overlay */}
         <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
           <img
-            src="https://tailwindui.com/img/ecommerce-images/home-page-01-hero-full-width.jpg"
-            alt=""
+            src="/images/tshirtrack.jpg"
+            alt="A clothing rack with an assortment of t-shirts and shirts."
             className="w-full h-full object-center object-cover"
           />
         </div>
