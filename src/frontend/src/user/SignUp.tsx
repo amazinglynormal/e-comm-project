@@ -2,6 +2,7 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { useAppDispatch } from "../hooks/redux-hooks";
+import { useAlert } from "../state/AlertContext";
 import userSignUp from "../state/async-thunks/userSignUp";
 
 const defaultFormData = {
@@ -14,6 +15,7 @@ const SignUp = () => {
   const [formData, setFormData] = useState(defaultFormData);
   const dispatch = useAppDispatch();
   const history = useHistory();
+  const { triggerAlert } = useAlert();
 
   const onFormChange = (event: ChangeEvent<HTMLInputElement>) => {
     switch (event.target.id) {
@@ -51,7 +53,6 @@ const SignUp = () => {
     const { name, email, password } = formData;
     if (name.length > 0 && email.length > 0 && password.length >= 8) {
       try {
-        console.log(password);
         const actionResult = await dispatch(
           userSignUp({ username: name, email, password })
         );
@@ -59,7 +60,7 @@ const SignUp = () => {
         setFormData(defaultFormData);
         history.push("");
       } catch (error) {
-        console.log(error);
+        triggerAlert("error", "Something went wrong. Please try again.");
       }
     }
   };

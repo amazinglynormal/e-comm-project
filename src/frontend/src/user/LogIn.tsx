@@ -11,6 +11,7 @@ import {
 } from "../utils/localStorageOrderUtils";
 import deleteOrder from "../state/async-thunks/deleteOrder";
 import createOrder from "../state/async-thunks/createOrder";
+import { useAlert } from "../state/AlertContext";
 
 const defaultFormData = { email: "", password: "" };
 
@@ -18,14 +19,16 @@ const LogIn = () => {
   const [formData, setFormData] = useState(defaultFormData);
   const dispatch = useAppDispatch();
   const history = useHistory();
+  const { triggerAlert } = useAlert();
 
   const onFormChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
     switch (event.target.id) {
       case "email":
         setFormData((data) => {
           return {
             ...data,
-            email: event.target.value,
+            email: value,
           };
         });
         break;
@@ -33,7 +36,7 @@ const LogIn = () => {
         setFormData((data) => {
           return {
             ...data,
-            password: event.target.value,
+            password: value,
           };
         });
         break;
@@ -68,7 +71,7 @@ const LogIn = () => {
         setFormData(defaultFormData);
         history.push("/");
       } catch (error) {
-        console.log(error);
+        triggerAlert("error", "Something went wrong. Please try again.");
       }
     }
   };

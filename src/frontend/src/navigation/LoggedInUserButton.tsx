@@ -6,6 +6,7 @@ import { Link, useHistory } from "react-router-dom";
 import { useAppDispatch } from "../hooks/redux-hooks";
 import userLogout from "../state/async-thunks/userLogout";
 import { unwrapResult } from "@reduxjs/toolkit";
+import { useAlert } from "../state/AlertContext";
 
 interface Props {
   user: User;
@@ -14,17 +15,17 @@ interface Props {
 const LoggedInUserButton = ({ user }: Props) => {
   const dispatch = useAppDispatch();
   const history = useHistory();
+  const { triggerAlert } = useAlert();
 
   const onSignOutClick = async () => {
     try {
       const logoutResult = await dispatch(userLogout());
       unwrapResult(logoutResult);
       if (history.location.pathname !== "/") {
-        console.log(history.location.pathname);
         history.push("/");
       }
     } catch (error) {
-      console.log(error);
+      triggerAlert("error", "Something went wrong. Please try again.");
     }
   };
 
