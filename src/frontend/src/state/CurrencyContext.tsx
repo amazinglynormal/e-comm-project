@@ -7,9 +7,7 @@ interface ProviderProps {
 
 const CurrencyContext = createContext({
   currency: Currency.EUR,
-  changeCurrency: (currency: Currency) => {
-    console.log(currency);
-  },
+  changeCurrency: (currency: Currency) => {},
 });
 
 const useCurrency = () => {
