@@ -55,7 +55,7 @@ public class OrderService {
     }
 
     public List<OrderDTO> findAllOrdersPlacedByUser(UUID userId) {
-        List<OrderStatus> statuses = Arrays.asList(OrderStatus.USER_BROWSING);
+        List<OrderStatus> statuses = List.of(OrderStatus.USER_BROWSING);
         List<Order> orders = orderRepository.findUserOrders(userId, statuses);
         List<OrderDTO> orderDTOs = new ArrayList<>();
         orders.forEach(order -> orderDTOs.add(mapper.map(order, OrderDTO.class)));
@@ -195,8 +195,9 @@ public class OrderService {
             throw new RuntimeException("Unable to deserialize event data object");
         }
 
-        switch (event.getType()) {
-            case "payment_intent.succeeded":
+
+        if (event.getType().equals("payment_intent.succeeded")) {
+
                 PaymentIntent paymentIntent = (PaymentIntent) stripeObject;
                 String paymentIntentId = paymentIntent.getId();
                 Order order = orderRepository.findOrderByStripePaymentIntentId(paymentIntentId).orElseThrow(OrderNotFoundException::new);
@@ -220,12 +221,7 @@ public class OrderService {
                         order.getTotalCost(),
                         paymentIntent.getCurrency()
                         );
-                break;
-            case "checkout.session.expired":
-                System.out.println("checkout.session.expired");
-                break;
-            default:
-                System.out.println("Hit default case in event.getType() --->" + event.getType());
+
         }
 
     }
