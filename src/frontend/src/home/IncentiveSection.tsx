@@ -1,6 +1,6 @@
 const incentives = [
   {
-    name: "Free Shipping",
+    name: "Free Shipping for orders over €50",
     description:
       "It's not actually free we just price it into the products. Someone's paying for it, and it's not us.",
     imageSrc:
