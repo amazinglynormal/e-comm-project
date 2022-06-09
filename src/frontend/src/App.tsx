@@ -27,6 +27,7 @@ import Spinner from "./components/Spinner";
 
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
+import BluffCalledPage from "./components/BluffCalledPage";
 
 const stripePromise = loadStripe(
   "pk_test_51KSkRQGXwpaEprvgD2FZ9X9uKYJ8vStU0PamJaKh592lWV4zzhMVXBbAKi8aRuwSb9SuDhKA39UNndIFUa2kgY0i00G9oZKxlW"
@@ -82,6 +83,9 @@ const App = () => {
               </Route>
               <Route path="/forgotpassword">
                 <ForgotPassword />
+              </Route>
+              <Route path="/bluff">
+                <BluffCalledPage />
               </Route>
               <Route exact path="/">
                 <Home />
