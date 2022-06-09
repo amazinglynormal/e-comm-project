@@ -20,26 +20,28 @@ const navigation = {
         {
           name: "Jeans",
           href: "/products/clothing/jeans",
-          imageSrc:
-            "https://tailwindui.com/img/ecommerce-images/mega-menu-category-02.jpg",
-          imageAlt:
-            "Close up of Basic Tee fall bundle with off-white, ochre, olive, and black tees.",
+          imageSrc: "/images/jeans.jpg",
+          imageAlt: "The back pocket of a pair of blue denim jeans.",
         },
         {
           name: "Hoodies",
           href: "/products/clothing/hoodies",
-          imageSrc:
-            "https://tailwindui.com/img/ecommerce-images/mega-menu-category-03.jpg",
+          imageSrc: "/images/hoodie.jpg",
           imageAlt:
-            "Model wearing minimalist watch with black wristband and white watch face.",
+            "Hooded man with his hands in his pockets looking at the ground.",
+        },
+        {
+          name: "Shirts",
+          href: "/products/clothing/shirts",
+          imageSrc: "/images/shirt.jpg",
+          imageAlt: "A clothing rack with three shirts on hangers.",
         },
         {
           name: "Jackets",
           href: "/products/clothing/jackets",
-          imageSrc:
-            "https://tailwindui.com/img/ecommerce-images/mega-menu-category-04.jpg",
+          imageSrc: "/images/jacket.jpg",
           imageAlt:
-            "Model opening tan leather long wallet with credit card pockets and cash pouch.",
+            "close up of a pair of hands zipping up a green winter jacket.",
         },
       ],
     },
@@ -49,33 +51,20 @@ const navigation = {
         {
           name: "Boots",
           href: "/products/footwear/boots",
-          imageSrc:
-            "https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-01.jpg",
-          imageAlt:
-            "Hats and sweaters on wood shelves next to various colors of t-shirts on hangers.",
+          imageSrc: "/images/boots.jpg",
+          imageAlt: "Brown work boots hanging by the laces.",
         },
         {
           name: "Trainers",
           href: "/products/footwear/trainers",
-          imageSrc:
-            "https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-02.jpg",
-          imageAlt: "Model wearing light heather gray t-shirt.",
+          imageSrc: "/images/trainers.jpg",
+          imageAlt: "Out-stretched arm holding high-top trainers by the laces.",
         },
         {
           name: "Shoes",
           href: "/products/footwear/shoes",
-          imageSrc:
-            "https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-03.jpg",
-          imageAlt:
-            "Grey 6-panel baseball hat with black brim, black mountain graphic on front, and light heather gray body.",
-        },
-        {
-          name: "Slippers",
-          href: "/products/footwear/slippers",
-          imageSrc:
-            "https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-04.jpg",
-          imageAlt:
-            "Model putting folded cash into slim card holder olive leather wallet with hand stitching.",
+          imageSrc: "/images/shoes.jpg",
+          imageAlt: "Unlaced brown shoes.",
         },
       ],
     },
@@ -85,33 +74,26 @@ const navigation = {
         {
           name: "Belts",
           href: "/products/accessories/belts",
-          imageSrc:
-            "https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-01.jpg",
-          imageAlt:
-            "Hats and sweaters on wood shelves next to various colors of t-shirts on hangers.",
+          imageSrc: "/images/belt.jpg",
+          imageAlt: "A rolled up brown belt sitting on a black wire rack.",
         },
         {
           name: "Sunglasses",
           href: "/products/accessories/sunglasses",
-          imageSrc:
-            "https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-02.jpg",
-          imageAlt: "Model wearing light heather gray t-shirt.",
+          imageSrc: "/images/sunglasses.jpg",
+          imageAlt: "Gold-rimmed sunglasses sitting on a reflective surface.",
         },
         {
           name: "Ties",
           href: "/products/accessories/ties",
-          imageSrc:
-            "https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-03.jpg",
-          imageAlt:
-            "Grey 6-panel baseball hat with black brim, black mountain graphic on front, and light heather gray body.",
+          imageSrc: "/images/ties.jpg",
+          imageAlt: "A wall of ties of various colours and patterns.",
         },
         {
           name: "Wallets",
           href: "/products/accessories/wallets",
-          imageSrc:
-            "https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-04.jpg",
-          imageAlt:
-            "Model putting folded cash into slim card holder olive leather wallet with hand stitching.",
+          imageSrc: "/images/wallets.jpg",
+          imageAlt: "A display of leather wallets.",
         },
       ],
     },
