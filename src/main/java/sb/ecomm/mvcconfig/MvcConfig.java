@@ -17,8 +17,5 @@ public class MvcConfig implements WebMvcConfigurer {
                 .addResourceLocations("classpath:/images/");
     }
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**");
-    }
+
 }
