@@ -113,12 +113,7 @@ export const DesktopNavigation = ({ setOpen }: Props) => {
             {/* Logo (lg+) */}
             <div className="hidden lg:flex-1 lg:flex lg:items-center">
               <Link to="/">
-                <span className="sr-only">Workflow</span>
-                <img
-                  className="h-8 w-auto"
-                  src="https://tailwindui.com/img/logos/workflow-mark.svg?color=indigo&shade=600"
-                  alt=""
-                />
+                <p className="font-pacifico text-4xl text-indigo-600">Eire</p>
               </Link>
             </div>
 
@@ -147,12 +142,7 @@ export const DesktopNavigation = ({ setOpen }: Props) => {
 
             {/* Logo (lg-) */}
             <Link to="/" className="lg:hidden">
-              <span className="sr-only">Workflow</span>
-              <img
-                src="https://tailwindui.com/img/logos/workflow-mark.svg?color=indigo&shade=600"
-                alt=""
-                className="h-8 w-auto"
-              />
+              <p className="font-pacifico text-4xl text-indigo-600">Eire</p>
             </Link>
 
             <div className="flex-1 flex items-center justify-end">
