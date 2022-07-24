@@ -7,6 +7,7 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ["Inter var", ...defaultTheme.fontFamily.sans],
+        pacifico: ["Pacifico", "cursive"],
       },
       colors: {
         green: colors.emerald,
