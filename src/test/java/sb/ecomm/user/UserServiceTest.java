@@ -9,17 +9,18 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import sb.ecomm.email.EmailService;
+import sb.ecomm.exceptions.OrderNotFoundException;
 import sb.ecomm.exceptions.UserNotFoundException;
 import sb.ecomm.order.Order;
 import sb.ecomm.order.OrderService;
+import sb.ecomm.order.OrderStatus;
+import sb.ecomm.order.dto.OrderDTO;
+import sb.ecomm.product.Product;
 import sb.ecomm.user.dto.CreateUserDTO;
 import sb.ecomm.user.dto.UpdateUserDTO;
 import sb.ecomm.user.dto.UserDTO;
 
-import java.util.Collections;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -133,7 +134,45 @@ class UserServiceTest {
     }
 
     @Test
-    void findUserOrderById() {
+    void findUserOrderById_success() {
+        UUID testUUID = UUID.randomUUID();
+        Long testOrderId = 1L;
+
+        OrderDTO testOrderDTO = getSingleOrderDTO(testOrderId, testUUID);
+
+        when(orderService.findOrderById(testOrderId)).thenReturn(testOrderDTO);
+
+        OrderDTO orderDTO = userService.findUserOrderById(testUUID, testOrderId);
+        assertNotNull(orderDTO);
+        assertEquals(testOrderId, orderDTO.getId());
+        assertEquals(testUUID, orderDTO.getUserId());
+    }
+
+    @Test
+    void findUserOrderByIdThrowsExceptionWhenGivenWrongOrderId() {
+        Long wrongOrderId = 2L;
+
+        when(orderService.findOrderById(wrongOrderId)).thenThrow(new OrderNotFoundException(wrongOrderId));
+
+        assertThrows(OrderNotFoundException.class, () -> {
+            userService.findUserOrderById(UUID.randomUUID(), wrongOrderId);
+        });
+
+    }
+
+    @Test
+    void findUserOrderByIdThrowsExceptionWhenUserIdDoesNotMatchUserIdInOrder() {
+        UUID testUUID = UUID.randomUUID();
+        Long testOrderId = 1L;
+        UUID wrongUserId = UUID.randomUUID();
+
+        OrderDTO testOrderDTO = getSingleOrderDTO(testOrderId, testUUID);
+
+        when(orderService.findOrderById(testOrderId)).thenReturn(testOrderDTO);
+
+        assertThrows(RuntimeException.class, () -> {
+            userService.findUserOrderById(wrongUserId, testOrderId);
+        }, "Not authorised to access this resource");
     }
 
     @Test
@@ -171,5 +210,23 @@ class UserServiceTest {
         testUserDTO.setEmail("email@test.com");
         testUserDTO.setRole(Role.CUSTOMER);
         return testUserDTO;
+    }
+
+    private OrderDTO getSingleOrderDTO(Long orderId, UUID userId) {
+        OrderDTO order = new OrderDTO();
+        order.setId(orderId);
+        order.setStatus(OrderStatus.USER_BROWSING);
+        order.setUserId(userId);
+
+        Product product = new Product();
+        product.setName("test-product");
+        product.setDescription("test-description");
+        product.setEUR(9.99);
+        product.setStockRemaining(10);
+
+        order.setProducts(List.of(product));
+
+        return order;
+
     }
 }
