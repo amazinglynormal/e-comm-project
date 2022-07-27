@@ -234,7 +234,15 @@ class UserServiceTest {
     }
 
     @Test
-    void deleteUserOrder() {
+    void deleteUserOrderThrowsExceptionWhenUserIdDoesNotMatchUserIdInOrder() {
+        UUID testUUID = UUID.randomUUID();
+        Long orderId = 1L;
+        OrderDTO orderDTO = getSingleOrderDTO(1L, UUID.randomUUID());
+        when(orderService.findOrderById(orderId)).thenReturn(orderDTO);
+
+        assertThrows(RuntimeException.class, () -> {
+            userService.deleteUserOrder(testUUID, orderId);
+        }, "Not authorised to modify this order");
     }
 
 
