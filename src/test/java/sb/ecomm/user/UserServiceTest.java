@@ -11,9 +11,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import sb.ecomm.email.EmailService;
 import sb.ecomm.exceptions.OrderNotFoundException;
 import sb.ecomm.exceptions.UserNotFoundException;
+import sb.ecomm.order.Currency;
 import sb.ecomm.order.Order;
 import sb.ecomm.order.OrderService;
 import sb.ecomm.order.OrderStatus;
+import sb.ecomm.order.dto.CreateCheckoutSessionDTO;
 import sb.ecomm.order.dto.CreateOrderDTO;
 import sb.ecomm.order.dto.OrderDTO;
 import sb.ecomm.order.dto.UpdateOrderDTO;
@@ -230,7 +232,26 @@ class UserServiceTest {
     }
 
     @Test
-    void createCheckoutSession() {
+    void createCheckoutSessionWhenUserIdDoesNotMatchUserIdInOrder() {
+        Long orderId = 1L;
+        CreateCheckoutSessionDTO createCheckoutSessionDTO = new CreateCheckoutSessionDTO();
+        createCheckoutSessionDTO.setEmail("email@test.com");
+        createCheckoutSessionDTO.setCurrency(Currency.EUR);
+        createCheckoutSessionDTO.setPhone("0123456789");
+        createCheckoutSessionDTO.setOrderId(orderId);
+        Address address = new Address();
+        address.setLine1("test address");
+        createCheckoutSessionDTO.setShippingAddress(address);
+        createCheckoutSessionDTO.setProductIds(List.of(1L,2L,3L));
+
+        UUID testUUID = UUID.randomUUID();
+        OrderDTO orderDTO = getSingleOrderDTO(orderId, UUID.randomUUID());
+
+        when(orderService.findOrderById(orderId)).thenReturn(orderDTO);
+
+        assertThrows(RuntimeException.class, () -> {
+            userService.createCheckoutSession(testUUID, orderId, createCheckoutSessionDTO);
+        }, "Not authorised to access this resource");
     }
 
     @Test

@@ -107,7 +107,7 @@ public class UserService {
     CreateCheckoutSessionResponse createCheckoutSession(UUID userId, long orderId, CreateCheckoutSessionDTO createCheckoutSessionDTO) {
         OrderDTO order = orderService.findOrderById(orderId);
         if (!order.getUserId().equals(userId)) {
-            throw new RuntimeException("Not authorised to modify this order");
+            throw new RuntimeException("Not authorised to access this resource");
         }
 
         createCheckoutSessionDTO.setOrderId(orderId);
@@ -115,7 +115,6 @@ public class UserService {
         return orderService.createCheckoutSession(createCheckoutSessionDTO);
 
     }
-
 
 
     void deleteUserOrder(UUID userId, Long orderId) {
