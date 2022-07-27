@@ -14,7 +14,9 @@ import sb.ecomm.exceptions.UserNotFoundException;
 import sb.ecomm.order.Order;
 import sb.ecomm.order.OrderService;
 import sb.ecomm.order.OrderStatus;
+import sb.ecomm.order.dto.CreateOrderDTO;
 import sb.ecomm.order.dto.OrderDTO;
+import sb.ecomm.order.dto.UpdateOrderDTO;
 import sb.ecomm.product.Product;
 import sb.ecomm.user.dto.CreateUserDTO;
 import sb.ecomm.user.dto.UpdateUserDTO;
@@ -176,15 +178,55 @@ class UserServiceTest {
     }
 
     @Test
-    void getAllOrdersPlacedByUser() {
+    void getAllOrdersPlacedByUser_success() {
+        UUID testUUID = UUID.randomUUID();
+        OrderDTO order1 = getSingleOrderDTO(1L, testUUID);
+        OrderDTO order2 = getSingleOrderDTO(2L, testUUID);
+
+        List<OrderDTO> orders = List.of(order1, order2);
+        when(orderService.findAllOrdersPlacedByUser(testUUID)).thenReturn(orders);
+
+        List<OrderDTO> userOrders = userService.getAllOrdersPlacedByUser(testUUID);
+
+        assertEquals(2, userOrders.size());
     }
 
     @Test
-    void addNewUserOrder() {
+    void getAllOrdersPlacedByUserReturnsEmptyListWhenUserHasNoOrders() {
+        UUID testUUID = UUID.randomUUID();
+        List<OrderDTO> orders = List.of();
+
+        when(orderService.findAllOrdersPlacedByUser(testUUID)).thenReturn(orders);
+
+        List<OrderDTO> userOrders = userService.getAllOrdersPlacedByUser(testUUID);
+
+        assertEquals(0, userOrders.size());
     }
 
     @Test
-    void updateUserOrder() {
+    void updateUserOrderThrowsExceptionWhenGivenWrongOrderId() {
+        UUID testUUID = UUID.randomUUID();
+        Long orderId = 1L;
+        UpdateOrderDTO updateOrderDTO = new UpdateOrderDTO();
+        when(orderService.findOrderById(orderId)).thenThrow(new OrderNotFoundException(orderId));
+
+        assertThrows(OrderNotFoundException.class, () -> {
+            userService.updateUserOrder(testUUID, orderId, updateOrderDTO);
+        });
+    }
+
+    @Test
+    void updateUserOrderThrowsExceptionWhenUserIdDoesNotMatchUserIdInOrder() {
+        UUID testUUID = UUID.randomUUID();
+        Long orderId = 1L;
+        UpdateOrderDTO updateOrderDTO = new UpdateOrderDTO();
+        OrderDTO orderDTO = getSingleOrderDTO(1L, UUID.randomUUID());
+        when(orderService.findOrderById(orderId)).thenReturn(orderDTO);
+
+
+        assertThrows(RuntimeException.class, () -> {
+            userService.updateUserOrder(testUUID, orderId, updateOrderDTO);
+        }, "Not authorised to access this resource");
     }
 
     @Test
