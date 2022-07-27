@@ -12,6 +12,7 @@ import sb.ecomm.email.EmailService;
 import sb.ecomm.exceptions.UserNotFoundException;
 import sb.ecomm.order.Order;
 import sb.ecomm.order.OrderService;
+import sb.ecomm.user.dto.CreateUserDTO;
 import sb.ecomm.user.dto.UserDTO;
 
 import java.util.Collections;
@@ -20,6 +21,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,20 +36,12 @@ class UserServiceTest {
     private UserService userService;
 
 
-
-
     @Test
     void findUserById_success() {
-        Set<Order> orders = Collections.emptySet();
         UUID testUUID = UUID.randomUUID();
-        User testUser = new User("username", "email@test.com", "password123", Role.CUSTOMER, "abcde12345", orders);
-        testUser.setId(testUUID);
+        User testUser = getSingleTestUser(testUUID);
 
-        UserDTO testUserDTO = new UserDTO();
-        testUserDTO.setId(testUUID);
-        testUserDTO.setUsername("username");
-        testUserDTO.setEmail("email@test.com");
-        testUserDTO.setRole(Role.CUSTOMER);
+        UserDTO testUserDTO = getSingleTestUserDTO(testUUID);
 
         when(userRepository.findById(testUUID)).thenReturn(Optional.of(testUser));
         when(mapper.map(testUser, UserDTO.class)).thenReturn(testUserDTO);
@@ -68,7 +62,25 @@ class UserServiceTest {
     }
 
     @Test
-    void createNewUserAccount() {
+    void createNewUserAccount_success() {
+        CreateUserDTO createUserDTO = new CreateUserDTO();
+        createUserDTO.setUsername("username");
+        createUserDTO.setEmail("email@test.com");
+        createUserDTO.setPassword("abcde12345");
+
+        UUID testUUID = UUID.randomUUID();
+
+        User testUser = getSingleTestUser(testUUID);
+        UserDTO userDTO = getSingleTestUserDTO(testUUID);
+
+        when(mapper.map(createUserDTO, User.class)).thenReturn(testUser);
+        when(passwordEncoder.encode(any(String.class))).thenReturn("12345abcde");
+        when(userRepository.save(testUser)).thenReturn(testUser);
+        when(mapper.map(testUser, UserDTO.class)).thenReturn(userDTO);
+
+        UserDTO testUserDTO = userService.createNewUserAccount(createUserDTO);
+
+        assertEquals(testUUID, testUserDTO.getId());
     }
 
     @Test
@@ -101,5 +113,22 @@ class UserServiceTest {
 
     @Test
     void deleteUserOrder() {
+    }
+
+
+    private User getSingleTestUser(UUID testUUID) {
+        Set<Order> orders = Collections.emptySet();
+        User testUser = new User("username", "email@test.com", "password123", Role.CUSTOMER, "abcde12345", orders);
+        testUser.setId(testUUID);
+        return testUser;
+    }
+
+    private UserDTO getSingleTestUserDTO(UUID testUUID) {
+        UserDTO testUserDTO = new UserDTO();
+        testUserDTO.setId(testUUID);
+        testUserDTO.setUsername("username");
+        testUserDTO.setEmail("email@test.com");
+        testUserDTO.setRole(Role.CUSTOMER);
+        return testUserDTO;
     }
 }
