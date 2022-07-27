@@ -13,6 +13,7 @@ import sb.ecomm.exceptions.UserNotFoundException;
 import sb.ecomm.order.Order;
 import sb.ecomm.order.OrderService;
 import sb.ecomm.user.dto.CreateUserDTO;
+import sb.ecomm.user.dto.UpdateUserDTO;
 import sb.ecomm.user.dto.UserDTO;
 
 import java.util.Collections;
@@ -22,7 +23,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -84,11 +85,51 @@ class UserServiceTest {
     }
 
     @Test
-    void updateUserAccount() {
+    void updateUserAccount_success() {
+        UpdateUserDTO updateUserDTO = new UpdateUserDTO();
+        updateUserDTO.setUsername("updated-username");
+        updateUserDTO.setEmail("updatedEmail@test.com");
+        updateUserDTO.setLine1("updated-address-line1");
+        updateUserDTO.setCity("updated-address-city");
+
+        UUID testUUID = UUID.randomUUID();
+
+        User testUser = getSingleTestUser(testUUID);
+        UserDTO userDTO = getSingleTestUserDTO(testUUID);
+        Address address = new Address();
+        address.setLine1("updated-address-line1");
+        address.setCity("updated-address-city");
+        userDTO.setAddress(address);
+        userDTO.setUsername("updated-username");
+        userDTO.setEmail("updatedEmail@test.com");
+
+        when(userRepository.findById(testUUID)).thenReturn(Optional.of(testUser));
+        when(userRepository.save(testUser)).thenReturn(testUser);
+        when(mapper.map(testUser, UserDTO.class)).thenReturn(userDTO);
+
+        UserDTO testUserDTO = userService.updateUserAccount(testUUID, updateUserDTO);
+
+        assertEquals(testUUID, testUserDTO.getId());
+        assertEquals("updated-username", testUserDTO.getUsername());
+        assertEquals("updatedEmail@test.com", testUserDTO.getEmail());
+        assertEquals(address, testUserDTO.getAddress());
+
     }
 
     @Test
-    void deleteUserAccount() {
+    void updateUserAccount_failure() {
+        UUID testUUID = UUID.randomUUID();
+        when(userRepository.findById(testUUID)).thenThrow(new UserNotFoundException(testUUID));
+
+        UpdateUserDTO updateUserDTO = new UpdateUserDTO();
+        updateUserDTO.setUsername("updated-username");
+        updateUserDTO.setEmail("updatedEmail@test.com");
+        updateUserDTO.setLine1("updated-address-line1");
+        updateUserDTO.setCity("updated-address-city");
+
+        assertThrows(UserNotFoundException.class, () -> {
+            userService.updateUserAccount(testUUID, updateUserDTO);
+        });
     }
 
     @Test
