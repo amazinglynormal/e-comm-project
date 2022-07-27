@@ -6,9 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import sb.ecomm.email.EmailService;
 import sb.ecomm.exceptions.OrderNotFoundException;
 import sb.ecomm.exceptions.UserNotFoundException;
 import sb.ecomm.order.Currency;
@@ -16,7 +14,6 @@ import sb.ecomm.order.Order;
 import sb.ecomm.order.OrderService;
 import sb.ecomm.order.OrderStatus;
 import sb.ecomm.order.dto.CreateCheckoutSessionDTO;
-import sb.ecomm.order.dto.CreateOrderDTO;
 import sb.ecomm.order.dto.OrderDTO;
 import sb.ecomm.order.dto.UpdateOrderDTO;
 import sb.ecomm.product.Product;
@@ -36,7 +33,6 @@ class UserServiceTest {
     @Mock private OrderService orderService;
     @Mock private PasswordEncoder passwordEncoder;
     @Mock private ModelMapper mapper;
-    @Mock private EmailService emailService;
 
     @InjectMocks
     private UserService userService;
@@ -62,9 +58,7 @@ class UserServiceTest {
         UUID testUUID = UUID.randomUUID();
         when(userRepository.findById(testUUID)).thenThrow(new UserNotFoundException(testUUID));
 
-        assertThrows(UserNotFoundException.class, () -> {
-            userService.findUserById(testUUID);
-        });
+        assertThrows(UserNotFoundException.class, () -> userService.findUserById(testUUID));
     }
 
     @Test
@@ -132,9 +126,7 @@ class UserServiceTest {
         updateUserDTO.setLine1("updated-address-line1");
         updateUserDTO.setCity("updated-address-city");
 
-        assertThrows(UserNotFoundException.class, () -> {
-            userService.updateUserAccount(testUUID, updateUserDTO);
-        });
+        assertThrows(UserNotFoundException.class, () -> userService.updateUserAccount(testUUID, updateUserDTO));
     }
 
     @Test
@@ -158,9 +150,7 @@ class UserServiceTest {
 
         when(orderService.findOrderById(wrongOrderId)).thenThrow(new OrderNotFoundException(wrongOrderId));
 
-        assertThrows(OrderNotFoundException.class, () -> {
-            userService.findUserOrderById(UUID.randomUUID(), wrongOrderId);
-        });
+        assertThrows(OrderNotFoundException.class, () -> userService.findUserOrderById(UUID.randomUUID(), wrongOrderId));
 
     }
 
@@ -174,9 +164,7 @@ class UserServiceTest {
 
         when(orderService.findOrderById(testOrderId)).thenReturn(testOrderDTO);
 
-        assertThrows(RuntimeException.class, () -> {
-            userService.findUserOrderById(wrongUserId, testOrderId);
-        }, "Not authorised to access this resource");
+        assertThrows(RuntimeException.class, () -> userService.findUserOrderById(wrongUserId, testOrderId), "Not authorised to access this resource");
     }
 
     @Test
@@ -212,9 +200,7 @@ class UserServiceTest {
         UpdateOrderDTO updateOrderDTO = new UpdateOrderDTO();
         when(orderService.findOrderById(orderId)).thenThrow(new OrderNotFoundException(orderId));
 
-        assertThrows(OrderNotFoundException.class, () -> {
-            userService.updateUserOrder(testUUID, orderId, updateOrderDTO);
-        });
+        assertThrows(OrderNotFoundException.class, () -> userService.updateUserOrder(testUUID, orderId, updateOrderDTO));
     }
 
     @Test
@@ -226,9 +212,7 @@ class UserServiceTest {
         when(orderService.findOrderById(orderId)).thenReturn(orderDTO);
 
 
-        assertThrows(RuntimeException.class, () -> {
-            userService.updateUserOrder(testUUID, orderId, updateOrderDTO);
-        }, "Not authorised to access this resource");
+        assertThrows(RuntimeException.class, () -> userService.updateUserOrder(testUUID, orderId, updateOrderDTO), "Not authorised to access this resource");
     }
 
     @Test
@@ -249,9 +233,7 @@ class UserServiceTest {
 
         when(orderService.findOrderById(orderId)).thenReturn(orderDTO);
 
-        assertThrows(RuntimeException.class, () -> {
-            userService.createCheckoutSession(testUUID, orderId, createCheckoutSessionDTO);
-        }, "Not authorised to access this resource");
+        assertThrows(RuntimeException.class, () -> userService.createCheckoutSession(testUUID, orderId, createCheckoutSessionDTO), "Not authorised to access this resource");
     }
 
     @Test
@@ -261,9 +243,7 @@ class UserServiceTest {
         OrderDTO orderDTO = getSingleOrderDTO(1L, UUID.randomUUID());
         when(orderService.findOrderById(orderId)).thenReturn(orderDTO);
 
-        assertThrows(RuntimeException.class, () -> {
-            userService.deleteUserOrder(testUUID, orderId);
-        }, "Not authorised to modify this order");
+        assertThrows(RuntimeException.class, () -> userService.deleteUserOrder(testUUID, orderId), "Not authorised to modify this order");
     }
 
 
