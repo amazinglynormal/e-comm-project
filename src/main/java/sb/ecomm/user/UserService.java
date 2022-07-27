@@ -99,7 +99,7 @@ public class UserService {
                              UpdateOrderDTO updateOrderDTO) {
         OrderDTO order = orderService.findOrderById(orderId);
         if (!order.getUserId().equals(userId)) {
-            throw new RuntimeException("Not authorised to modify this order");
+            throw new RuntimeException("Not authorised to access this resource");
         }
         return orderService.updateOrder(orderId, updateOrderDTO);
     }
