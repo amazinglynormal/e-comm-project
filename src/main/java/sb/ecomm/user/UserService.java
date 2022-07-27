@@ -121,7 +121,7 @@ public class UserService {
     void deleteUserOrder(UUID userId, Long orderId) {
         OrderDTO order = orderService.findOrderById(orderId);
         if (!order.getUserId().equals(userId)) {
-            throw new RuntimeException("forbidden yeah");
+            throw new RuntimeException("Not authorised to modify this order");
         }
 
         orderService.deleteOrderById(orderId);
