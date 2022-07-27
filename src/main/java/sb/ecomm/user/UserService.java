@@ -81,7 +81,7 @@ public class UserService {
                                Long orderId) {
         OrderDTO order = orderService.findOrderById(orderId);
         if (!order.getUserId().equals(userId)) {
-            throw new RuntimeException("forbidden yeah");
+            throw new RuntimeException("Not authorised to access this resource");
         }
         return order;
     }
