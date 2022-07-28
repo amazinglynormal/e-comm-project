@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import sb.ecomm.email.EmailService;
 import sb.ecomm.exceptions.OrderNotFoundException;
 import sb.ecomm.exceptions.UserNotFoundException;
 import sb.ecomm.order.Currency;
@@ -33,6 +34,7 @@ class UserServiceTest {
     @Mock private OrderService orderService;
     @Mock private PasswordEncoder passwordEncoder;
     @Mock private ModelMapper mapper;
+    @Mock private EmailService emailService;
 
     @InjectMocks
     private UserService userService;
