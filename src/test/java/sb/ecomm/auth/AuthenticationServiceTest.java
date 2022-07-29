@@ -9,6 +9,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import sb.ecomm.email.EmailService;
@@ -43,7 +46,47 @@ class AuthenticationServiceTest {
     private AuthenticationService authenticationService;
 
     @Test
-    void authenticateUser() {
+    void authenticateUser_success() {
+        User user = getTestUser();
+        UserDetailsImpl userDetails = getUserDetailsImpl(user);
+        AuthenticationRequest authRequest = new AuthenticationRequest(user.getEmail(), user.getPassword());
+        TestingAuthenticationToken auth = new TestingAuthenticationToken(userDetails, new ArrayList<>());
+
+        when(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                authRequest.getEmail(),
+                authRequest.getPassword(),
+                new ArrayList<>()
+        ))).thenReturn(auth);
+
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+        when(userRepository.save(user)).thenReturn(user);
+
+
+        ResponseEntity<LoginResponse> response = authenticationService.authenticateUser(authRequest);
+
+        assertEquals(200, response.getStatusCodeValue());
+
+        String header = response.getHeaders().getFirst("Authorization");
+
+        assertNotNull(header);
+
+        String responseBody = response.getBody().getRefreshToken();
+
+        assertNotNull(responseBody);
+    }
+
+    @Test
+    void authenticateUserThrowsAuthExceptionWhenAuthenticationFails() {
+        User user = getTestUser();
+        AuthenticationRequest authRequest = new AuthenticationRequest(user.getEmail(), user.getPassword());
+
+        when(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                authRequest.getEmail(),
+                authRequest.getPassword(),
+                new ArrayList<>()
+        ))).thenThrow(new RuntimeException("Hit an auth Exception"));
+
+        assertThrows(RuntimeException.class, () -> authenticationService.authenticateUser(authRequest));
     }
 
     @Test
