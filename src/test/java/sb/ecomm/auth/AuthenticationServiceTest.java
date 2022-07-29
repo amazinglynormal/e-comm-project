@@ -150,11 +150,7 @@ class AuthenticationServiceTest {
     }
 
     private String generateTestJWTToken(User user, JwtTokenType tokenType) {
-        UserDetailsImpl userDetails = new UserDetailsImpl();
-        userDetails.setId(user.getId());
-        userDetails.setUsername(user.getEmail());
-        userDetails.setEnabled(user.isEnabled());
-        userDetails.setAuthorities(getAuthorities(user));
+        UserDetailsImpl userDetails = getUserDetailsImpl(user);
 
         String hashedAccessTokenFingerprint = JwtUtils.hashJwtFingerprint(this.testFingerprint);
 
@@ -173,5 +169,16 @@ class AuthenticationServiceTest {
         Set<GrantedAuthority> authorities = new HashSet<>();
         user.getRole().getAuthorities().forEach(authority -> authorities.add(new SimpleGrantedAuthority(authority.getAuthority())));
         return authorities;
+    }
+
+    private UserDetailsImpl getUserDetailsImpl(User user) {
+        UserDetailsImpl userDetails = new UserDetailsImpl();
+        userDetails.setId(user.getId());
+        userDetails.setUsername(user.getEmail());
+        userDetails.setEnabled(user.isEnabled());
+        userDetails.setAuthorities(getAuthorities(user));
+
+        return userDetails;
+
     }
 }
