@@ -36,6 +36,9 @@ class AuthenticationServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private EmailService emailService;
+
     @InjectMocks
     private AuthenticationService authenticationService;
 
@@ -56,17 +59,63 @@ class AuthenticationServiceTest {
     }
 
     @Test
-    void requestPasswordReset() {
+    void requestPasswordReset_success() {
+        User user = getTestUser();
+        user.setEnabled(true);
+        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        when(userRepository.save(user)).thenReturn(user);
+
+        ResponseEntity<HttpStatus> response = authenticationService.requestPasswordReset(user.getEmail());
+
+        assertEquals(200, response.getStatusCodeValue());
     }
 
     @Test
-    void resetPassword() {
+    void requestPasswordResetThrowsExceptionWhenUserEmailNotFoundInDB() {
+        String testEmail = "test@test.com";
+        when(userRepository.findByEmail(testEmail)).thenThrow(new RuntimeException("User not found"));
+
+        assertThrows(RuntimeException.class, () -> authenticationService.requestPasswordReset(testEmail));
+    }
+
+    @Test
+    void resetPassword_success() {
+        User user = getTestUser();
+        String testJWT = generateTestJWTToken(user, JwtTokenType.RESET);
+        user.setPasswordResetToken(testJWT);
+
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+        when(userRepository.save(user)).thenReturn(user);
+
+        ResetPasswordDto resetPasswordDto = new ResetPasswordDto();
+        resetPasswordDto.setNewPassword("abcdefg12");
+        resetPasswordDto.setResetToken(testJWT);
+
+        ResponseEntity<HttpStatus> response = authenticationService.resetPassword(resetPasswordDto);
+
+        assertEquals(200, response.getStatusCodeValue());
+    }
+
+    @Test
+    void resetPasswordReturns403ForbiddenStatusWhenRefreshTokenDoesNotMatchStoredToken() {
+        User user = getTestUser();
+        String testJWT = generateTestJWTToken(user, JwtTokenType.RESET);
+
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+
+        ResetPasswordDto resetPasswordDto = new ResetPasswordDto();
+        resetPasswordDto.setNewPassword("abcdefg12");
+        resetPasswordDto.setResetToken(testJWT);
+
+        ResponseEntity<HttpStatus> response = authenticationService.resetPassword(resetPasswordDto);
+
+        assertEquals(403, response.getStatusCodeValue());
     }
 
     @Test
     void logoutUser_success() {
         User user = getTestUser();
-        String testJWT = generateTestJWTToken(user);
+        String testJWT = generateTestJWTToken(user, JwtTokenType.ACCESS);
 
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
 
@@ -78,13 +127,13 @@ class AuthenticationServiceTest {
     @Test
     void logoutUserThrowsExceptionWhenWrongFingerprintIsGiven() {
         User user = getTestUser();
-        String testJWT = generateTestJWTToken(user);
+        String testJWT = generateTestJWTToken(user, JwtTokenType.ACCESS);
 
         assertThrows(JwtException.class, () -> authenticationService.logoutUser(testJWT, "wrongfingerprint"),
                 "User is not authorised to perform to request");
     }
 
-    private String generateTestJWTToken(User user) {
+    private String generateTestJWTToken(User user, JwtTokenType tokenType) {
         UserDetailsImpl userDetails = new UserDetailsImpl();
         userDetails.setId(user.getId());
         userDetails.setUsername(user.getEmail());
@@ -93,7 +142,7 @@ class AuthenticationServiceTest {
 
         String hashedAccessTokenFingerprint = JwtUtils.hashJwtFingerprint(this.testFingerprint);
 
-        return JwtUtils.generateJwtToken(userDetails, hashedAccessTokenFingerprint, JwtTokenType.ACCESS);
+        return JwtUtils.generateJwtToken(userDetails, hashedAccessTokenFingerprint, tokenType);
     }
 
     private User getTestUser() {
