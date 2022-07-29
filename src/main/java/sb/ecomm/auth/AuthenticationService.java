@@ -150,7 +150,7 @@ public class AuthenticationService {
 
         String storedPasswordResetToken = user.getPasswordResetToken();
 
-        if (!storedPasswordResetToken.equals(resetPasswordDto.getResetToken())) {
+        if (storedPasswordResetToken == null || !storedPasswordResetToken.equals(resetPasswordDto.getResetToken())) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
