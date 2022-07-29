@@ -90,7 +90,59 @@ class AuthenticationServiceTest {
     }
 
     @Test
-    void reauthenticateUser() {
+    void reauthenticateUser_success() {
+        User user = getTestUser();
+        UserDetailsImpl userDetails = getUserDetailsImpl(user);
+        AuthenticationRequest authRequest = new AuthenticationRequest(user.getEmail(), user.getPassword());
+        TestingAuthenticationToken auth = new TestingAuthenticationToken(userDetails, new ArrayList<>());
+        auth.setAuthenticated(true);
+
+        when(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                authRequest.getEmail(),
+                authRequest.getPassword(),
+                new ArrayList<>()
+        ))).thenReturn(auth);
+
+        ResponseEntity<HttpStatus> response = authenticationService.reauthenticateUser(authRequest, user.getId());
+
+        assertEquals(200, response.getStatusCodeValue());
+    }
+
+    @Test
+    void reauthenticateUserReturns403ForbiddenWhenNotAuthenticated() {
+        User user = getTestUser();
+        UserDetailsImpl userDetails = getUserDetailsImpl(user);
+        AuthenticationRequest authRequest = new AuthenticationRequest(user.getEmail(), user.getPassword());
+        TestingAuthenticationToken auth = new TestingAuthenticationToken(userDetails, new ArrayList<>());
+
+        when(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                authRequest.getEmail(),
+                authRequest.getPassword(),
+                new ArrayList<>()
+        ))).thenReturn(auth);
+
+        ResponseEntity<HttpStatus> response = authenticationService.reauthenticateUser(authRequest, user.getId());
+
+        assertEquals(403, response.getStatusCodeValue());
+    }
+
+    @Test
+    void reauthenticateUserReturns403ForbiddenWhenUserIdsDoNotMatch() {
+        User user = getTestUser();
+        User wrongUser = getTestUser();
+        UserDetailsImpl userDetails = getUserDetailsImpl(wrongUser);
+        AuthenticationRequest authRequest = new AuthenticationRequest(user.getEmail(), user.getPassword());
+        TestingAuthenticationToken auth = new TestingAuthenticationToken(userDetails, new ArrayList<>());
+
+        when(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                authRequest.getEmail(),
+                authRequest.getPassword(),
+                new ArrayList<>()
+        ))).thenReturn(auth);
+
+        ResponseEntity<HttpStatus> response = authenticationService.reauthenticateUser(authRequest, user.getId());
+
+        assertEquals(403, response.getStatusCodeValue());
     }
 
     @Test
