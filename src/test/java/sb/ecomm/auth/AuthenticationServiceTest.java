@@ -55,7 +55,23 @@ class AuthenticationServiceTest {
     }
 
     @Test
-    void verifyUserEmail() {
+    void verifyUserEmail_success() {
+        User user = getTestUser();
+        when(userRepository.findByVerificationHash(user.getVerificationHash())).thenReturn(Optional.of(user));
+
+        ResponseEntity<HttpStatus> response = authenticationService.verifyUserEmail(user.getVerificationHash());
+
+        assertEquals(200, response.getStatusCodeValue());
+    }
+
+    @Test
+    void verifyUserEmailReturns400BadRequestWhenUserNotFoundInDB() {
+        String verificationHash = "abcdefg";
+        when(userRepository.findByVerificationHash(verificationHash)).thenReturn(Optional.empty());
+
+        ResponseEntity<HttpStatus> response = authenticationService.verifyUserEmail(verificationHash);
+
+        assertEquals(400, response.getStatusCodeValue());
     }
 
     @Test
