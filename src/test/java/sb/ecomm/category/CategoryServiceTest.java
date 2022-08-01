@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import sb.ecomm.category.dto.CategoryDTO;
+import sb.ecomm.category.dto.CreateCategoryDTO;
 import sb.ecomm.product.Product;
 
 import java.util.ArrayList;
@@ -56,6 +57,24 @@ class CategoryServiceTest {
 
     @Test
     void addNewCategory() {
+        CreateCategoryDTO createCategoryDTO = new CreateCategoryDTO();
+        createCategoryDTO.setName("test category");
+        createCategoryDTO.setDescription("test category description");
+
+        Category category = getTestCategory(1L);
+
+        when(mapper.map(createCategoryDTO, Category.class)).thenReturn(category);
+        when(categoryRepository.save(category)).thenReturn(category);
+
+        CategoryDTO categoryDTO = getTestCategoryDTO(category);
+
+        when(mapper.map(category, CategoryDTO.class)).thenReturn(categoryDTO);
+
+        CategoryDTO response = categoryService.addNewCategory(createCategoryDTO);
+
+        assertNotNull(response);
+        assertEquals(1L, response.getId());
+        assertEquals("test category", response.getName());
     }
 
     @Test
