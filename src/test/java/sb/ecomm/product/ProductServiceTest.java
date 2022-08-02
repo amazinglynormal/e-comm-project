@@ -12,6 +12,7 @@ import sb.ecomm.exceptions.ProductNotFoundException;
 import sb.ecomm.product.dto.CreateProductDTO;
 import sb.ecomm.product.dto.ProductDTO;
 import sb.ecomm.product.dto.QueryResults;
+import sb.ecomm.product.dto.UpdateProductDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -81,30 +82,6 @@ class ProductServiceTest {
     }
 
 
-
-//    private String name;
-//
-//    private String description;
-//
-//    private double USD;
-//
-//    private double EUR;
-//
-//    private double GBP;
-//
-//    private String imageSrc;
-//
-//    private String imageAlt;
-//
-//    private Color color;
-//
-//    private String size;
-//
-//    private boolean inStock;
-//
-//    private int stockRemaining;
-//
-//    private Long categoryId;
     @Test
     void addNewProduct_success() {
         CreateProductDTO createProductDTO = new CreateProductDTO();
@@ -136,10 +113,31 @@ class ProductServiceTest {
 
     @Test
     void updateProduct() {
-    }
+        UpdateProductDTO updateProductDTO = new UpdateProductDTO();
+        updateProductDTO.setName("updated name");
+        updateProductDTO.setColor(Color.BLUE);
+        updateProductDTO.setSize("M");
 
-    @Test
-    void deleteProductById() {
+        Product product = getTestProduct(1L, Color.BLACK, "S", 99L);
+
+        when(productRepository.findById(1L)).thenReturn(Optional.of(product));
+
+        product.setName("updated name");
+        product.setColor(Color.BLUE);
+        product.setSize("M");
+
+        when(productRepository.save(product)).thenReturn(product);
+
+        ProductDTO productDTO = getTestProductDTO(product);
+
+        when(mapper.map(product, ProductDTO.class)).thenReturn(productDTO);
+
+        ProductDTO response = productService.updateProduct(1L, updateProductDTO);
+
+        assertNotNull(response);
+        assertEquals("updated name", response.getName());
+        assertEquals("M", response.getSize());
+        assertEquals(Color.BLUE, response.getColor());
     }
 
     private Product getTestProduct(Long id, Color color, String size, Long categoryId) {
