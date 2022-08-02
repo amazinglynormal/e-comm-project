@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import sb.ecomm.email.EmailService;
@@ -31,7 +30,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class AuthenticationServiceTest {
 
-    private String testFingerprint = "abcdefghijk123";
+    private final String testFingerprint = "abcdefghijk123";
 
     @Mock
     private AuthenticationManager authenticationManager;
@@ -146,7 +145,7 @@ class AuthenticationServiceTest {
     }
 
     @Test
-    void refreshUser() {
+    void refreshUser_success() {
     }
 
     @Test
