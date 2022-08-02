@@ -8,6 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import sb.ecomm.category.dto.CategoryDTO;
 import sb.ecomm.category.dto.CreateCategoryDTO;
+import sb.ecomm.category.dto.UpdateCategoryDTO;
 import sb.ecomm.exceptions.CategoryNotFoundException;
 import sb.ecomm.product.Product;
 
@@ -105,7 +106,48 @@ class CategoryServiceTest {
     }
 
     @Test
-    void updateCategory() {
+    void updateCategory_success() {
+        UpdateCategoryDTO updateCategoryDTO = new UpdateCategoryDTO();
+        updateCategoryDTO.setName("updated name");
+        updateCategoryDTO.setDescription("updated description");
+
+        Category updatedCategory = getTestCategory(1L);
+        updatedCategory.setName("updated name");
+        updatedCategory.setDescription("updated description");
+
+        Category category = getTestCategory(1L);
+
+        when(mapper.map(updateCategoryDTO, Category.class)).thenReturn(updatedCategory);
+        when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
+        when(categoryRepository.save(category)).thenReturn(updatedCategory);
+
+        CategoryDTO categoryDTO = getTestCategoryDTO(updatedCategory);
+        when(mapper.map(updatedCategory, CategoryDTO.class)).thenReturn(categoryDTO);
+
+        CategoryDTO response = categoryService.updateCategory(1L, updateCategoryDTO);
+
+        assertNotNull(response);
+        assertEquals("updated name", response.getName());
+        assertEquals("updated description", response.getDescription());
+        assertEquals(1L, response.getId());
+    }
+
+    @Test
+    void updateCategoryThrowsExceptionWhenCategoryNotFound() {
+        UpdateCategoryDTO updateCategoryDTO = new UpdateCategoryDTO();
+        updateCategoryDTO.setName("updated name");
+        updateCategoryDTO.setDescription("updated description");
+
+        Category updatedCategory = getTestCategory(1L);
+        updatedCategory.setName("updated name");
+        updatedCategory.setDescription("updated description");
+
+        when(mapper.map(updateCategoryDTO, Category.class)).thenReturn(updatedCategory);
+        when(categoryRepository.findById(1L)).thenThrow(new CategoryNotFoundException(1L));
+
+        assertThrows(CategoryNotFoundException.class, () -> {
+            categoryService.updateCategory(1L, updateCategoryDTO);
+        });
     }
 
     @Test
