@@ -8,10 +8,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import sb.ecomm.category.dto.CategoryDTO;
 import sb.ecomm.category.dto.CreateCategoryDTO;
+import sb.ecomm.exceptions.CategoryNotFoundException;
 import sb.ecomm.product.Product;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -78,7 +80,28 @@ class CategoryServiceTest {
     }
 
     @Test
-    void findCategoryById() {
+    void findCategoryById_success() {
+        Category category = getTestCategory(1L);
+        CategoryDTO categoryDTO = getTestCategoryDTO(category);
+
+        when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
+        when(mapper.map(category, CategoryDTO.class)).thenReturn(categoryDTO);
+
+        CategoryDTO response = categoryService.findCategoryById(1L);
+
+        assertNotNull(response);
+        assertEquals(1L, response.getId());
+        assertEquals("test category", response.getName());
+        assertEquals("test category description", response.getDescription());
+    }
+
+    @Test
+    void findCategoryByIdThrowsExceptionWhenCategoryNotFound() {
+        when(categoryRepository.findById(1L)).thenThrow(new CategoryNotFoundException(1L));
+
+        assertThrows(CategoryNotFoundException.class, () -> {
+            categoryService.findCategoryById(1L);
+        });
     }
 
     @Test
