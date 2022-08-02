@@ -9,15 +9,15 @@ import org.modelmapper.ModelMapper;
 import sb.ecomm.category.Category;
 import sb.ecomm.category.CategoryRepository;
 import sb.ecomm.exceptions.ProductNotFoundException;
+import sb.ecomm.product.dto.CreateProductDTO;
 import sb.ecomm.product.dto.ProductDTO;
 import sb.ecomm.product.dto.QueryResults;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ProductServiceTest {
@@ -57,7 +57,7 @@ class ProductServiceTest {
 
     @Test
     void findProductById_success() {
-        Product product = getTestProduct(1L);
+        Product product = getTestProduct(1L, Color.BLACK, "S", 99L);
         ProductDTO productDTO = getTestProductDTO(product);
         when(productRepository.findById(1L)).thenReturn(Optional.of(product));
         when(mapper.map(product, ProductDTO.class)).thenReturn(productDTO);
@@ -67,6 +67,7 @@ class ProductServiceTest {
         assertNotNull(response);
         assertEquals(1L, response.getId());
         assertEquals("test product", response.getName());
+        assertEquals(Color.BLACK, response.getColor());
 
     }
 
@@ -79,8 +80,58 @@ class ProductServiceTest {
         }, "Could not find product 1L");
     }
 
+
+
+//    private String name;
+//
+//    private String description;
+//
+//    private double USD;
+//
+//    private double EUR;
+//
+//    private double GBP;
+//
+//    private String imageSrc;
+//
+//    private String imageAlt;
+//
+//    private Color color;
+//
+//    private String size;
+//
+//    private boolean inStock;
+//
+//    private int stockRemaining;
+//
+//    private Long categoryId;
     @Test
-    void addNewProduct() {
+    void addNewProduct_success() {
+        CreateProductDTO createProductDTO = new CreateProductDTO();
+        createProductDTO.setName("test product");
+        createProductDTO.setDescription("test description");
+        createProductDTO.setColor(Color.BLACK);
+        createProductDTO.setSize("S");
+        createProductDTO.setCategoryId(99L);
+
+        Product product = getTestProduct(1L, Color.BLACK, "S", 99L);
+
+        when(mapper.map(createProductDTO, Product.class)).thenReturn(product);
+        when(productRepository.save(product)).thenReturn(product);
+
+        when(categoryRepository.findById(99L)).thenReturn(Optional.of(product.getCategory()));
+
+        ProductDTO productDTO = getTestProductDTO(product);
+
+        when(mapper.map(product, ProductDTO.class)).thenReturn(productDTO);
+
+        ProductDTO response = productService.addNewProduct(createProductDTO);
+
+        assertNotNull(response);
+        assertEquals("test product", response.getName());
+        assertEquals(Color.BLACK, response.getColor());
+        assertEquals(99L, response.getCategoryId());
+
     }
 
     @Test
@@ -91,9 +142,9 @@ class ProductServiceTest {
     void deleteProductById() {
     }
 
-    private Product getTestProduct(Long id) {
+    private Product getTestProduct(Long id, Color color, String size, Long categoryId) {
         Category category = new Category();
-        category.setId(99L);
+        category.setId(categoryId);
         category.setName("test category");
         category.setDescription("test category description");
 
@@ -104,8 +155,8 @@ class ProductServiceTest {
                 9.99,
                 "imageSrc",
                 "imageAlt",
-                Color.BLACK,
-                "S",
+                color,
+                size,
                 true,
                 10,
                 category);
