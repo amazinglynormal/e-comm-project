@@ -1,10 +1,8 @@
 package sb.ecomm.product;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -38,7 +36,7 @@ class ProductServiceTest {
     @Mock
     private CategoryRepository categoryRepository;
 
-    private ModelMapper mapper = new ModelMapper();
+    private final ModelMapper mapper = new ModelMapper();
 
     private ProductService productService;
 
@@ -55,8 +53,6 @@ class ProductServiceTest {
 
         Product prod1 = getTestProduct(1L, Color.BLACK, "S", 1L);
         Product prod2 = getTestProduct(2L, Color.BLUE, "S", 1L);
-//        Product prod3 = getTestProduct(3L, Color.BROWN, "L", 1L);
-//        Product prod4 = getTestProduct(4L, Color.BLACK, "S", 2L);
 
         PageRequest pageRequest = PageRequest.of(0, 10);
 
@@ -170,7 +166,7 @@ class ProductServiceTest {
 
         assertNotNull(response);
         List<ProductDTO> listProdDTOs = new ArrayList<>();
-        response.forEach(productDTO -> listProdDTOs.add(productDTO));
+        response.forEach(listProdDTOs::add);
         assertEquals(4, listProdDTOs.size());
         assertEquals(2L, listProdDTOs.get(1).getId());
         assertEquals("XL", listProdDTOs.get(3).getSize());
@@ -194,9 +190,7 @@ class ProductServiceTest {
     void findProductByIdThrowsExceptionWhenProductNotFound() {
         when(productRepository.findById(1L)).thenThrow(new ProductNotFoundException(1L));
 
-        assertThrows(ProductNotFoundException.class, () -> {
-            productService.findProductById(1L);
-        }, "Could not find product 1L");
+        assertThrows(ProductNotFoundException.class, () -> productService.findProductById(1L), "Could not find product 1L");
     }
 
 
@@ -270,28 +264,6 @@ class ProductServiceTest {
         product.setId(id);
 
         return product;
-    }
-
-    private ProductDTO getTestProductDTO(Product product) {
-        ProductDTO productDTO = new ProductDTO();
-        productDTO.setId(product.getId());
-        productDTO.setName(product.getName());
-        productDTO.setDescription(product.getDescription());
-        productDTO.setUSD(product.getUSD());
-        productDTO.setGBP(product.getGBP());
-        productDTO.setEUR(product.getEUR());
-        productDTO.setImageSrc(product.getImageSrc());
-        productDTO.setImageAlt(product.getImageAlt());
-        productDTO.setColor(product.getColor());
-        productDTO.setSize(product.getSize());
-        productDTO.setInStock(product.isInStock());
-        productDTO.setCategoryId(product.getCategory().getId());
-
-        return productDTO;
-    }
-
-    private QueryResults getQueryResults(List<ProductDTO> productDTOList) {
-        return new QueryResults(productDTOList, productDTOList.size(), 1);
     }
 
     private Category getTestCategory(Long id) {
