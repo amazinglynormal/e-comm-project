@@ -37,7 +37,8 @@ describe("<FilterCheckbox", () => {
     expect(label).toBeInTheDocument();
   });
 
-  test("changes checked state when clicked", () => {
+  test("changes checked state when clicked", async () => {
+    const user = userEvent.setup();
     const { getByRole } = render(
       <FilterCheckbox
         category={category}
@@ -50,10 +51,10 @@ describe("<FilterCheckbox", () => {
     const checkbox = getByRole("checkbox");
     expect(checkbox).not.toBeChecked();
 
-    userEvent.click(checkbox);
+    await user.click(checkbox);
     expect(checkbox).toBeChecked();
 
-    userEvent.click(checkbox);
+    await user.click(checkbox);
     expect(checkbox).not.toBeChecked();
   });
 });

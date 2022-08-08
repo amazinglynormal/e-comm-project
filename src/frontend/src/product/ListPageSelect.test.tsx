@@ -41,7 +41,8 @@ describe("<ListPageSelect>", () => {
     expect(buttons[4]).toHaveTextContent("Next");
   });
 
-  test("pageChangeHandler fires on button click", () => {
+  test("pageChangeHandler fires on button click", async () => {
+    const user = userEvent.setup();
     const { getAllByRole } = render(
       <ListPageSelect
         currentPage={4}
@@ -52,11 +53,11 @@ describe("<ListPageSelect>", () => {
 
     const buttons = getAllByRole("button");
 
-    userEvent.click(buttons[0]);
-    userEvent.click(buttons[1]);
-    userEvent.click(buttons[2]); //buttons[2] should be disabled
-    userEvent.click(buttons[3]);
-    userEvent.click(buttons[4]);
+    await user.click(buttons[0]);
+    await user.click(buttons[1]);
+    await user.click(buttons[2]); //buttons[2] should be disabled
+    await user.click(buttons[3]);
+    await user.click(buttons[4]);
 
     expect(pageChangeHandler).toHaveBeenCalledTimes(4);
   });

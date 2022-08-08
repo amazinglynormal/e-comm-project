@@ -22,7 +22,8 @@ describe("<SizeSelector>", () => {
     expect(initialListItems.length).toBe(0);
   });
 
-  test("list items appear when button is clicked", () => {
+  test("list items appear when button is clicked", async () => {
+    const user = userEvent.setup();
     const { getByRole, queryAllByRole, getAllByRole } = render(
       <SizeSelector
         products={products}
@@ -36,14 +37,15 @@ describe("<SizeSelector>", () => {
     const initialListItems = queryAllByRole("option");
     expect(initialListItems.length).toBe(0);
 
-    userEvent.click(listButton);
+    await user.click(listButton);
 
     const openListItems = getAllByRole("option");
     expect(openListItems.length).toBe(4);
   });
 
-  test("initial size is already selected", () => {
-    const { getByRole, getAllByRole, getByText } = render(
+  test("initial size is already selected", async () => {
+    const user = userEvent.setup();
+    const { getByRole, getAllByRole } = render(
       <SizeSelector
         products={products}
         currentlySelected={1}
@@ -54,13 +56,14 @@ describe("<SizeSelector>", () => {
     const listButton = getByRole("button");
     expect(listButton).toHaveTextContent("M");
 
-    userEvent.click(listButton);
+    await user.click(listButton);
 
     const initialListItems = getAllByRole("option");
     expect(initialListItems[0]).toHaveTextContent("M");
   });
 
-  test("different sizes can be selected", () => {
+  test("different sizes can be selected", async () => {
+    const user = userEvent.setup();
     const { getByRole, getAllByRole } = render(
       <SizeSelector
         products={products}
@@ -70,16 +73,17 @@ describe("<SizeSelector>", () => {
     );
 
     const listButton = getByRole("button");
-    userEvent.click(listButton);
+    await user.click(listButton);
 
     const initialListItems = getAllByRole("option");
-    userEvent.click(initialListItems[1]);
-    userEvent.click(initialListItems[2]);
+    await user.click(initialListItems[1]);
+    await user.click(initialListItems[2]);
 
     expect(onSelectedSizeChangeHandler).toHaveBeenCalledTimes(2);
   });
 
-  test("out of stock items are disabled", () => {
+  test("out of stock items are disabled", async () => {
+    const user = userEvent.setup();
     const { getByRole, getAllByRole } = render(
       <SizeSelector
         products={products}
@@ -89,7 +93,7 @@ describe("<SizeSelector>", () => {
     );
 
     const listButton = getByRole("button");
-    userEvent.click(listButton);
+    await user.click(listButton);
 
     const initialListItems = getAllByRole("option");
 

@@ -25,32 +25,34 @@ describe("<ProfileInformationItem>", () => {
     expect(descDetails).toHaveTextContent("••••••••");
   });
 
-  test("reveals update form when update button is clicked", () => {
+  test("reveals update form when update button is clicked", async () => {
+    const user = userEvent.setup();
     const { getByRole, getByLabelText } = render(
       <ProfileInformationItem id="Username" info="Test Username" />
     );
 
     const updateButton = getByRole("button");
 
-    userEvent.click(updateButton);
+    await user.click(updateButton);
 
     const updateInput = getByLabelText("Username");
     expect(updateInput).toBeInTheDocument();
   });
 
-  test("hides update form when cancel button is clicked", () => {
+  test("hides update form when cancel button is clicked", async () => {
+    const user = userEvent.setup();
     const { getByRole, getAllByRole } = render(
       <ProfileInformationItem id="Username" info="Test Username" />
     );
 
     const updateButton = getByRole("button");
 
-    userEvent.click(updateButton);
+    await user.click(updateButton);
 
     const buttons = getAllByRole("button");
     expect(buttons[0]).toHaveTextContent("Cancel");
 
-    userEvent.click(buttons[0]);
+    await user.click(buttons[0]);
 
     expect(buttons[0]).not.toBeInTheDocument();
   });

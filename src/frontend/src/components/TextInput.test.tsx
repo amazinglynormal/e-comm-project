@@ -39,7 +39,8 @@ describe("<TextInput>", () => {
     expect(input).toBeInTheDocument();
   });
 
-  test("value changes when user types in input", () => {
+  test("value changes when user types in input", async () => {
+    const user = userEvent.setup();
     const { getByDisplayValue } = render(
       <TextInput
         type="text"
@@ -53,11 +54,12 @@ describe("<TextInput>", () => {
 
     const input = getByDisplayValue("test value");
     expect(input).toHaveDisplayValue("test value");
-    userEvent.type(input, "foo");
+    await user.type(input, "foo");
     expect(changeHandler).toHaveBeenCalledTimes(3);
   });
 
-  test("focus handler fires when clicked", () => {
+  test("focus handler fires when clicked", async () => {
+    const user = userEvent.setup();
     const focusHandler = jest.fn();
     const { getByLabelText } = render(
       <TextInput
@@ -72,7 +74,7 @@ describe("<TextInput>", () => {
     );
 
     const input = getByLabelText("Test");
-    userEvent.click(input);
+    await user.click(input);
     expect(focusHandler).toHaveBeenCalledTimes(1);
   });
 });

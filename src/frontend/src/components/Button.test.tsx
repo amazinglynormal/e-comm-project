@@ -39,7 +39,8 @@ describe("<Button>", () => {
     expect(buttonIcon).toBeInTheDocument();
   });
 
-  test("triggers clickHandler on click", () => {
+  test("triggers clickHandler on click", async () => {
+    const user = userEvent.setup();
     const { getByRole } = render(
       <Button
         type="button"
@@ -51,8 +52,8 @@ describe("<Button>", () => {
     );
 
     const button = getByRole("button");
-    userEvent.click(button);
-    userEvent.click(button);
+    await user.click(button);
+    await user.click(button);
 
     expect(clickHandler).toBeCalledTimes(2);
   });

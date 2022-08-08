@@ -19,13 +19,14 @@ describe("<DeleteUserAccountForm>", () => {
     expect(button).toHaveTextContent("Delete Account");
   });
 
-  test("reveals password input and form buttons when Delete Account button is clicked", () => {
+  test("reveals password input and form buttons when Delete Account button is clicked", async () => {
+    const user = userEvent.setup();
     const { getByRole, getByDisplayValue, getAllByRole } = render(
       <DeleteUserAccountForm />
     );
 
     const button = getByRole("button");
-    userEvent.click(button);
+    await user.click(button);
 
     const passwordInput = getByDisplayValue("");
     expect(passwordInput).toBeInTheDocument();
