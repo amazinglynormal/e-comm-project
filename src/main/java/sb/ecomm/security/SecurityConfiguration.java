@@ -61,8 +61,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "script-src 'self' https://checkout.stripe.com https://js.stripe.com; " +
                         "connect-src 'self' https://api.stripe.com https://checkout.stripe.com; " +
                         "img-src 'self' https://*.stripe.com; " +
-                        "style-src 'self'; " +
+                        "style-src 'self' https://fonts.googleapis.com https://rsms.me/inter/inter.css; " +
                         "frame-src https://checkout.stripe.com https://js.stripe.com https://hooks.stripe.com; " +
+                        "font-src https://fonts.gstatic.com " +
                         "frame-ancestors 'self'; " +
                         "form-action 'self';");
     }
