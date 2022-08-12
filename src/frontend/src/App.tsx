@@ -52,7 +52,7 @@ const App = () => {
               >
                 <Products />
               </Route>
-              <Route path="/cart/:orderId">
+              <Route exact path="/cart">
                 <Cart />
               </Route>
               <Route path="/user/verify/:hash">
