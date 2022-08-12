@@ -24,7 +24,7 @@ export const SecondaryHighlightSection = () => {
                 real hero?&quot; - Mitch Hedberg
               </p>
               <Link
-                to="/profile"
+                to="/products/accessories/belts"
                 className="mt-8 w-full block bg-white border border-transparent rounded-md py-3 px-8 text-base font-medium text-gray-900 hover:bg-gray-100 sm:w-auto"
               >
                 Shop Belts
