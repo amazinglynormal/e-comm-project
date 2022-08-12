@@ -60,10 +60,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .contentSecurityPolicy(" default-src 'none'; " +
                         "script-src 'self' https://checkout.stripe.com https://js.stripe.com; " +
                         "connect-src 'self' https://api.stripe.com https://checkout.stripe.com; " +
-                        "img-src 'self' https://*.stripe.com; " +
+                        "img-src 'self' https://*.stripe.com https://tailwindui.com/img/ecommerce/icons/; " +
                         "style-src 'self' https://fonts.googleapis.com https://rsms.me/inter/inter.css; " +
                         "frame-src https://checkout.stripe.com https://js.stripe.com https://hooks.stripe.com; " +
-                        "font-src https://fonts.gstatic.com " +
+                        "font-src https://fonts.gstatic.com https://rsms.me/inter/; " +
                         "frame-ancestors 'self'; " +
                         "form-action 'self';");
     }
