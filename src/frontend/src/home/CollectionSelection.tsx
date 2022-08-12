@@ -17,7 +17,7 @@ const callouts = [
   },
   {
     name: "Trainers",
-    description: "stylish and essential",
+    description: "Stylish and essential",
     imageSrc: "/images/trainers.jpg",
     imageAlt: "Out-stretched arm holding high-top trainers by the laces.",
     href: "/products/footwear/trainers",
