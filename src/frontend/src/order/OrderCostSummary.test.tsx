@@ -5,7 +5,11 @@ import products from "../test-utils/testProducts";
 describe("<OrderCostSummary>", () => {
   test("renders correctly", () => {
     const { getAllByRole, getByRole } = render(
-      <CartSummary orderProducts={products} buttonText="Test button" />
+      <CartSummary
+        orderProducts={products}
+        buttonText="Test button"
+        setIsModalOpen={() => false}
+      />
     );
 
     const heading = getByRole("heading");
@@ -31,7 +35,7 @@ describe("<OrderCostSummary>", () => {
 
     const button = getByRole("button");
     expect(button).toHaveTextContent("Test button");
-    expect(button).toHaveAttribute("type", "submit");
+    expect(button).toHaveAttribute("type", "button");
     expect(button).toBeEnabled();
   });
 });

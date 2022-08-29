@@ -1,7 +1,6 @@
 import { QuestionMarkCircleIcon } from "@heroicons/react/solid";
-import axios from "axios";
+import { Dispatch, SetStateAction } from "react";
 import { Link } from "react-router-dom";
-import { useAppDispatch } from "../hooks/redux-hooks";
 import { useCurrency } from "../state/CurrencyContext";
 import Product from "../types/Product.type";
 
@@ -14,15 +13,24 @@ const currencySymbol: { [index: string]: string } = {
 interface Props {
   orderProducts: Product[];
   buttonText: string;
+  setIsModalOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-const OrderCostSummary = ({ orderProducts, buttonText }: Props) => {
+const OrderCostSummary = ({
+  orderProducts,
+  buttonText,
+  setIsModalOpen,
+}: Props) => {
   const { currency } = useCurrency();
 
   let subtotal = 0.0;
   orderProducts.forEach((product) => (subtotal += product[currency]));
 
   const shippingEstimate = subtotal > 0 ? 9.99 : 0;
+
+  const onClickHandler = () => {
+    setIsModalOpen(true);
+  };
 
   return (
     <section
@@ -64,8 +72,9 @@ const OrderCostSummary = ({ orderProducts, buttonText }: Props) => {
 
       <div className="mt-6">
         <button
-          type="submit"
+          type="button"
           className="w-full bg-indigo-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
+          onClick={onClickHandler}
         >
           {buttonText}
         </button>
