@@ -35,7 +35,7 @@ const OrderSummary = () => {
 
   const order = useAppSelector(selectCompletedOrder);
 
-  dispatch(resetActiveOrder);
+  dispatch(resetActiveOrder());
   deleteOrderFromLocalStorage();
 
   return (
