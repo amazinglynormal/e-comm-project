@@ -11,6 +11,7 @@ import axios from "axios";
 import { useAlert } from "../state/AlertContext";
 import Order from "../interfaces/order.interface";
 import { storeOrderInLocalStorage } from "../utils/localStorageOrderUtils";
+import Modal from "../components/Modal";
 
 interface FormData {
   email: string;
@@ -59,6 +60,7 @@ const Checkout = () => {
   const { currency } = useCurrency();
   const { triggerAlert } = useAlert();
   const stripe = useStripe();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [formData, setFormData] = useState<FormData>(initialFormData);
 
@@ -153,6 +155,7 @@ const Checkout = () => {
 
   return (
     <div className="bg-gray-50">
+      <Modal isOpen={isModalOpen} setIsOpen={setIsModalOpen} />
       <div className="max-w-2xl mx-auto pt-16 pb-24 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
         <h2 className="sr-only">Checkout</h2>
 
@@ -288,6 +291,7 @@ const Checkout = () => {
             <OrderCostSummary
               orderProducts={order?.products || []}
               buttonText="Confirm order"
+              setIsModalOpen={setIsModalOpen}
             />
           </div>
         </form>
