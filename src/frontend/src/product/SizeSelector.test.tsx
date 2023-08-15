@@ -67,7 +67,7 @@ describe("<SizeSelector>", () => {
     const { getByRole, getAllByRole } = render(
       <SizeSelector
         products={products}
-        currentlySelected={1}
+        currentlySelected={0}
         onChangeHandler={onSelectedSizeChangeHandler}
       />
     );
@@ -75,8 +75,12 @@ describe("<SizeSelector>", () => {
     const listButton = getByRole("button");
     await user.click(listButton);
 
-    const initialListItems = getAllByRole("option");
+    let initialListItems = getAllByRole("option");
     await user.click(initialListItems[1]);
+
+    await user.click(listButton);
+    initialListItems = getAllByRole("option");
+
     await user.click(initialListItems[2]);
 
     expect(onSelectedSizeChangeHandler).toHaveBeenCalledTimes(2);
