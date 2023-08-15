@@ -132,7 +132,7 @@ public class ProductService {
         newProduct.setCategory(category);
         Product savedProduct = productRepository.save(newProduct);
 
-        addProductToStripeAccount(savedProduct);
+//        addProductToStripeAccount(savedProduct);
 
         return mapper.map(savedProduct, ProductDTO.class);
     }
