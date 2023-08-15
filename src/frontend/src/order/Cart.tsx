@@ -21,14 +21,7 @@ const EmptyCart = () => {
 };
 
 const Cart = () => {
-  const history = useHistory();
-
   const order = useAppSelector(selectOrder);
-
-  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    history.push("/checkout");
-  };
 
   return (
     <div className="bg-white">
@@ -36,10 +29,7 @@ const Cart = () => {
         <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
           Shopping Bag
         </h1>
-        <form
-          onSubmit={onSubmit}
-          className="mt-12 lg:grid lg:grid-cols-12 lg:gap-x-12 lg:items-start xl:gap-x-16"
-        >
+        <form className="mt-12 lg:grid lg:grid-cols-12 lg:gap-x-12 lg:items-start xl:gap-x-16">
           <section aria-labelledby="cart-heading" className="lg:col-span-7">
             <h2 id="cart-heading" className="sr-only">
               Items in your shopping bag

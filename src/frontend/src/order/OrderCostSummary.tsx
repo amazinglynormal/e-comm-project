@@ -1,6 +1,6 @@
 import { QuestionMarkCircleIcon } from "@heroicons/react/solid";
 import { Dispatch, SetStateAction } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useCurrency } from "../state/CurrencyContext";
 import Product from "../types/Product.type";
 
@@ -13,7 +13,7 @@ const currencySymbol: { [index: string]: string } = {
 interface Props {
   orderProducts: Product[];
   buttonText: string;
-  setIsModalOpen: Dispatch<SetStateAction<boolean>>;
+  setIsModalOpen?: Dispatch<SetStateAction<boolean>>;
 }
 
 const OrderCostSummary = ({
@@ -22,6 +22,7 @@ const OrderCostSummary = ({
   setIsModalOpen,
 }: Props) => {
   const { currency } = useCurrency();
+  const history = useHistory();
 
   let subtotal = 0.0;
   orderProducts.forEach((product) => (subtotal += product[currency]));
@@ -29,7 +30,11 @@ const OrderCostSummary = ({
   const shippingEstimate = subtotal > 0 ? 9.99 : 0;
 
   const onClickHandler = () => {
-    setIsModalOpen(true);
+    if (setIsModalOpen) {
+      setIsModalOpen(true);
+    } else {
+      history.push("/checkout");
+    }
   };
 
   return (
