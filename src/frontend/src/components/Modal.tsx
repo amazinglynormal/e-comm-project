@@ -1,17 +1,23 @@
-import { Dispatch, Fragment, SetStateAction, useState } from "react";
+import { Dispatch, Fragment, SetStateAction } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { ExclamationCircleIcon } from "@heroicons/react/outline";
 import { useHistory } from "react-router-dom";
+import Order from "../interfaces/order.interface";
+import { useAppDispatch } from "../hooks/redux-hooks";
+import { setCompletedOrder } from "../state/orderSlice";
 
 interface Props {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
+  order: Order;
 }
 
-const Modal = ({ isOpen, setIsOpen }: Props) => {
+const Modal = ({ isOpen, setIsOpen, order }: Props) => {
   const history = useHistory();
+  const dispatch = useAppDispatch();
 
   const onClickHandler = () => {
+    dispatch(setCompletedOrder(order));
     setIsOpen(false);
     history.push("/ordersummary");
   };

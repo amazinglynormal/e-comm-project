@@ -6,7 +6,7 @@ const KEY = "locallySavedOrder";
 function checkLocalStorageForExistingOrder(): Order | null {
   const order = localStorage.getItem(KEY);
 
-  if (order !== null) {
+  if (order) {
     const parsedOrder: Order = JSON.parse(order);
     return parsedOrder;
   }
@@ -30,6 +30,13 @@ function addProductToLocalStorageOrder(product: Product): Order {
   }
 
   order.products.push(product);
+  let subtotal = order.products.reduce((acc, prod) => acc + prod.eur, 0);
+  const shippingCost = subtotal < 50 ? 0.0 : 9.99;
+  const totalCost = subtotal + shippingCost;
+
+  order.subtotal = subtotal;
+  order.shippingCost = shippingCost;
+  order.totalCost = totalCost;
 
   const stringifiedOrder = JSON.stringify(order);
 
@@ -49,6 +56,14 @@ function removeProductFromLocalStorageOrder(product: Product): Order {
   }
 
   order.products.splice(indexOfProduct, 1);
+
+  let subtotal = order.products.reduce((acc, prod) => acc + prod.eur, 0);
+  const shippingCost = subtotal < 50 ? 0.0 : 9.99;
+  const totalCost = subtotal + shippingCost;
+
+  order.subtotal = subtotal;
+  order.shippingCost = shippingCost;
+  order.totalCost = totalCost;
 
   const stringifiedOrder = JSON.stringify(order);
 

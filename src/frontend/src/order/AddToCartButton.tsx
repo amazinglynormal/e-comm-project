@@ -3,15 +3,12 @@ import useProductDetailsSWR from "../hooks/useProductDetailsSWR";
 import createOrder from "../state/async-thunks/createOrder";
 import updateOrder from "../state/async-thunks/updateOrder";
 import {
-  addProductToOrder,
   selectOrder,
   setAsActiveOrder,
+  updateOrderLocally,
 } from "../state/orderSlice";
 import { selectUser } from "../state/userSlice";
-import {
-  addProductToLocalStorageOrder,
-  checkLocalStorageForExistingOrder,
-} from "../utils/localStorageOrderUtils";
+import { addProductToLocalStorageOrder } from "../utils/localStorageOrderUtils";
 
 interface Props {
   productId: number;
@@ -26,19 +23,11 @@ const AddToCartButton = ({ productId }: Props) => {
 
   const onClickHandler = () => {
     if (!user) {
+      const order = addProductToLocalStorageOrder(data);
       if (!activeOrder) {
-        const existingOrder = checkLocalStorageForExistingOrder();
-
-        if (!existingOrder) {
-          addProductToLocalStorageOrder(data);
-          dispatch(setAsActiveOrder({ products: [data] }));
-        } else {
-          const updatedOrder = addProductToLocalStorageOrder(data);
-          dispatch(setAsActiveOrder(updatedOrder));
-        }
+        dispatch(setAsActiveOrder(order));
       } else {
-        addProductToLocalStorageOrder(data);
-        dispatch(addProductToOrder(data));
+        dispatch(updateOrderLocally({ ...order }));
       }
     } else {
       if (!activeOrder) {

@@ -54,6 +54,9 @@ export const orderSlice = createSlice({
     setCompletedOrder: (state, action: PayloadAction<Order>) => {
       state.completedOrder = action.payload;
     },
+    updateOrderLocally: (state, action: PayloadAction<Order>) => {
+      state.activeOrder = { ...action.payload };
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(createOrder.pending, (state) => {
@@ -112,6 +115,7 @@ export const {
   clearAllProductsFromOrder,
   resetActiveOrder,
   setCompletedOrder,
+  updateOrderLocally,
 } = orderSlice.actions;
 
 export const selectOrder = (state: RootState) => state.order.activeOrder;

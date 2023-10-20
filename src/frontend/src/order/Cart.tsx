@@ -1,4 +1,3 @@
-import { FormEvent } from "react";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import { useAppSelector } from "../hooks/redux-hooks";
@@ -22,6 +21,12 @@ const EmptyCart = () => {
 
 const Cart = () => {
   const order = useAppSelector(selectOrder);
+
+  const history = useHistory();
+
+  const onClickHandler = () => {
+    history.push("/checkout");
+  };
 
   return (
     <div className="bg-white">
@@ -49,8 +54,8 @@ const Cart = () => {
           </section>
 
           <OrderCostSummary
-            orderProducts={order?.products || []}
             buttonText="Go to checkout"
+            onClickHandler={onClickHandler}
           />
         </form>
       </div>

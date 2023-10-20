@@ -1,8 +1,8 @@
 import { QuestionMarkCircleIcon } from "@heroicons/react/solid";
-import { Dispatch, SetStateAction } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useCurrency } from "../state/CurrencyContext";
-import Product from "../types/Product.type";
+import { useAppSelector } from "../hooks/redux-hooks";
+import { selectOrder } from "../state/orderSlice";
 
 const currencySymbol: { [index: string]: string } = {
   eur: "€",
@@ -11,31 +11,13 @@ const currencySymbol: { [index: string]: string } = {
 };
 
 interface Props {
-  orderProducts: Product[];
   buttonText: string;
-  setIsModalOpen?: Dispatch<SetStateAction<boolean>>;
+  onClickHandler: () => void;
 }
 
-const OrderCostSummary = ({
-  orderProducts,
-  buttonText,
-  setIsModalOpen,
-}: Props) => {
+const OrderCostSummary = ({ buttonText, onClickHandler }: Props) => {
   const { currency } = useCurrency();
-  const history = useHistory();
-
-  let subtotal = 0.0;
-  orderProducts.forEach((product) => (subtotal += product[currency]));
-
-  const shippingEstimate = subtotal > 0 ? 9.99 : 0;
-
-  const onClickHandler = () => {
-    if (setIsModalOpen) {
-      setIsModalOpen(true);
-    } else {
-      history.push("/checkout");
-    }
-  };
+  const order = useAppSelector(selectOrder);
 
   return (
     <section
@@ -49,7 +31,7 @@ const OrderCostSummary = ({
       <dl className="mt-6 space-y-4">
         <div className="flex items-center justify-between">
           <dt className="text-sm text-gray-600">Subtotal</dt>
-          <dd className="text-sm font-medium text-gray-900">{`${currencySymbol[currency]}${subtotal}`}</dd>
+          <dd className="text-sm font-medium text-gray-900">{`${currencySymbol[currency]}${order?.subtotal}`}</dd>
         </div>
         <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
           <dt className="flex items-center text-sm text-gray-600">
@@ -64,14 +46,12 @@ const OrderCostSummary = ({
               <QuestionMarkCircleIcon className="h-5 w-5" aria-hidden="true" />
             </Link>
           </dt>
-          <dd className="text-sm font-medium text-gray-900">{`${currencySymbol[currency]}${shippingEstimate}`}</dd>
+          <dd className="text-sm font-medium text-gray-900">{`${currencySymbol[currency]}${order?.shippingCost}`}</dd>
         </div>
 
         <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
           <dt className="text-base font-medium text-gray-900">Order total</dt>
-          <dd className="text-base font-medium text-gray-900">{`${
-            currencySymbol[currency]
-          }${subtotal + shippingEstimate}`}</dd>
+          <dd className="text-base font-medium text-gray-900">{`${currencySymbol[currency]}${order?.totalCost}`}</dd>
         </div>
       </dl>
 

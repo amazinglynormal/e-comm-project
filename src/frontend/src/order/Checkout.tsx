@@ -5,7 +5,11 @@ import Address from "../interfaces/Address.interface";
 import { TextInput } from "../components/TextInput";
 import { useStripe } from "@stripe/react-stripe-js";
 import OrderCostSummary from "./OrderCostSummary";
-import { selectOrder, setAsActiveOrder } from "../state/orderSlice";
+import {
+  selectOrder,
+  setAsActiveOrder,
+  updateOrderLocally,
+} from "../state/orderSlice";
 import { selectUser } from "../state/userSlice";
 import axios from "axios";
 import { useAlert } from "../state/AlertContext";
@@ -68,6 +72,40 @@ const Checkout = () => {
     setFormData((prevState) => {
       return { ...prevState, [event.target.id]: event.target.value };
     });
+  };
+
+  const onClickHandler = () => {
+    if (!order) return;
+    if (!formData.email) return;
+    if (
+      !formData.line1 ||
+      !formData.name ||
+      !formData.country ||
+      !formData.state
+    )
+      return;
+    if (!formData.phone) return;
+
+    const shippingAddress: Address = {
+      name: formData.name,
+      line1: formData.line1,
+      line2: formData.line2,
+      line3: formData.line3,
+      city: formData.city,
+      province: formData.state,
+      country: formData.country,
+      zipCode: formData.zipCode,
+    };
+
+    const newOrderObject: Order = {
+      ...order,
+      shippingAddress,
+      email: formData.email,
+      phone: formData.phone,
+    };
+
+    dispatch(updateOrderLocally(newOrderObject));
+    setIsModalOpen(true);
   };
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -155,7 +193,7 @@ const Checkout = () => {
 
   return (
     <div className="bg-gray-50">
-      <Modal isOpen={isModalOpen} setIsOpen={setIsModalOpen} />
+      <Modal isOpen={isModalOpen} setIsOpen={setIsModalOpen} order={order!} />
       <div className="max-w-2xl mx-auto pt-16 pb-24 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
         <h2 className="sr-only">Checkout</h2>
 
@@ -289,9 +327,8 @@ const Checkout = () => {
 
           <div>
             <OrderCostSummary
-              orderProducts={order?.products || []}
               buttonText="Confirm order"
-              setIsModalOpen={setIsModalOpen}
+              onClickHandler={onClickHandler}
             />
           </div>
         </form>

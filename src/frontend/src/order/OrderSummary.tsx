@@ -1,14 +1,6 @@
 import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
-import {
-  resetActiveOrder,
-  selectCompletedOrder,
-  selectOrder,
-  setCompletedOrder,
-} from "../state/orderSlice";
-import {
-  checkLocalStorageForExistingOrder,
-  deleteOrderFromLocalStorage,
-} from "../utils/localStorageOrderUtils";
+import { resetActiveOrder, selectCompletedOrder } from "../state/orderSlice";
+import { deleteOrderFromLocalStorage } from "../utils/localStorageOrderUtils";
 import Spinner from "../components/Spinner";
 import { useCurrency } from "../state/CurrencyContext";
 import { Link } from "react-router-dom";
@@ -21,17 +13,7 @@ const currencySymbol: { [index: string]: string } = {
 
 const OrderSummary = () => {
   const dispatch = useAppDispatch();
-  const completedOrder = useAppSelector(selectOrder);
   const { currency } = useCurrency();
-
-  if (!completedOrder) {
-    const locallyStoredOrder = checkLocalStorageForExistingOrder();
-    if (locallyStoredOrder) dispatch(setCompletedOrder(locallyStoredOrder));
-  }
-
-  if (completedOrder) {
-    dispatch(setCompletedOrder(completedOrder));
-  }
 
   const order = useAppSelector(selectCompletedOrder);
 
@@ -154,7 +136,9 @@ const OrderSummary = () => {
               <div>
                 <dt className="font-medium text-gray-900">Expected delivery</dt>
                 <dd className="mt-2 text-gray-700">
-                  <p>Takes up to 7 working days</p>
+                  <p>
+                    Takes up to 7 working days or whenever we get around to it
+                  </p>
                 </dd>
               </div>
             </dl>
@@ -162,7 +146,7 @@ const OrderSummary = () => {
             <h3 className="sr-only">Summary</h3>
 
             <dl className="space-y-6 border-t border-gray-200 text-sm pt-10">
-              {order?.subtotal && order.shippingCost && order.totalCost ? (
+              {/* {order?.subtotal && order.shippingCost && order.totalCost ? (
                 <>
                   <div className="flex justify-between">
                     <dt className="font-medium text-gray-900">Subtotal</dt>
@@ -180,7 +164,20 @@ const OrderSummary = () => {
                 </>
               ) : (
                 <Spinner />
-              )}
+              )} */}
+              <div className="flex justify-between">
+                <dt className="font-medium text-gray-900">Subtotal</dt>
+                <dd className="text-gray-700">{`${currencySymbol[currency]}${order?.subtotal}`}</dd>
+              </div>
+
+              <div className="flex justify-between">
+                <dt className="font-medium text-gray-900">Shipping</dt>
+                <dd className="text-gray-700">{`${currencySymbol[currency]}${order?.shippingCost}`}</dd>
+              </div>
+              <div className="flex justify-between">
+                <dt className="font-medium text-gray-900">Total</dt>
+                <dd className="text-gray-900">{`${currencySymbol[currency]}${order?.totalCost}`}</dd>
+              </div>
             </dl>
           </div>
         </div>
