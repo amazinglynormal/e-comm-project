@@ -235,7 +235,7 @@ public class AuthenticationService {
         headers.add("Set-cookie",
                 cookiePrefix + "-fingerprint=" + fingerprint + "; " +
                         "Max-Age=86400; " +
-//                        "Secure; " +
+                        "Secure; " +
                         "HttpOnly; SameSite=Strict; " +
                         "Path=" + path + cookieExpires);
     }
